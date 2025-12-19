@@ -127,7 +127,7 @@ body.dark .theme-toggle img {
 	font-size: var(--menu-size);
 }
 
-.navbar .list .nav-item:hover, 
+.navbar .list .nav-item:hover,
 .navbar .list .nav-item.active {
 	cursor: pointer;
 
@@ -200,6 +200,12 @@ body.dark .theme-toggle img {
 	object-fit: cover;
 }
 
+.about .content {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
 .about .content p {
 	font-size: var(--body-size);
 	color: var(--body-clr);
@@ -216,6 +222,10 @@ body.dark .theme-toggle img {
 
 .about .content a:hover img {
 	scale: 1.2;
+}
+
+.about .content p a {
+	color: var(--body-clr);
 }
 
 .about .content img {
