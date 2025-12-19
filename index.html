@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Yordanos</title>
+
+	<link rel="stylesheet" type="text/css" href="style.css">
+
+</head>
+<body class="dark">
+
+	<header class="home-header">
+		<h1>Yordanos</h1>
+	</header>
+
+	<nav class="navbar">
+		<div class="container">
+			<ul class="list">
+				<li class="nav-item active">Home</li>
+				<li class="nav-item">About</li>
+			</ul>
+
+			<div class="theme-toggle">
+				<img src="./imgs/icons/sun.svg" class="sun">
+				<img src="./imgs/icons/moon.svg" class="moon">
+			</div>
+		</div>
+	</nav>
+
+	<section class="tabs">
+		<div class="tab-item posts active">
+<!--			<a href="#" class="post">
+				<div class="content">
+					<h1 class="title">Title of the Post</h1>
+					<p class="desc">
+						A metus sem adipiscing phasellus purus ridiculus. Quis porttitor nec nibh ornare pellentesque nam aliquam rutrum imperdiet porta ante.
+					</p>
+					<p class="date">Jan 01, 0001</p>
+				</div>
+
+				<div class="image"></div>
+			</a>-->
+		</div>
+
+		<div class="tab-item about">
+			<img src="./imgs/about-pic.webp" alt="" class="img">
+			<div class="content">
+				<p>
+					Habitant tincidunt tortor proin orci dolor. Turpis molestie mollis suscipit luctus vulputate dignissim vel quis cursus. Potenti quisque primis purus vulputate vehicula integer maecenas ex conubia imperdiet interdum. Ac pretium rutrum netus semper ipsum maecenas lectus taciti. Pharetra augue convallis eget morbi bibendum diam egestas fusce imperdiet vitae.
+					<br>
+					<br>
+					Habitant tincidunt tortor proin orci dolor. Turpis molestie mollis suscipit luctus vulputate dignissim vel quis cursus. Potenti quisque primis purus vulputate vehicula integer maecenas ex conubia imperdiet interdum. Ac pretium rutrum netus semper ipsum maecenas lectus taciti. Pharetra augue convallis eget morbi bibendum diam egestas fusce imperdiet vitae.
+				</p>
+
+				<ul class="links">
+					<li>
+						<a href="https://github.com/theyordanos" target="_blank">
+							<img src="./imgs/icons/github.svg" alt="">
+						</a>
+					</li>
+					<li>
+						<a href="https://t.me/theyordanos" target="_blank">
+							<img src="./imgs/icons/telegram.svg" alt="">
+						</a>
+					</li>
+					<li>
+						<a href="mailto:yordanoszt15@gmail.com" target="_blank">
+							<img src="./imgs/icons/email.svg" alt="">
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</section>
+
+	<script src="./toggle.js"></script>
+
+	<script>
+
+		// Nav & Tabs
+		let navItems = document.getElementsByClassName("nav-item")
+		let tabItems = document.getElementsByClassName("tab-item")
+		let count = navItems.length < tabItems.length ? navItems.length : tabItems.length
+
+		for (let i = 0; i < count; i++) {
+			navItems[i].addEventListener("click", () => {
+
+				for (let i = 0; i < count; i++) {
+					navItems[i].classList.remove("active")
+					tabItems[i].classList.remove("active")
+				}
+
+				navItems[i].classList.add("active")
+				tabItems[i].classList.add("active")
+
+			})
+		}
+
+	</script>
+
+</body>
+</html>

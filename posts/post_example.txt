@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Post</title>
+
+	<link rel="stylesheet" type="text/css" href="./../style.css">
+
+</head>
+<body class="dark">
+
+	<header class="post-header">
+		<div class="content">
+			<h1 class="title">Title of the Post</h1>
+			<ul class="links">
+				<li>
+					<a href="../index.html">
+						<img src="./../imgs/icons/home.svg" alt="">
+					</a>
+				</li>
+				<li>
+					<a href="https://github.com/theyordanos">
+						<img src="./../imgs/icons/github.svg" alt="">
+					</a>
+				</li>
+				<li class="theme-toggle">
+					<img src="./../imgs/icons/sun.svg" class="sun">
+					<img src="./../imgs/icons/moon.svg" class="moon">
+				</li>
+			</ul>
+		</div>
+	</header>
+
+	<article class="post-article">
+		<!-- Article -->
+	</article>
+
+	<script src="./../toggle.js"></script>
+
+</body>
+</html>
