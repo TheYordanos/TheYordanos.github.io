@@ -68,7 +68,7 @@ header, .navbar, section, article {
 .theme-toggle img {
 	display: none;
 
-	width: 36px;
+	width: 26px;
 	filter: invert(10%);
 
 	cursor: pointer;
@@ -83,7 +83,7 @@ body.dark .theme-toggle img {
 }
 
 /* ==============================
-				HOME
+	HOME
    ============================== */
 
 
@@ -239,7 +239,7 @@ body.dark .about .content img {
 
 
 /* ==============================
-				POST
+	POST
    ============================== */
 .post-header .content {
 	padding-block: 120px 32px;
@@ -357,7 +357,7 @@ body.dark .post-header .links img {
 
 
 /* ==============================
-			MEDIA QUERIES
+	MEDIA QUERIES
    ============================== */
 
 @media (width >= 1770px) {
@@ -390,7 +390,7 @@ body.dark .post-header .links img {
 		gap: 20px;
 	}
 
-	.about {
+	.about.active {
 		display: flex !important;
 		flex-direction: column;
 	}
