@@ -23,11 +23,10 @@
 	--normal-clr: #666666;
 	--body-clr: #393939;
 	--link-clr: royalblue;
-	--code-clr: #393939;
 
 	--light-clr: #B2B2B2;
 
-	--code-bg-clr: #DDD;
+	--code-border-clr: #888;
 }
 
 
@@ -41,8 +40,7 @@ body.dark {
 
 	--light-clr: #444;
 
-	--code-bg-clr: #333;
-	--code-clr: #bbb;
+	--code-border-clr: #555;
 }
 
 
@@ -318,11 +316,15 @@ body.dark .post-header .links img {
 	font-size: var(--code-size);
 	font-family: 'Roboto Mono', monospace, 'Courier New', sans-serif;
 
-	background-color: var(--code-bg-clr);
-	color: var(--code-clr);
-
-	padding: 20px;
+	border: 2px solid var(--code-border-clr);
 	border-radius: 5px;
+	overflow: hidden;
+}
+
+.post-article pre code {
+	padding: 20px;
+
+	font-family: inherit;
 }
 
 .post-article blockquote {
