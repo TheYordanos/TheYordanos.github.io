@@ -19,7 +19,7 @@ post_header: string = `
 	<title>Post</title>
 
 	<link rel="stylesheet" type="text/css" href="./../../style/style.css">
-	
+
 	<link rel="stylesheet" href="./../../style/highlight/hl.css">
 	<script src="./../../style/highlight/highlight.pack.js"></script>
 	<script>hljs.initHighlightingOnLoad();</script>
@@ -71,9 +71,7 @@ read_and_write_markdown :: proc(path: string) {
 		os.exists(path),
 		fmt.aprintfln("%s: %s", path, "doesn't exist"))
 
-	is_directory: bool = os.is_dir(path)
-
-	if is_directory {
+	if os.is_dir(path) {
 		// Trim input folder name from output
 		output_path := fmt.aprintf("%s/%s", default_output, strings.trim(path, fmt.aprintf("%s/", default_input)))
 		if !os.exists(output_path) do os.make_directory(output_path)
