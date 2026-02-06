@@ -334,11 +334,11 @@ body.dark .post-header .links img {
 	border-left: 4px solid var(--light-clr);
 }
 
-.post-article ul {
+.post-article ul, .post-article ol {
 	padding-left: 50px;
 }
 
-.post-article ul li {
+.post-article ul li, .post-article ol li {
 	font-size: var(--body-size);
 	color: var(--body-clr);
 }
