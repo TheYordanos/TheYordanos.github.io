@@ -1,3 +1,56 @@
+// ===================================
+// Markdown
+// ===================================
+---
+{
+    "title": "Index",
+    "description": "This is a description",
+    "date": "Jan 01, 2000",
+    "thumbnail": "post01.png"
+}
+---
+
+# H1
+## H2
+### H3
+
+**bold text**
+
+*italicized text*
+
+Vitae nam ipsum enim cubilia blandit elementum metus nulla nullam scelerisque habitant ridiculus tristique senectus augue mus mollis pulvinar sodales id orci inceptos conubia posuere.
+
+> blockquote
+
+1. First item
+2. Second item
+3. Third item
+
+- First item
+- Second item
+- Third item
+
+`Inline code`
+
+```odin
+package main
+
+import "core:fmt"
+
+main :: proc() {
+    fmt.println("SUP")
+}
+```
+
+---
+
+[Title](https://www.example.com)
+
+![alt text](img.webp)
+
+// ===================================
+// HTML
+// ===================================
 <!DOCTYPE html>
 <html lang="en">
 <head>

@@ -165,9 +165,14 @@ body.dark .theme-toggle img {
 	margin-bottom: 10px;
 }
 
-.post .desc, .post .date {
+.post .desc {
 	font-size: var(--body-size);
 	color: var(--body-clr);
+}
+
+.post .date {
+	font-size: var(--menu-size);
+	color: var(--light-clr);
 }
 
 .post .desc {
