@@ -63,6 +63,12 @@ header, .navbar, section, article {
 	padding-inline: 20%;
 }
 
+hr {
+	border: none;
+	height: 2px;
+	background-color: var(--light-clr);
+}
+
 .theme-toggle img {
 	display: none;
 
@@ -268,7 +274,7 @@ body.dark .about .content img {
 	POST
    ============================== */
 .post-header .content {
-	padding-block: 120px 32px;
+	padding-block: 40px 32px;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -308,7 +314,7 @@ body.dark .post-header .links img {
 }
 
 .post-article {
-	padding-block: 52px;
+	padding-block: 32px;
 }
 
 .post-article > * {
