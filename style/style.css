@@ -351,6 +351,7 @@ body.dark .post-header .links img {
 .post-article img {
 	max-width: 100%;
 	width: 100%;
+	margin-top: 20px;
 }
 
 .post-article a {
