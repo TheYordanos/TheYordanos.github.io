@@ -53,6 +53,7 @@ modify_index :: proc() {
 		link, _ = strings.replace(link, "{{title}}", data.title, 1)
 		link, _ = strings.replace(link, "{{description}}", data.description, 1)
 		link, _ = strings.replace(link, "{{date}}", data.date, 1)
+		link, _ = strings.replace(link, "{{thumbnail}}", data.thumbnail, 1)
 
 		all_posts_link = strings.join([]string{all_posts_link, link}, "\n")
 	}
