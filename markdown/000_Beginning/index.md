@@ -16,7 +16,7 @@ Here is a [caricature](https://en.wikipedia.org/wiki/Caricature) of me (you can 
 heheh as you probably could tell, I really like [caricatures](https://en.wikipedia.org/wiki/Caricature) (a little too much, probably).
 
 ### Goals
-Now enough with the introductions. Let get straight to the point of why I made this website and what my future plans are.
+Now enough with the introductions. Let's get straight to the point of why I made this website and what my future plans are.
 
 In the recent few years that I picked up game development, I've realized how much of an amazing hobby or even a potential career it is. It's a field of endless possibilities. Creation of your own world and rules. I believe it is truly the peak of Art where you live inside one's creation.
 - A world made of cubes
@@ -30,15 +30,9 @@ Whatever your imagination can imagine... IT’S LIMITLESS
 However, this endlessness is a double edged sword. The skills required for an individual to grow and learn this form of art is also near endless. I'm here to document my journey through this treacherous path and have a little bit of fun along the way ;D
 
 I am programmer first. So I believe things like design, art and music will be the most... let's just say FUN paths haha. A technical person trying out a creative venture? I mean, How difficult can it be right?
-> \*Phone ringing\*
 
-> \*Pick up\*
+...turns out design, art and music don't have debuggers :(
 
-> "Hello?"
-
-> \*Phone noises\*
-
-> "What? What do you mean design, art and music don't have debuggers?"
 ---
 Here are what I plan to write and document about in this site:
 - Devlogs of games I make, featuring my very respectable Michelangelo-level art skills (Michelangelo, age 2. On a bad day.)
