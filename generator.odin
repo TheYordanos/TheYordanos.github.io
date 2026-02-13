@@ -39,11 +39,8 @@ main :: proc() {
 }
 
 modify_index :: proc() {
-	index_data, ok_i := os.read_entire_file("templates/index.txt")
-	if !ok_i do fmt.println("Couldn't reading index")
-
-	post_link_data, ok_p := os.read_entire_file("templates/post_link.txt")
-	if !ok_p do fmt.println("Couldn't reading post link")
+	index_data := #load("templates/index.txt")
+	post_link_data := #load("templates/post_link.txt")
 
 	all_posts_link: string
 	#reverse for data in metadatas {
@@ -65,13 +62,8 @@ modify_index :: proc() {
 }
 
 read_templates :: proc() {
-	h_data, ok_h := os.read_entire_file("templates/post_header.txt")
-	if !ok_h do fmt.println("Couldn't reading post header")
-	post_header = string(h_data)
-
-	f_data, ok_f := os.read_entire_file("templates/post_footer.txt")
-	if !ok_f do fmt.println("Couldn't reading post footer")
-	post_footer = string(f_data)
+	post_header = #load("templates/post_header.txt")
+	post_footer = #load("templates/post_footer.txt")
 }
 
 read_and_write_markdown :: proc(path: string) {
