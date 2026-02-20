@@ -73,7 +73,7 @@ read_and_write_markdown :: proc(path: string) {
 
 	if os.is_dir(path) {
 		// Trim input folder name from output
-		output_path := fmt.aprintf("%s%s", default_output, strings.trim(path, fmt.aprintf("%s", default_input)))
+		output_path := fmt.aprintf("%s%s", default_output, strings.trim(path, default_input))
 		if !os.exists(output_path) do os.make_directory(output_path)
 
 		input_folder, err := os2.open(path)
@@ -93,7 +93,7 @@ read_and_write_markdown :: proc(path: string) {
 	} else {
 		// Copy every file to output folder if it isn't markdown
 		if !strings.has_suffix(path, ".md") {
-			name := strings.trim(path, fmt.aprintf("%s", default_input))
+			name := strings.trim(path, default_input)
 			output := fmt.aprintf("%s%s", default_output, name)
 
 			os2.copy_file(output, path)
@@ -128,9 +128,9 @@ read_and_write_markdown :: proc(path: string) {
 			// Parse md to html
 			html_content := cm.markdown_to_html_from_string(string(md_content), {})
 
-			// Filen and output name
+			// File and output name
 			name := strings.trim(path, ".md")
-			name = strings.trim(name, fmt.aprintf("%s/", default_input))
+			name = strings.trim(name, default_input)
 			output := fmt.aprintf("%s%s.%s", default_output, name, "html")
 
 			// Replace things in header
