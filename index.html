@@ -1,164 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Yordanos</title>
+  <meta charset="UTF-8">
+  <title>My Blog</title>
 
-	<link rel="stylesheet" type="text/css" href="./style/style.css">
-
+  <link rel="stylesheet" href="style.css">
 </head>
-<body class="dark">
 
-	<header class="home-header">
-		<h1>Yordanos</h1>
-	</header>
+<body>
 
-	<nav class="navbar">
-		<div class="container">
-			<ul class="list">
-				<li class="nav-item active">Home</li>
-				<li class="nav-item">About</li>
-			</ul>
+  <h1>Yordanos's Blog</h1>
 
-			<div class="theme-toggle">
-				<img src="./imgs/icons/sun.svg" class="sun">
-				<img src="./imgs/icons/moon.svg" class="moon">
-			</div>
-		</div>
-	</nav>
+  <p>
+  Sup,
+  <br>
+  I'm Yordanos. I'm a programmer for fun (more specifically a game dev). I like writing about random stuff I find interesting.
+  </p>
 
-	<section class="tabs">
-		<div class="tab-item posts active">
-			
-<a href="posts\004_2D_Tilemap\index.html" class="post">
-	<div class="content">
-		<h1 class="title">2D Tilemap and Tilesets</h1>
-		<p class="desc">
-			How to load and display 2d tile maps inside your game
-		</p>
-		<p class="date">Jan 01, 0000</p>
-	</div>
+  <nav class="nav">
+    <a href="https://t.me/theyordanos">Telegram</a> ·
+    <a href="https://github.com/theyordanos">Github</a> ·
+    <a href="mailto:yordnaoszt15@gmail.com">Email</a> ·
+    <button id="theme-toggle">[dark]</button>
+  </nav>
 
-	<div class="image">
-		<img src="./imgs/thumbnails/">
-	</div>
-</a>
-<a href="posts\003_Resizing\index.html" class="post">
-	<div class="content">
-		<h1 class="title">Resizing window</h1>
-		<p class="desc">
-			Here are different methods you can use to handle a resizing window
-		</p>
-		<p class="date">Jan 01, 0000</p>
-	</div>
+  <h2>Posts</h2>
 
-	<div class="image">
-		<img src="./imgs/thumbnails/">
-	</div>
-</a>
-<a href="posts\002_Animations\index.html" class="post">
-	<div class="content">
-		<h1 class="title">Animation</h1>
-		<p class="desc">
-			A 2D animation flipbook system
-		</p>
-		<p class="date">Jan 01, 0000</p>
-	</div>
+  <ul>
+    <li><a href="posts/resizing_window.html">Handling a resizing window</a></li>
+    <li><a href="posts/animation2d.html">2D Flipbook Animation System</a></li>
+    <li><a href="posts/particles2d.html">Simple 2D Particle System</a></li>
+    <li><a href="posts/beginning.html">Beginning</a></li>
+  </ul>
 
-	<div class="image">
-		<img src="./imgs/thumbnails/">
-	</div>
-</a>
-<a href="posts\001_Particles\index.html" class="post">
-	<div class="content">
-		<h1 class="title">Particle System</h1>
-		<p class="desc">
-			A simple and small particle system made in odin suited for game jams and smaller projects
-		</p>
-		<p class="date">Jan 01, 0000</p>
-	</div>
+  <hr>
 
-	<div class="image">
-		<img src="./imgs/thumbnails/">
-	</div>
-</a>
-<a href="posts\000_Beginning\index.html" class="post">
-	<div class="content">
-		<h1 class="title">The Beginning</h1>
-		<p class="desc">
-			Documenting my journey of Game, Programming, Art and Music
-		</p>
-		<p class="date">Feb 08, 2026</p>
-	</div>
+  <footer>
+  © 2026 TheYordanos
+  </footer>
 
-	<div class="image">
-		<img src="./imgs/thumbnails/beginning.webp">
-	</div>
-</a>
-		</div>
-
-		<div class="tab-item about">
-			<img src="./imgs/about-pic.webp" alt="" class="img">
-			<div class="content">
-				<p>
-					Sup,
-					<br>
-					<br>
-
-					I'm Yordanos. I'm a programmer for fun (more specifically a game dev). I like writing about random stuff I find interesting.
-					<br>
-					<br>
-					<--- Here is a
-					<a href="https://en.wikipedia.org/wiki/Caricature" target="_blank">caricature</a>
-					of me drawn by a friend :)
-				</p>
-
-				<ul class="links">
-					<li>
-						<a href="https://github.com/theyordanos" target="_blank">
-							<img src="./imgs/icons/github.svg" alt="">
-						</a>
-					</li>
-					<li>
-						<a href="https://t.me/theyordanos" target="_blank">
-							<img src="./imgs/icons/telegram.svg" alt="">
-						</a>
-					</li>
-					<li>
-						<a href="mailto:yordanoszt15@gmail.com" target="_blank">
-							<img src="./imgs/icons/email.svg" alt="">
-						</a>
-					</li>
-				</ul>
-			</div>
-		</div>
-	</section>
-
-	<script src="./scripts/toggle.js"></script>
-
-	<script>
-
-		// Nav & Tabs
-		let navItems = document.getElementsByClassName("nav-item")
-		let tabItems = document.getElementsByClassName("tab-item")
-		let count = navItems.length < tabItems.length ? navItems.length : tabItems.length
-
-		for (let i = 0; i < count; i++) {
-			navItems[i].addEventListener("click", () => {
-
-				for (let i = 0; i < count; i++) {
-					navItems[i].classList.remove("active")
-					tabItems[i].classList.remove("active")
-				}
-
-				navItems[i].classList.add("active")
-				tabItems[i].classList.add("active")
-
-			})
-		}
-
-	</script>
+  <script src="script.js"></script>
 
 </body>
 </html>

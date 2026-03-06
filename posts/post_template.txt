@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My First Post</title>
+
+  <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+
+  <a href="../index.html">← Back to home</a>
+
+  <h1>My First Post</h1>
+  <div class="meta">March 6, 2026</div>
+
+  <p>
+  Lorem ipsum dolor sit amet. Here is some inline code:
+  <code>console.log("hello world")</code>.
+  </p>
+
+  <h2>A Quote</h2>
+
+  <blockquote>
+  The best way to learn programming is to build things.
+  </blockquote>
+
+  <h2>Code Example</h2>
+
+  <pre><code>function greet(name) {
+    return "Hello " + name;
+  }
+
+  console.log(greet("world"));
+  </code></pre>
+
+  <h2>List Example</h2>
+
+  <ul>
+    <li>Simple HTML</li>
+    <li>Clean CSS</li>
+    <li>Write posts</li>
+  </ul>
+
+  <h2>Image Example</h2>
+
+  <figure>
+    <img src="../images/example.jpg" alt="Example image">
+    <figcaption>An example blog image.</figcaption>
+  </figure>
+
+  <h2>Table Example</h2>
+
+  <table>
+    <tr>
+      <th>Language</th>
+      <th>Difficulty</th>
+    </tr>
+    <tr>
+      <td>HTML</td>
+      <td>Easy</td>
+    </tr>
+    <tr>
+      <td>JavaScript</td>
+      <td>Medium</td>
+    </tr>
+  </table>
+
+  <footer>
+  © 2026 My Blog
+  </footer>
+
+  <script src="../script.js"></script>
+
+</body>
+</html>
