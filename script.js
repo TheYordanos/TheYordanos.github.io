@@ -1,3 +1,4 @@
+// TOGGLE ==================================
 const toggle = document.getElementById("theme-toggle");
 
 function updateButton() {
@@ -27,3 +28,23 @@ if (toggle) {
     updateButton();
   };
 }
+
+// ART ==================================
+function openLightbox(img){
+  const lightbox = document.getElementById("lightbox");
+  const lightboxImg = document.getElementById("lightbox-img");
+
+  lightboxImg.src = img.src;
+
+  lightbox.classList.add("active");
+}
+
+function closeLightbox(){
+  document.getElementById("lightbox").classList.remove("active");
+}
+
+document.addEventListener("keydown", function(event){
+  if(event.key === "Escape"){
+    closeLightbox();
+  }
+});
