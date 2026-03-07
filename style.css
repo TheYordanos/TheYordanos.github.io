@@ -635,7 +635,7 @@ footer {
 
   .featured-container {
     grid-template-columns: 1fr;
-    gap: 30px;
+    gap: 0;
   }
 
   .featured-media img {
@@ -643,7 +643,7 @@ footer {
   }
 
   #featured {
-    padding: 60px 20px;
+    padding-block: 20px;
   }
 
   .projects-grid {
