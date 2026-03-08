@@ -67,6 +67,8 @@
     </tr>
   </table>
 
+  <a href="../index.html">← Back to home</a>
+  <hr>
   <footer>
   © 2026 My Blog
   </footer>
