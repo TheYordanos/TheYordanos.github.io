@@ -219,16 +219,40 @@ footer {
 
 .hero {
   margin-bottom: 50px;
+
+  display: flex;
+  align-items: center;
+  gap: 40px;
+
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
 }
 
 .hero h1 {
   font-size: 36px;
-  margin-bottom: 6px;
+  margin-block: 0px 6px;
 }
 
 .hero-sub {
   color: var(--meta);
   font-size: 16px;
+}
+
+.hero .img {
+  max-width: 40%;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.hero img {
+  width: 100%;
+  scale: 2;
+  transition: scale 0.3s;
+}
+
+.hero img:hover {
+  scale: 2.1;
 }
 
 /* =========================
@@ -676,6 +700,18 @@ footer {
 
 }
 
+@media (max-width: 650px) {
+
+  .hero {
+    flex-direction: column-reverse;
+  }
+
+  .hero .img {
+    max-width: 80%;
+  }
+
+}
+
 /* Large phones */
 @media (max-width: 425px) {
 
@@ -696,6 +732,10 @@ footer {
   pre {
     padding: 14px;
     font-size: 12.5px;
+  }
+
+  .hero .img {
+    max-width: 100%;
   }
 
   .projects-grid {
