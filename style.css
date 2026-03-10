@@ -155,21 +155,23 @@ blockquote {
    IMAGES
    ========================= */
 
-img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 6px;
+img, video, iframe {
+  width: 100%;
+  max-height: 500px;
+  object-fit: contain;
+  border-radius: 8px;
   margin: 20px 0;
 }
 
 figure {
-  margin: 25px 0;
+  margin: 30px 0;
 }
 
 figcaption {
   font-size: 14px;
   color: var(--meta);
   text-align: center;
+  margin-top: 8px;
 }
 
 /* =========================
@@ -247,6 +249,7 @@ footer {
 
 .hero img {
   width: 100%;
+  max-height: 100%;
   scale: 2;
   transition: scale 0.3s;
 }
@@ -275,10 +278,6 @@ footer {
 #featured {
   max-width: 1100px;
   margin: auto;
-}
-
-#featured h2 {
-  font-size: 28px;
 }
 
 .featured-container {

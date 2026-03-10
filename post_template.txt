@@ -45,11 +45,6 @@
 
   <h2>Image Example</h2>
 
-  <figure>
-    <img src="../images/example.jpg" alt="Example image">
-    <figcaption>An example blog image.</figcaption>
-  </figure>
-
   <h2>Table Example</h2>
 
   <table>
@@ -67,13 +62,36 @@
     </tr>
   </table>
 
+  <!-- IMG -->
+  <figure>
+    <img src="../images/example.png" alt="Example">
+    <figcaption>System architecture overview.</figcaption>
+  </figure>
+
+  <!-- VID -->
+  <figure>
+    <video controls>
+      <source src="../media/demo.mp4" type="video/mp4">
+    </video>
+    <figcaption>Live demo of the application.</figcaption>
+  </figure>
+
+  <!-- EMB -->
+  <figure>
+    <iframe 
+      src="https://www.youtube.com/embed/VIDEO_ID"
+      allowfullscreen>
+    </iframe>
+    <figcaption>Explanation video.</figcaption>
+  </figure>
+
   <a href="../index.html">← Back to home</a>
   <hr>
   <footer>
   © 2026 My Blog
   </footer>
 
-  <script src="../script.js"></script>
+  <script src="../toggle.js"></script>
 
 </body>
 </html>
