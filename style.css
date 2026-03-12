@@ -725,6 +725,29 @@ body.dark .play-item:hover {
   margin-bottom: 20px;
 }
 
+.game-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.game-actions button,
+.game-actions a {
+  font-size: 13px;
+  border: 1px solid var(--border);
+  background: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--link);
+  text-decoration: none;
+}
+
+.game-actions button:hover,
+.game-actions a:hover {
+  border-color: var(--link);
+}
+
 .game-container {
   border: 1px solid var(--border);
   border-radius: 6px;
