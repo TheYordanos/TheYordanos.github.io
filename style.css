@@ -59,6 +59,7 @@ body {
    ========================= */
 section {
   padding-top: 24px;
+  scroll-margin-top: 10px;
 }
 
 /* =========================

@@ -15,7 +15,7 @@ const features = [
     desc: "A small HTML canvas recreation of the classic Flappy Bird game.",
     media: `<img src="res/placeholder.png" alt="Flappy Clone">`,
     link: "play/test.html",
-    linkText: "▶ Play",
+    linkText: "&#x25B6; Play",
     linkType: "button"
   },
 
