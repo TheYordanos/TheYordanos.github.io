@@ -835,6 +835,8 @@ body.dark .play-item:hover {
 .game-actions button:hover,
 .game-actions a:hover {
   border-color: var(--link);
+  background: var(--link);
+  color: white;
 }
 
 .game-container {
