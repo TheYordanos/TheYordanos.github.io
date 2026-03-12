@@ -58,7 +58,7 @@ body {
    SECTIONS
    ========================= */
 section {
-  margin-top: 56px;
+  padding-top: 24px;
 }
 
 /* =========================
@@ -232,19 +232,49 @@ footer {
 }
 
 /* =========================
-   NAV
+   NAVBAR
    ========================= */
-   
-.site-nav{
+
+.site-nav {
   position: sticky;
   top: 0;
   background: var(--bg);
   border-bottom: 1px solid var(--border);
-  padding: 10px 0;
+  padding: 12px 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  z-index: 1000;
+}
+
+.nav-left a {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.nav-links {
   display: flex;
   gap: 18px;
   font-size: 14px;
-  z-index: 100;
+}
+
+.nav-links a {
+  color: var(--text);
+}
+
+.nav-links a:hover {
+  color: var(--link);
+}
+
+.nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: var(--text);
 }
 
 /* =========================
@@ -252,8 +282,6 @@ footer {
    ========================= */
 
 .hero {
-  margin-bottom: 50px;
-
   display: flex;
   align-items: center;
   gap: 40px;
@@ -845,6 +873,29 @@ body.dark .play-item:hover {
 
   pre {
     font-size: 13px;
+  }
+
+  .nav-toggle {
+    display: block;
+  }
+
+  .nav-links {
+    position: absolute;
+    top: 55px;
+    left: 0;
+    width: 100%;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+
+    padding: 15px 20px;
+  }
+
+  .nav-links.active {
+    display: flex;
   }
 
   .play-item {
