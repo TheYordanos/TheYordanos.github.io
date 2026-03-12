@@ -21,10 +21,10 @@ const features = [
 
   {
     type: "Article",
-    title: "Trying to make money off Games",
-    desc: "A short reflection on whether indie games can actually make money.",
-    media: `<img src="res/placeholder.png" alt="Article cover">`,
-    link: "blog/monetizing.html",
+    title: "Beginning",
+    desc: "Why I made this site, the beginning of a journey!",
+    media: `<img src="res/featured/beginning.webp" alt="Article cover">`,
+    link: "blog/beginning.html",
     linkText: "Read Article",
   },
 
