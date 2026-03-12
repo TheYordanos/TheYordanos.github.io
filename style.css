@@ -329,6 +329,75 @@ footer {
 }
 
 /* =========================
+   PLAY GAMES
+   ========================= */
+
+.play-list {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.play-item {
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  align-items: center;
+  gap: 18px;
+
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px 14px;
+
+  text-decoration: none;
+  color: inherit;
+
+  transition: border 0.15s ease, background 0.15s ease;
+}
+
+.play-item:hover {
+  border-color: var(--link);
+  background: rgba(0,0,0,0.02);
+}
+
+body.dark .play-item:hover {
+  background: rgba(255,255,255,0.03);
+}
+
+.play-item img {
+  width: 80px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin: 0;
+}
+
+.play-info h3 {
+  font-size: 16px;
+  margin: 0 0 4px 0;
+}
+
+.play-info p {
+  font-size: 13px;
+  color: var(--meta);
+  margin: 0;
+}
+
+.play-btn {
+  font-size: 13px;
+  color: var(--link);
+  border: 1px solid var(--border);
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+
+.play-btn:hover {
+  text-decoration: none;
+  background: var(--link);
+  color: white;
+}
+
+/* =========================
    PROJECTS SECTION
    ========================= */
 
@@ -637,6 +706,57 @@ footer {
 }
 
 /* =========================
+   GAME PAGE
+   ========================= */
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.game-page {
+  max-width: 900px;
+  margin: auto;
+}
+
+.game-desc {
+  color: var(--meta);
+  margin-bottom: 20px;
+}
+
+.game-container {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 14px;
+  background: var(--bg);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin: 25px 0;
+}
+
+.game-container canvas,
+.game-container iframe {
+  width: 100%;
+  max-width: 800px;
+  border-radius: 4px;
+}
+
+.game-container canvas {
+  height: auto;
+  aspect-ratio: 16/9;
+}
+
+.game-meta {
+  font-size: 14px;
+  color: var(--meta);
+  line-height: 1.6;
+}
+
+/* =========================
    RESPONSIVE DESIGN
    ========================= */
 
@@ -654,6 +774,17 @@ footer {
 
   pre {
     font-size: 13px;
+  }
+
+  .play-item{
+    grid-template-columns:60px 1fr;
+    gap:14px;
+  }
+
+  .play-btn{
+    grid-column:2;
+    justify-self:start;
+    margin-top:6px;
   }
 
   .featured-container {
@@ -900,7 +1031,7 @@ footer {
     font-size:12px;
   }
 
-  .gallery-item img{
+  .gallery-item img {
     height:220px;
   }
 
