@@ -311,6 +311,10 @@ footer {
   margin-bottom: 15px;
 }
 
+.featured-content .play-btn {
+  padding: 8px 16px;
+}
+
 .featured-desc {
   color: #444;
   line-height: 1.6;
@@ -320,12 +324,18 @@ footer {
 .featured-link {
   text-decoration: none;
   font-weight: 500;
-  /*border-bottom: 1px solid #000;*/
   padding-bottom: 3px;
 }
 
 .featured-link:hover {
   opacity: 0.7;
+}
+
+.featured-media iframe {
+  width: 100%;
+  height: 320px;
+  border: 0;
+  border-radius: 6px;
 }
 
 /* =========================
