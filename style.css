@@ -232,6 +232,22 @@ footer {
 }
 
 /* =========================
+   NAV
+   ========================= */
+   
+.site-nav{
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 0;
+  display: flex;
+  gap: 18px;
+  font-size: 14px;
+  z-index: 100;
+}
+
+/* =========================
    HERO
    ========================= */
 
