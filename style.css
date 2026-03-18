@@ -843,7 +843,6 @@ body.dark .play-item:hover {
 .game-container {
   border: 1px solid var(--border);
   border-radius: 6px;
-  padding: 14px;
   background: var(--bg);
 
   display: flex;
