@@ -21,10 +21,10 @@ const features = [
 
   {
     type: "Article",
-    title: "Beginning",
-    desc: "Why I made this site, the beginning of a journey!",
-    media: `<img src="res/featured/beginning.webp" alt="Article cover">`,
-    link: "blog/beginning.html",
+    title: "Boids",
+    desc: "Birds flocking around on a screen",
+    media: `<img src="res/featured/boids.png" alt="Article cover">`,
+    link: "article/boids.html",
     linkText: "Read Article",
   },
 
