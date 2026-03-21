@@ -12,8 +12,8 @@
   --link: #0066cc;
   --border: #ddd;
   --inline-code-bg: #f0f0f0;
-  --code-bg: #0f172a;
-  --code-text: #e5e7eb;
+  --code-bg: #e8e8e8;
+  --code-text: #303030;
   --code-border: #1f2937;
   --blockquote-border: #ccc;
   --blockquote-text: #555;
@@ -120,7 +120,9 @@ ul, ol {
    ========================= */
 
 code, pre {
-  font-family: "Fira Code", Consolas, monospace;
+  /*font-family: "Fira Code", Consolas, monospace;*/
+  font-family: "Cascadia Mono", "Segoe UI Mono", "Ubuntu Mono", "Roboto Mono", Menlo, Monaco, Consolas, monospace;
+  font-size: 1rem;
 }
 
 p code, li code {
