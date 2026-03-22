@@ -28,25 +28,22 @@
   
   <ul>
     <li>
-      <strong>Separation:</strong> Each boid steers to avoid crowding its neighbors. If another boid 
-      gets too close, the boid moves away. This prevents collisions and maintains personal space.
+      <strong>Separation:</strong> Each boid steers to avoid crowding its neighbors.
     </li>
   
     <li>
       <strong>Alignment:</strong> Each boid steers toward the average heading of nearby boids. 
-      This causes the flock to move together in a coordinated direction.
+      This causes the flock to <strong>move</strong> together.
     </li>
   
     <li>
       <strong>Cohesion:</strong> Each boid steers toward the average position of nearby boids. 
-      This keeps the flock together as a unified group rather than scattering.
+      This <strong>keeps</strong> the flock together.
     </li>
   </ul>
   
   <p>
-    Thats it... Thats the whole simulation. The beautiful, fluid motion you see in the simulation above emerges purely from these three 
-    local rules. No single boid is directing the flock. The complex group behavior emerges 
-    from simple individual interactions.
+    Thats it... Thats the whole simulation. Complex group behavior emerging from simple individual interactions :)
   </p>
   
   <h2>Some additional behaviours I added</h2>
@@ -57,14 +54,11 @@
   
   <ul>
     <li>
-      <strong>Wall avoidance:</strong> Boids sense and steer away from the canvas edges, creating 
-      a natural turning behavior rather than abruptly bouncing.
+      <strong>Wall avoidance:</strong> Boids sense and steer away from the canvas edges.
     </li>
     
     <li>
-      <strong>Speed control:</strong> Boids maintain a minimum and maximum speed. Too slow and they'd 
-      stall; too fast and the flock would become chaotic. The speed constraints create more realistic, 
-      flowing motion.
+      <strong>Speed control:</strong> Boids maintain a minimum and maximum speed.
     </li>
   </ul>
   
@@ -73,8 +67,8 @@
   <p>wait don't go away because of this yet... its actually really simple.</p>
   
   <p>
-    Each boid has a position and velocity vector. On every frame, every boid looks at its neighbors 
-    within a vision radius. For each of the three rules, it calculates a desired steering force, 
+    Each boid has a <i>position</i> and <i>velocity</i> vector. On every frame, every boid looks at its neighbors 
+    within a <i>vision radius</i>. For each of the three rules, it calculates a desired steering force, 
     then combines them using weighted averages. These weights determine the personality of the flock:
   </p>
   
@@ -125,28 +119,7 @@ const WALL_MARGINS = 40
   <p>This function runs at the beginning of the simulation. It gives each boid a random position and velocity.</p>
 
 <pre><code>function init() {
-  for (let i = 0; i < 120; i++) {
-    let boid = {
-      pos: {
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-      },
-      vel: {
-        x: (Math.random() - 0.5) * 4,
-        y: (Math.random() - 0.5) * 4,
-      },
-      size: 8,
-    }
-
-    let speed = Math.sqrt(boid.vel.x * boid.vel.x + boid.vel.y * boid.vel.y)
-    if (speed < MIN_VEL) {
-      let angle = Math.random() * Math.PI * 2
-      boid.vel.x = Math.cos(angle) * MIN_VEL
-      boid.vel.y = Math.sin(angle) * MIN_VEL
-    }
-
-    boids.push(boid)
-  }
+  // Give every boid a random position and velocity...
 
   tick()
 }
@@ -226,7 +199,6 @@ const WALL_MARGINS = 40
 }
 </code></pre>
 
-  <h4>DRAWING</h4>
 <pre><code>function drawTriangleBoid(boid) {
   let angle = Math.atan2(boid.vel.y, boid.vel.x)
   let size = boid.size
