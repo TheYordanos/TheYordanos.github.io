@@ -9,15 +9,15 @@ const features = [
     linkText: "View More",
   },
 
-  {
-    type: "Game",
-    title: "Flappy Clone",
-    desc: "A small HTML canvas recreation of the classic Flappy Bird game.",
-    media: `<img src="res/placeholder.png" alt="Flappy Clone">`,
-    link: "play/test.html",
-    linkText: "&#x25B6; Play",
-    linkType: "button"
-  },
+  // {
+  //   type: "Game",
+  //   title: "Flappy Clone",
+  //   desc: "A small HTML canvas recreation of the classic Flappy Bird game.",
+  //   media: `<img src="res/placeholder.png" alt="Flappy Clone">`,
+  //   link: "play/test.html",
+  //   linkText: "&#x25B6; Play",
+  //   linkType: "button"
+  // },
 
   {
     type: "Article",
@@ -28,18 +28,18 @@ const features = [
     linkText: "Read Article",
   },
 
-  {
-    type: "Music",
-    title: "Soft Piano Loop",
-    desc: "A minimal piano loop idea recorded for a new composition.",
-    media: `
-      <audio controls>
-        <source src="audio/piano-loop.mp3" type="audio/mpeg">
-      </audio>
-    `,
-    link: "#audio",
-    linkText: "Listen More",
-  }
+  // {
+  //   type: "Music",
+  //   title: "Soft Piano Loop",
+  //   desc: "A minimal piano loop idea recorded for a new composition.",
+  //   media: `
+  //     <audio controls>
+  //       <source src="audio/piano-loop.mp3" type="audio/mpeg">
+  //     </audio>
+  //   `,
+  //   link: "#audio",
+  //   linkText: "Listen More",
+  // }
 
 ];
 
