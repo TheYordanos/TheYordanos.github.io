@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>TheYordanos</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+        <style>
+        :root {
+            --bg: #0e0e0e;
+            --fg: #f2f2f2;
+            --muted: #a8a8a8;
+            --border: #262626;
+            --card: #141414;
+        }
+
+        body.light {
+            --bg: #f7f7f7;
+            --fg: #111111;
+            --muted: #555;
+            --border: #dddddd;
+            --card: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--fg);
+            line-height: 1.7;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            max-width: 920px;
+            margin: 0 auto;
+            padding: 80px 24px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 90px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            letter-spacing: 0.08em;
+        }
+
+        .logo-mark {
+            width: 10px;
+            height: 10px;
+            background: var(--fg);
+            border-radius: 2px;
+        }
+
+        nav a {
+            color: var(--muted);
+            text-decoration: none;
+            margin-left: 22px;
+            font-size: 13px;
+        }
+
+        .toggle {
+            margin-left: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .hero {
+            margin-bottom: 50px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 1s ease forwards;
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            color: var(--muted);
+            max-width: 520px;
+        }
+
+        section {
+            padding-block: 50px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        h2 {
+            font-size: 18px;
+            margin-bottom: 24px;
+        }
+
+        /* PROJECTS */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .project {
+            position: relative;
+            overflow: hidden;
+            height: 260px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .project img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%);
+            transition: transform 0.5s ease, filter 0.5s ease;
+        }
+
+        .project:hover img {
+            transform: scale(1.05);
+            filter: grayscale(0%);
+        }
+
+        .overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .project:hover .overlay {
+            opacity: 1;
+        }
+
+        .overlay h3 {
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .overlay p {
+            font-size: 13px;
+            color: #ccc;
+        }
+
+        /* responsive */
+        @media (max-width: 600px) {
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ABOUT */
+        .about p {
+            color: var(--muted);
+            max-width: 600px;
+        }
+
+        /* TEAM */
+        .team {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+        }
+
+        .member {
+            text-align: center;
+        }
+
+        .member img {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            filter: grayscale(100%);
+            border: 1px solid var(--border);
+            transition: scale 0.2s;
+        }
+
+        .member img:hover {
+            scale: 1.03;
+        }
+
+        .member h4 {
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .member span {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        /* SOCIALS */
+        .socials a {
+            display: inline-block;
+            margin-right: 16px;
+            margin-top: 10px;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .socials a:hover {
+            color: var(--fg);
+        }
+
+        /* CONTACT */
+        .contact a {
+            display: inline-block;
+            margin-top: 12px;
+            color: var(--fg);
+            text-decoration: none;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 2px;
+            transition: border 0.3s ease;
+        }
+
+        .contact a:hover {
+            border-color: var(--fg);
+        }
+
+        footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 600px) {
+            .hero h1 {
+                font-size: 30px;
+            }
+
+            nav {
+                flex-direction: column;
+                gap: 12px;
+            }
+        }
+        </style>
+    </head>
+
+    <body>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <div class="logo-mark"></div>
+                    TheYordanos
+                </div>
+                <div>
+                    <a href="#work">Work</a>
+                    <a href="#team">Team</a>
+                    <a href="#contact">Contact</a>
+                    <span class="toggle" onclick="toggleTheme()"></span>
+                </div>
+            </nav>
+            
+            <div class="hero">
+                <h1>We build thoughtful games.</h1>
+                <p>Minimal, immersive, and meaningful interactive experiences.</p>
+            </div>
+
+            <section id="work">
+                <h2>Selected Work</h2>
+                <div class="projects-grid">
+                    <div class="project">
+                        <img src="placeholder.png">
+                        <div class="overlay">
+                            <h3>Project One</h3>
+                            <p>Exploration and solitude.</p>
+                        </div>
+                    </div>
+                    <div class="project">
+                        <img src="placeholder.png">
+                        <div class="overlay">
+                            <h3>Project Two</h3>
+                            <p>Light and shadow puzzles.</p>
+                        </div>
+                    </div>
+                    <div class="project">
+                        <img src="placeholder.png">
+                        <div class="overlay">
+                            <h3>Project Three</h3>
+                            <p>Narrative-driven experience.</p>
+                        </div>
+                    </div>
+                    <div class="project">
+                        <img src="placeholder.png">
+                        <div class="overlay">
+                            <h3>Project Four</h3>
+                            <p>Atmospheric storytelling.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="about" class="about">
+                <h2>About</h2>
+                <p>
+                    We are a small team of developers, artists, and designers crafting games with intention.
+                    Our focus is on clarity, atmosphere, and player experience.
+                </p>
+            </section>
+
+            <section id="team">
+                <h2>Team</h2>
+                <div class="team">
+                    <div class="member">
+                        <img src="placeholder.png">
+                        <h4>Alex</h4>
+                        <span>Game Director</span>
+                    </div>
+                    <div class="member">
+                        <img src="placeholder.png">
+                        <h4>Sam</h4>
+                        <span>Developer</span>
+                    </div>
+                    <div class="member">
+                        <img src="placeholder.png">
+                        <h4>Jordan</h4>
+                        <span>Artist</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="socials">
+                <h2>Socials</h2>
+                <a href="#">Twitter</a>
+                <a href="#">Instagram</a>
+                <a href="#">GitHub</a>
+            </section>
+
+            <section id="contact" class="contact">
+                <h2>Contact</h2>
+                <a href="mailto:hello@studio.com">hello@studio.com</a>
+            </section>
+            <footer>
+                © 2026 Studio
+            </footer>
+        </div>
+        <script>
+        // theme toggle with persistence
+        function toggleTheme() {
+            document.body.classList.toggle("light");
+            localStorage.setItem("theme", document.body.classList.contains("light") ? "light" : "dark");
+
+            document.querySelector(".toggle").textContent = document.body.classList.contains("light") ? "[Dark]" : "[Light]"
+        }
+
+        // load saved theme
+        if (localStorage.getItem("theme") === "light") {
+            document.body.classList.add("light");
+        }
+
+        // scroll reveal
+        const sections = document.querySelectorAll("section");
+
+        const reveal = () => {
+            const trigger = window.innerHeight * 0.85;
+
+            sections.forEach(section => {
+                if (section.getBoundingClientRect().top < trigger) {
+                    section.classList.add("visible");
+                }
+            });
+        };
+
+        window.addEventListener("scroll", reveal);
+        reveal();
+
+        document.querySelector(".toggle").textContent = document.body.classList.contains("light") ? "[Dark]" : "[Light]"
+        </script>
+    </body>
+
+</html>
