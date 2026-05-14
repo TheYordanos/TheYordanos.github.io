@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-
-    <head>
-        <meta charset="UTF-8">
-        <title>TheYordanos</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-        <style>
+<head>
+    <meta charset="UTF-8">
+    <title>TheYordanos · Game Dev</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
         :root {
             --bg: #0e0e0e;
             --fg: #f2f2f2;
             --muted: #a8a8a8;
             --border: #262626;
             --card: #141414;
+            --accent: #5eead4;       /* subtle teal accent */
+            --accent-soft: rgba(94, 234, 212, 0.08);
         }
 
         body.light {
@@ -21,6 +22,8 @@
             --muted: #555;
             --border: #dddddd;
             --card: #ffffff;
+            --accent: #0d9488;
+            --accent-soft: rgba(13, 148, 136, 0.06);
         }
 
         * {
@@ -42,16 +45,19 @@
         }
 
         .container {
-            max-width: 920px;
+            max-width: 1100px;
             margin: 0 auto;
             padding: 80px 24px;
         }
 
+        /* ---- navigation ---- */
         nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 90px;
+            flex-wrap: wrap;
+            gap: 12px;
         }
 
         .logo {
@@ -60,12 +66,13 @@
             gap: 10px;
             font-size: 13px;
             letter-spacing: 0.08em;
+            font-weight: 500;
         }
 
         .logo-mark {
             width: 10px;
             height: 10px;
-            background: var(--fg);
+            background: var(--accent);
             border-radius: 2px;
         }
 
@@ -74,6 +81,11 @@
             text-decoration: none;
             margin-left: 22px;
             font-size: 13px;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: var(--fg);
         }
 
         .toggle {
@@ -81,27 +93,37 @@
             cursor: pointer;
             font-size: 12px;
             color: var(--muted);
+            user-select: none;
+            transition: color 0.2s;
+        }
+        .toggle:hover {
+            color: var(--fg);
         }
 
+        /* ---- hero ---- */
         .hero {
-            margin-bottom: 50px;
+            margin-bottom: 70px;
             opacity: 0;
             transform: translateY(20px);
             animation: fadeUp 1s ease forwards;
         }
 
         .hero h1 {
-            font-size: 42px;
-            margin-bottom: 20px;
+            font-size: clamp(36px, 8vw, 52px);
+            font-weight: 600;
+            margin-bottom: 18px;
+            letter-spacing: -0.02em;
         }
 
         .hero p {
             color: var(--muted);
             max-width: 520px;
+            font-size: 1.05rem;
         }
 
+        /* ---- sections ---- */
         section {
-            padding-block: 50px;
+            padding-block: 60px;
             opacity: 0;
             transform: translateY(30px);
             transition: all 0.8s ease;
@@ -113,142 +135,166 @@
         }
 
         h2 {
-            font-size: 18px;
-            margin-bottom: 24px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            margin-bottom: 28px;
+            text-transform: uppercase;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        h2::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+            margin-left: 8px;
         }
 
-        /* PROJECTS */
+        /* ---- PROJECTS GRID (more columns) ---- */
         .projects-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 24px;
         }
 
         .project {
             position: relative;
+            border-radius: 12px;
             overflow: hidden;
-            height: 260px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-        }
-
-        .project img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            /*filter: grayscale(100%);*/
-            transition: transform 0.5s ease, filter 0.5s ease;
-        }
-
-        .project:hover img {
-            transform: scale(1.05);
-            /*filter: grayscale(0%);*/
-        }
-
-        .overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.6);
-            color: #fff;
+            background: transparent;
+            transition: transform 0.25s ease;
+            text-decoration: none;
+            color: inherit;
             display: flex;
             flex-direction: column;
-            justify-content: flex-end;
-            padding: 20px;
-            opacity: 0;
-            transition: opacity 0.4s ease;
         }
 
-        .project:hover .overlay {
-            opacity: 1;
+        .project:hover {
+            transform: translateY(-3px);
         }
 
-        .overlay h3 {
-            margin-bottom: 6px;
+        .project-image {
+            width: 100%;
+            aspect-ratio: 16 / 10;
+            object-fit: cover;
+            border-radius: 10px;
+            background: var(--border);
+            transition: filter 0.3s ease, transform 0.3s ease;
+            filter: brightness(0.95);
+        }
+
+        .project:hover .project-image {
+            filter: brightness(1.05);
+            transform: scale(1.02);
+        }
+
+        .project-info {
+            padding: 0.8rem 0.2rem 0.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .project-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--fg);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .project-tag {
+            font-size: 0.65rem;
+            background: var(--accent-soft);
+            color: var(--accent);
+            padding: 0.15rem 0.6rem;
+            border-radius: 30px;
             font-weight: 500;
+            letter-spacing: 0.2px;
+            text-transform: lowercase;
         }
 
-        .overlay p {
-            font-size: 13px;
-            color: #ccc;
+        .project-desc {
+            font-size: 0.8rem;
+            color: var(--muted);
+            line-height: 1.4;
         }
 
-        /* responsive */
-        @media (max-width: 600px) {
-            .projects-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* ABOUT */
+        /* ---- ABOUT ---- */
         .about p {
             color: var(--muted);
+            max-width: 620px;
         }
 
-        /* TEAM */
-        .team {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 20px;
+        /* ---- SOCIALS & CONTACT ---- */
+        .socials-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 8px;
         }
 
-        .member {
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 40px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            color: var(--fg);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .social-link:hover {
+            border-color: var(--accent);
+            background: var(--accent-soft);
+        }
+
+        .social-icon {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--accent);
+            width: 20px;
             text-align: center;
         }
 
-        .member img {
-            width: 100%;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            filter: grayscale(100%);
-            border: 1px solid var(--border);
-            transition: scale 0.2s;
+        .contact-block {
+            margin-top: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            align-items: baseline;
         }
 
-        .member img:hover {
-            scale: 1.03;
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.2s;
         }
 
-        .member h4 {
+        .contact-item:hover {
+            color: var(--fg);
+        }
+
+        .contact-icon {
+            color: var(--accent);
             font-weight: 500;
-            font-size: 14px;
-        }
-
-        .member span {
-            color: var(--muted);
-            font-size: 12px;
-        }
-
-        /* SOCIALS */
-        .socials a {
-            display: inline-block;
-            margin-right: 16px;
-            margin-top: 10px;
-            color: var(--muted);
-            text-decoration: none;
-            font-size: 14px;
-        }
-
-        .socials a:hover {
-            color: var(--fg);
-        }
-
-        /* CONTACT */
-        .contact a {
-            display: inline-block;
-            margin-top: 12px;
-            color: var(--fg);
-            text-decoration: none;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 2px;
-            transition: border 0.3s ease;
-        }
-
-        .contact a:hover {
-            border-color: var(--fg);
         }
 
         footer {
-            margin-top: 50px;
+            margin-top: 70px;
             padding-top: 20px;
             border-top: 1px solid var(--border);
             text-align: center;
@@ -263,191 +309,237 @@
             }
         }
 
-        /* RESPONSIVE */
         @media (max-width: 600px) {
-            .hero h1 {
-                font-size: 30px;
+            .projects-grid {
+                grid-template-columns: 1fr;
             }
-
             nav {
                 flex-direction: column;
-                gap: 12px;
+                align-items: flex-start;
+            }
+            .hero h1 {
+                font-size: 32px;
             }
         }
-        </style>
-    </head>
-
-    <body>
-        <div class="container">
-            <nav>
-                <div class="logo">
-                    <div class="logo-mark"></div>
-                    TheYordanos
-                </div>
-                <div>
-                    <a href="#work">Work</a>
-                    <a href="#about">About</a>
-                    <a href="#contact">Contact</a>
-                    <span class="toggle" onclick="toggleTheme()"></span>
-                </div>
-            </nav>
-            
-            <div class="hero">
-                <h1>I build Video Games.</h1>
-                <p>Creating worlds, stories and memories on the glass screen.</p>
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <div class="logo">
+                <div class="logo-mark"></div>
+                TheYordanos
             </div>
+            <div>
+                <a href="#work">Work</a>
+                <a href="#about">About</a>
+                <a href="#socials">Socials</a>
+                <a href="#contact">Contact</a>
+                <span class="toggle" onclick="toggleTheme()"></span>
+            </div>
+        </nav>
 
-            <section id="work">
-                <h2>Selected Work</h2>
-                <div class="projects-grid">
-
-                    <a href="https://yordanos.itch.io/cereal-hell" target="_blank" class="project">
-                        <img src="imgs/cereal_hell.webp">
-                        <div class="overlay">
-                            <h3>Cereal Hell</h3>
-                            <p>A bullet hell inside a cereal bowl</p>
-                        </div>
-                    </a>
-
-                    <a href="https://yordanos.itch.io/hellish-invasion" target="_blank" class="project">
-                        <img src="imgs/hellish_invasion.webp">
-                        <div class="overlay">
-                            <h3>Hellish Invasion</h3>
-                            <p>A small game jam game made in Odin</p>
-                        </div>
-                    </a>
-
-                    <a href="https://yordanos.itch.io/top-down-shooter" target="_blank" class="project">
-                        <img src="imgs/top_down_shooter.webp">
-                        <div class="overlay">
-                            <h3>Top Down Shooter</h3>
-                            <p>Every game dev should have atleast one TDS Game ;p</p>
-                        </div>
-                    </a>
-
-                    <div class="project">
-                        <img src="imgs/podo.webp">
-                        <div class="overlay">
-                            <h3>Podo</h3>
-                            <p>A multiplayer random chance gambling game</p>
-                        </div>
-                    </div>
-
-                    <a href="https://yordanos.itch.io/car-vs-zombies" target="_blank" class="project">
-                        <img src="imgs/car_vs_zombies.webp">
-                        <div class="overlay">
-                            <h3>Car vs Zombies</h3>
-                            <p>A game jam game made in Godot</p>
-                        </div>
-                    </a>
-
-                    <a href="https://yordanos.itch.io/bike-run" target="_blank" class="project">
-                        <img src="imgs/bike_run.webp">
-                        <div class="overlay">
-                            <h3>Bike Run</h3>
-                            <p>A 3D endless runner game made in Unity Engine</p>
-                        </div>
-                    </a>
-
-                    <div class="project">
-                        <img src="imgs/drunk_delivery.webp">
-                        <div class="overlay">
-                            <h3>Drunk Delivery</h3>
-                            <p>A Game made for Brackey's Game jam</p>
-                        </div>
-                    </div>
-
-                    <a href="https://yordanos.itch.io/trip-addis" target="_blank" class="project">
-                        <img src="imgs/flappy_bird.webp">
-                        <div class="overlay">
-                            <h3>Flappy Bird</h3>
-                            <p>What's a Game Dev showcase without flappy bird in it? :)</p>
-                        </div>
-                    </a>
-
-                    <div class="project">
-                        <img src="imgs/archers.webp">
-                        <div class="overlay">
-                            <h3>Archers</h3>
-                            <p>A clone of the mobile game "Archers" but with multiplayer features</p>
-                        </div>
-                    </div>
-
-                    <div class="project">
-                        <img src="imgs/bingo.webp">
-                        <div class="overlay">
-                            <h3>Bingo</h3>
-                            <p>A little semi-gambling game</p>
-                        </div>
-                    </div>
-
-                    <div class="project">
-                        <img src="imgs/carrom.webp">
-                        <div class="overlay">
-                            <h3>Carrom</h3>
-                            <p>A popular Asian board game made digital</p>
-                        </div>
-                    </div>
-
-                </div>
-            </section>
-
-            <section id="about" class="about">
-                <h2>About</h2>
-                <p>
-                    I'm a small time hobbist working as a developer, an artist, and a designer crafting games with intention ...and a lot of coffee ;p <br>
-                    My focus is really simple... Make games that are FUN to play :)
-                </p>
-            </section>
-
-            <section class="socials">
-                <h2>Socials</h2>
-                <a href="https://t.me/TheYordanos" target="_blank">Telegram</a>
-                <a href="https://instagram.com/theyordanos/" target="_blank">Instagram</a>
-                <a href="https://linkedin.com/in/theyordanos" target="_blank">Linkedin</a>
-                <a href="https://github.com/theyordanos" target="_blank">GitHub</a>
-            </section>
-
-            <section id="contact" class="contact">
-                <h2>Contact</h2>
-                <a href="mailto:yordanoszt15@gmail.com" target="_blank">yordanoszt15@gmail.com</a>
-            </section>
-            <footer>
-                Creator of Worlds and Coffee Addict
-            </footer>
+        <div class="hero">
+            <h1>I build video games.</h1>
+            <p>Creating worlds, stories and memories on the glass screen.</p>
         </div>
-        <script>
-        // theme toggle with persistence
+
+        <section id="work">
+            <h2>Selected Work</h2>
+            <div class="projects-grid">
+                <!-- project cards redesigned without overlays -->
+                <a href="https://yordanos.itch.io/cereal-hell" target="_blank" class="project">
+                    <img src="imgs/cereal_hell.webp" alt="Cereal Hell" class="project-image">
+                    <div class="project-info">
+                        <div class="project-title">
+                            Cereal Hell
+                            <span class="project-tag">jam</span>
+                        </div>
+                        <div class="project-desc">A bullet hell inside a cereal bowl</div>
+                    </div>
+                </a>
+
+                <a href="https://yordanos.itch.io/hellish-invasion" target="_blank" class="project">
+                    <img src="imgs/hellish_invasion.webp" alt="Hellish Invasion" class="project-image">
+                    <div class="project-info">
+                        <div class="project-title">
+                            Hellish Invasion
+                            <span class="project-tag">odin</span>
+                        </div>
+                        <div class="project-desc">A small game jam game made in Odin</div>
+                    </div>
+                </a>
+
+                <a href="https://yordanos.itch.io/top-down-shooter" target="_blank" class="project">
+                    <img src="imgs/top_down_shooter.webp" alt="Top Down Shooter" class="project-image">
+                    <div class="project-info">
+                        <div class="project-title">
+                            Top Down Shooter
+                            <span class="project-tag">classic</span>
+                        </div>
+                        <div class="project-desc">Every game dev should have at least one TDS ;)</div>
+                    </div>
+                </a>
+
+                <div class="project">
+                    <img src="imgs/podo.webp" alt="Podo" class="project-image">
+                    <div class="project-info">
+                        <div class="project-title">
+                            Podo
+                            <span class="project-tag">multiplayer</span>
+                        </div>
+                        <div class="project-desc">A multiplayer random chance gambling game</div>
+                    </div>
+                </div>
+
+                <a href="https://yordanos.itch.io/car-vs-zombies" target="_blank" class="project">
+                    <img src="imgs/car_vs_zombies.webp" alt="Car vs Zombies" class="project-image">
+                    <div class="project-info">
+                        <div class="project-title">
+                            Car vs Zombies
+                            <span class="project-tag">godot</span>
+                        </div>
+                        <div class="project-desc">A game jam game made in Godot</div>
+                    </div>
+                </a>
+
+                <a href="https://yordanos.itch.io/bike-run" target="_blank" class="project">
+                    <img src="imgs/bike_run.webp" alt="Bike Run" class="project-image">
+                    <div class="project-info">
+                        <div class="project-title">
+                            Bike Run
+                            <span class="project-tag">3D</span>
+                        </div>
+                        <div class="project-desc">A 3D endless runner made in Unity</div>
+                    </div>
+                </a>
+
+                <div class="project">
+                    <img src="imgs/drunk_delivery.webp" alt="Drunk Delivery" class="project-image">
+                    <div class="project-info">
+                        <div class="project-title">
+                            Drunk Delivery
+                            <span class="project-tag">brackeys</span>
+                        </div>
+                        <div class="project-desc">A game made for Brackey's Game Jam</div>
+                    </div>
+                </div>
+
+                <a href="https://yordanos.itch.io/trip-addis" target="_blank" class="project">
+                    <img src="imgs/flappy_bird.webp" alt="Flappy Bird" class="project-image">
+                    <div class="project-info">
+                        <div class="project-title">
+                            Flappy Bird
+                            <span class="project-tag">clone</span>
+                        </div>
+                        <div class="project-desc">What's a showcase without flappy bird? :)</div>
+                    </div>
+                </a>
+
+                <div class="project">
+                    <img src="imgs/archers.webp" alt="Archers" class="project-image">
+                    <div class="project-info">
+                        <div class="project-title">
+                            Archers
+                            <span class="project-tag">multiplayer</span>
+                        </div>
+                        <div class="project-desc">A clone of "Archers" with multiplayer</div>
+                    </div>
+                </div>
+
+                <div class="project">
+                    <img src="imgs/bingo.webp" alt="Bingo" class="project-image">
+                    <div class="project-info">
+                        <div class="project-title">
+                            Bingo
+                            <span class="project-tag">luck</span>
+                        </div>
+                        <div class="project-desc">A little semi-gambling game</div>
+                    </div>
+                </div>
+
+                <div class="project">
+                    <img src="imgs/carrom.webp" alt="Carrom" class="project-image">
+                    <div class="project-info">
+                        <div class="project-title">
+                            Carrom
+                            <span class="project-tag">board</span>
+                        </div>
+                        <div class="project-desc">A popular Asian board game made digital</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="about">
+            <h2>About</h2>
+            <p>
+                I'm a small‑time hobbyist working as a developer, artist, and designer crafting games with intention ...and a lot of coffee. <br>
+                My focus is really simple: make games that are FUN to play.
+            </p>
+        </section>
+
+        <section id="socials" class="socials">
+            <h2>Socials</h2>
+            <div class="socials-links">
+                <a href="https://t.me/TheYordanos" target="_blank" class="social-link">
+                    <span class="social-icon">T</span> Telegram
+                </a>
+                <a href="https://instagram.com/theyordanos/" target="_blank" class="social-link">
+                    <span class="social-icon">I</span> Instagram
+                </a>
+                <a href="https://linkedin.com/in/theyordanos" target="_blank" class="social-link">
+                    <span class="social-icon">L</span> LinkedIn
+                </a>
+                <a href="https://github.com/theyordanos" target="_blank" class="social-link">
+                    <span class="social-icon">G</span> GitHub
+                </a>
+                <a href="https://yordanos.itch.io" target="_blank" class="social-link">
+                    <span class="social-icon">i</span> itch.io
+                </a>
+            </div>
+        </section>
+
+        <section id="contact" class="contact">
+            <h2>Contact</h2>
+            <div class="contact-block">
+                <a href="mailto:yordanoszt15@gmail.com" class="contact-item">
+                    <span class="contact-icon">&#9993;</span> yordanoszt15@gmail.com
+                </a>
+                <a href="tel:+251949860385" class="contact-item">
+                    <span class="contact-icon">&#9742;</span> +251 94 986 0385
+                </a>
+            </div>
+        </section>
+        <footer>
+            Creator of Worlds and a Coffee Addict ;p
+        </footer>
+    </div>
+
+    <script>
         function toggleTheme() {
             document.body.classList.toggle("light");
             localStorage.setItem("theme", document.body.classList.contains("light") ? "light" : "dark");
-
-            document.querySelector(".toggle").textContent = document.body.classList.contains("light") ? "[Dark]" : "[Light]"
+            document.querySelector(".toggle").textContent = document.body.classList.contains("light") ? "[Dark]" : "[Light]";
         }
 
-        // load saved theme
         if (localStorage.getItem("theme") === "light") {
             document.body.classList.add("light");
         }
 
-        // scroll reveal
         const sections = document.querySelectorAll("section");
-
         const reveal = () => {
             const trigger = window.innerHeight * 0.85;
-
             sections.forEach(section => {
                 if (section.getBoundingClientRect().top < trigger) {
                     section.classList.add("visible");
                 }
             });
         };
-
         window.addEventListener("scroll", reveal);
         reveal();
 
-        document.querySelector(".toggle").textContent = document.body.classList.contains("light") ? "[Dark]" : "[Light]"
-        </script>
-    </body>
-
+        document.querySelector(".toggle").textContent = document.body.classList.contains("light") ? "[Dark]" : "[Light]";
+    </script>
+</body>
 </html>
