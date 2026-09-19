@@ -24,7 +24,7 @@
             TheYordanos
         </div>
         <div class="nav-right">
-            <span class="toggle" onclick="toggleTheme()">Light</span>
+            <span class="toggle" onclick="toggleTheme()">Dark</span>
         </div>
     </nav>
 
@@ -505,14 +505,14 @@
 
 <script>
     function toggleTheme() {
-        const light = document.body.classList.toggle("light");
-        localStorage.setItem("theme", light ? "light" : "dark");
-        document.querySelector(".toggle").textContent = light ? "Dark" : "Light";
+        const dark = document.body.classList.toggle("dark");
+        localStorage.setItem("theme", dark ? "dark" : "light");
+        document.querySelector(".toggle").textContent = dark ? "Light" : "Dark";
     }
 
-    if (localStorage.getItem("theme") === "light") {
-        document.body.classList.add("light");
-        document.querySelector(".toggle").textContent = "Dark";
+    if (localStorage.getItem("theme") === "dark") {
+        document.body.classList.add("dark");
+        document.querySelector(".toggle").textContent = "Light";
     }
 
     // ─── Tabs ───
