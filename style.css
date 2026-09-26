@@ -308,7 +308,7 @@ nav a:hover {
 
 /* ─── TOOLS ─── */
 .tools-list {
-    --col: 160px;
+    --col: 100px;
     columns: var(--col);
     column-gap: 28px;
 }
