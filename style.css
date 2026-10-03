@@ -452,7 +452,7 @@ footer {
 
   .nav-links {
     position: absolute;
-    top: 55px;
+    top: 50px;
     left: 0;
     width: 100%;
     background: var(--bg);
@@ -462,6 +462,7 @@ footer {
     flex-direction: column;
     gap: 12px;
 
+    box-sizing: border-box;
     padding: 15px 20px;
   }
 
