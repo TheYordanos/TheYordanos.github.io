@@ -33,7 +33,7 @@ links.querySelectorAll("a").forEach(link => {
 });
 
 // ART ==================================
-const galleryImages = document.querySelectorAll(".gallery-item img");
+const galleryImages = document.querySelectorAll(".gallery-grid img");
 const lightbox = document.getElementById("lightbox");
 const lightboxImg = document.getElementById("lightbox-img");
 
