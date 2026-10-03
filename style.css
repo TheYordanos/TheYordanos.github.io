@@ -210,20 +210,10 @@ footer {
   display: block;
   break-inside: avoid;
   margin-bottom: 16px;
-  transition: transform 0.25s ease;
-
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  overflow: hidden;
-  transition: transform 0.15s ease, border 0.15s ease;
-}
-
-.project:hover {
-  transform: translateY(-3px);
-  border-color: var(--link);
   text-decoration: none;
-  background: rgba(0,0,0,0.02);
+  border-radius: 8px;
 }
+.project:hover { background: rgba(0,0,0,0.02); }
 
 .project img {
   display: block;
@@ -231,7 +221,7 @@ footer {
   margin: 0;
   transition: transform 0.35s ease;
 }
-.project:hover img { transform: scale(1.1); }
+.project:hover img { transform: scale(1.04); }
 
 /* =========================
    ART GALLERY
