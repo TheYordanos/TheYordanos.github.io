@@ -203,7 +203,7 @@ footer {
 	margin: 0;
 	transition: transform 0.35s ease;
 }
-.project:hover img { transform: scale(1.04); }
+.project:hover img { transform: translateY(-5px); }
 
 /* ART GALLERY ========================= */
 .gallery-grid {
@@ -220,7 +220,7 @@ footer {
 	cursor: zoom-in;
 	transition: transform 0.3s ease;
 }
-.gallery-grid img:hover { transform: scale(1.04); }
+.gallery-grid img:hover { transform: translateY(-5px); }
 
 /* LIGHTBOX */
 #lightbox {
