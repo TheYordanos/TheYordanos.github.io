@@ -67,6 +67,9 @@ blockquote {
 	font-style: italic;
 }
 
+blockquote p { margin-bottom: 0; }
+cite { font-size: 14px; }
+
 img, video, iframe {
 	width: 100%;
 	max-height: 500px;
