@@ -148,6 +148,7 @@ footer {
 	max-width: 40%;
 	border-radius: 6px;
 	overflow: hidden;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .hero img {
@@ -201,6 +202,7 @@ footer {
 	width: 100%;
 	margin: 0;
 	transition: transform 0.35s ease;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 .project:hover img { transform: translateY(-5px); }
 
