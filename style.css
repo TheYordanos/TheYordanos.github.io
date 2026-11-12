@@ -6,6 +6,7 @@
 	--text: #333;
 	--meta: #777;
 	--link: #0066cc;
+	--link-visited: #6a0dad;
 	--border: #ddd;
 	--blockquote-border: #ccc;
 	--blockquote-text: #555;
@@ -17,6 +18,7 @@ body.dark {
 	--text: #e6e6e6;
 	--meta: #9aa0a6;
 	--link: #8ab4f8;
+	--link-visited: #c084fc;
 	--border: #2a2f36;
 	--blockquote-border: #3b3f45;
 	--blockquote-text: #b6bcc6;
@@ -56,6 +58,7 @@ a {
 	text-decoration: none;
 }
 a:hover { text-decoration: underline; }
+a:visited { color: var(--link-visited); }
 
 p { margin-bottom: 18px; }
 
