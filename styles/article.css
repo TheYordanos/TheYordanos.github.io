@@ -73,7 +73,23 @@ main li > ol {
 	margin: 8px 0;
 }
 
-/* BLOCKQUOTES */
+/* TASK LISTS (- [x] item) */
+main ul.task-list {
+	list-style: none;
+	padding-left: 5px;
+}
+
+main .task-list li {
+	padding-left: 0;
+}
+
+main .task-list input {
+	margin-right: 8px;
+}
+
+/* BLOCKQUOTES
+   Attribution: make the last paragraph of a quote start with an em dash,
+   e.g. "— Author". It is right-aligned when the quote has 2+ paragraphs. */
 main blockquote {
 	margin: 30px 0;
 	padding: 16px 22px;
@@ -87,16 +103,20 @@ main blockquote p:last-child {
 	margin-bottom: 0;
 }
 
-main blockquote cite {
-	display: block;
+main blockquote p:last-child:not(:first-child) {
 	margin-top: 10px;
 	text-align: right;
+	font-size: 14px;
+}
+
+/* LINE BLOCKS (| line one / | line two) */
+main .line-block {
+	margin: 22px 0;
 }
 
 /* IMAGES AND MEDIA */
 main img,
-main video,
-main iframe {
+main video {
 	display: block;
 	width: 100%;
 	max-height: 500px;
@@ -121,10 +141,6 @@ main figcaption {
 	margin-top: 10px;
 }
 
-main picture {
-	display: block;
-}
-
 main audio {
 	display: block;
 	width: 100%;
@@ -136,6 +152,31 @@ main hr {
 	border: none;
 	border-top: 1px solid var(--border);
 	margin: 40px 0;
+}
+
+/* FOOTNOTES */
+main a.footnote-ref,
+main a.footnote-back {
+	text-decoration: none;
+}
+
+main .footnotes {
+	margin-top: 48px;
+	font-size: 14px;
+	color: var(--meta);
+}
+
+main .footnotes hr {
+	margin: 0 0 20px;
+}
+
+main .footnotes ol {
+	margin: 0;
+	padding-left: 22px;
+}
+
+main .footnotes p {
+	margin: 0 0 8px;
 }
 
 /* INLINE CODE */
@@ -205,41 +246,17 @@ main tr:nth-child(even) {
 	background: rgba(127, 127, 127, 0.04);
 }
 
-/* OTHER SEMANTIC ELEMENTS */
-main strong,
-main b {
+/* INLINE TEXT */
+main strong {
 	font-weight: 700;
 }
 
-main em,
-main i {
+main em {
 	font-style: italic;
 }
 
-main mark {
-	background: #ffe58a;
-	color: #333;
-	padding: 2px 4px;
-	border-radius: 3px;
-}
-
-main del,
-main s {
+main del {
 	opacity: 0.65;
-}
-
-main abbr {
-	text-decoration: underline dotted;
-	cursor: help;
-}
-
-main kbd {
-	font-family: monospace;
-	font-size: 0.85em;
-	padding: 3px 6px;
-	border: 1px solid var(--border);
-	border-radius: 4px;
-	box-shadow: 0 2px 0 var(--border);
 }
 
 main sup,
@@ -247,22 +264,7 @@ main sub {
 	line-height: 0;
 }
 
-main details {
-	border: 1px solid var(--border);
-	border-radius: 5px;
-	padding: 12px 16px;
-	margin: 20px 0;
-}
-
-main summary {
-	cursor: pointer;
-	font-weight: 700;
-}
-
-main details[open] summary {
-	margin-bottom: 12px;
-}
-
+/* DEFINITION LISTS */
 main dl {
 	margin: 20px 0;
 }
@@ -274,12 +276,6 @@ main dt {
 
 main dd {
 	margin: 5px 0 0 20px;
-}
-
-main address {
-	font-style: normal;
-	color: var(--meta);
-	margin: 20px 0;
 }
 
 /* RESPONSIVE */
