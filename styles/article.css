@@ -1,0 +1,327 @@
+body {
+	max-width: 680px;
+}
+
+main {
+	margin: 0 auto;
+	line-height: 1.85;
+	overflow-wrap: break-word;
+}
+
+main p {
+	margin: 0 0 22px;
+}
+
+main h2 {
+	font-size: 25px;
+	line-height: 1.35;
+	margin: 48px 0 18px;
+	padding-bottom: 8px;
+}
+
+main h3 {
+	font-size: 20px;
+	line-height: 1.4;
+	margin: 35px 0 14px;
+}
+
+main h4 {
+	font-size: 17px;
+	margin: 28px 0 12px;
+}
+
+main h5,
+main h6 {
+	font-size: 15px;
+	margin: 24px 0 10px;
+}
+
+main h2:first-child,
+main h3:first-child {
+	margin-top: 0;
+}
+
+/* LINKS */
+main a {
+	text-decoration: underline;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 3px;
+}
+
+main a:hover {
+	text-decoration-thickness: 2px;
+}
+
+/* LISTS */
+main ul,
+main ol {
+	padding-left: 28px;
+	margin: 18px 0 25px;
+}
+
+main li {
+	padding-left: 5px;
+	margin-bottom: 8px;
+}
+
+main li::marker {
+	color: var(--meta);
+}
+
+main li > ul,
+main li > ol {
+	margin: 8px 0;
+}
+
+/* BLOCKQUOTES */
+main blockquote {
+	margin: 30px 0;
+	padding: 16px 22px;
+	border-left: 3px solid var(--blockquote-border);
+	background: rgba(127, 127, 127, 0.06);
+	border-radius: 0 5px 5px 0;
+	font-size: 17px;
+}
+
+main blockquote p:last-child {
+	margin-bottom: 0;
+}
+
+main blockquote cite {
+	display: block;
+	margin-top: 10px;
+	text-align: right;
+}
+
+/* IMAGES AND MEDIA */
+main img,
+main video,
+main iframe {
+	display: block;
+	width: 100%;
+	max-height: 500px;
+	object-fit: contain;
+	margin: 28px auto;
+	border-radius: 6px;
+}
+
+main figure {
+	margin: 30px 0;
+}
+
+main figure img,
+main figure video {
+	margin: 0 auto;
+}
+
+main figcaption {
+	color: var(--meta);
+	font-size: 13px;
+	text-align: center;
+	margin-top: 10px;
+}
+
+main picture {
+	display: block;
+}
+
+main audio {
+	display: block;
+	width: 100%;
+	margin: 25px 0;
+}
+
+/* HORIZONTAL RULE */
+main hr {
+	border: none;
+	border-top: 1px solid var(--border);
+	margin: 40px 0;
+}
+
+/* INLINE CODE */
+main code {
+	font-family: Consolas, Monaco, monospace;
+	font-size: 0.86em;
+	background: rgba(127, 127, 127, 0.12);
+	border: 1px solid var(--border);
+	border-radius: 4px;
+	padding: 2px 6px;
+	overflow-wrap: break-word;
+}
+
+/* CODE BLOCKS */
+main pre {
+	background: #e9e9e9;
+	color: #252525;
+	border: 1px solid var(--border);
+	border-radius: 6px;
+	padding: 18px;
+	margin: 25px 0;
+	overflow-x: auto;
+	line-height: 1.6;
+	font-size: 13px;
+	tab-size: 4;
+}
+
+body.dark main pre {
+	background: #191d24;
+	color: #e6e6e6;
+}
+
+main pre code {
+	display: block;
+	padding: 0;
+	background: none;
+	border: none;
+	border-radius: 0;
+	font-size: inherit;
+	overflow-wrap: normal;
+	white-space: pre;
+}
+
+/* TABLES */
+main table {
+	display: block;
+	width: 100%;
+	border-collapse: collapse;
+	overflow-x: auto;
+	margin: 25px 0;
+	font-size: 14px;
+}
+
+main th,
+main td {
+	border: 1px solid var(--border);
+	padding: 10px 14px;
+	text-align: left;
+}
+
+main th {
+	background: rgba(127, 127, 127, 0.10);
+	font-weight: 700;
+}
+
+main tr:nth-child(even) {
+	background: rgba(127, 127, 127, 0.04);
+}
+
+/* OTHER SEMANTIC ELEMENTS */
+main strong,
+main b {
+	font-weight: 700;
+}
+
+main em,
+main i {
+	font-style: italic;
+}
+
+main mark {
+	background: #ffe58a;
+	color: #333;
+	padding: 2px 4px;
+	border-radius: 3px;
+}
+
+main del,
+main s {
+	opacity: 0.65;
+}
+
+main abbr {
+	text-decoration: underline dotted;
+	cursor: help;
+}
+
+main kbd {
+	font-family: monospace;
+	font-size: 0.85em;
+	padding: 3px 6px;
+	border: 1px solid var(--border);
+	border-radius: 4px;
+	box-shadow: 0 2px 0 var(--border);
+}
+
+main sup,
+main sub {
+	line-height: 0;
+}
+
+main details {
+	border: 1px solid var(--border);
+	border-radius: 5px;
+	padding: 12px 16px;
+	margin: 20px 0;
+}
+
+main summary {
+	cursor: pointer;
+	font-weight: 700;
+}
+
+main details[open] summary {
+	margin-bottom: 12px;
+}
+
+main dl {
+	margin: 20px 0;
+}
+
+main dt {
+	font-weight: 700;
+	margin-top: 14px;
+}
+
+main dd {
+	margin: 5px 0 0 20px;
+}
+
+main address {
+	font-style: normal;
+	color: var(--meta);
+	margin: 20px 0;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+	main h2 {
+		font-size: 23px;
+	}
+}
+
+@media (max-width: 425px) {
+	main {
+		font-size: 15px;
+		line-height: 1.8;
+	}
+
+	main h2 {
+		font-size: 21px;
+		margin-top: 38px;
+	}
+
+	main h3 {
+		font-size: 18px;
+	}
+
+	main blockquote {
+		padding: 13px 16px;
+		font-size: 15px;
+	}
+
+	main pre {
+		padding: 14px;
+		font-size: 12px;
+		margin-left: -4px;
+		margin-right: -4px;
+	}
+
+	main table {
+		font-size: 13px;
+	}
+
+	main th,
+	main td {
+		padding: 8px 10px;
+	}
+}

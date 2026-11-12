@@ -1,398 +1,400 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="description" content="Yordanos, hobbyist game developer and designer. Fun games, drawings, animations, and audio.">
-	<title>Yordanos</title>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="Yordanos, hobbyist game developer and designer. Fun games, drawings, animations, and audio.">
 
-	<link rel="icon" type="image/png" href="res/theyordanos-icon.png">
+		<title>Yordanos</title>
 
-	<link rel="stylesheet" href="style.css">
-</head>
+		<link rel="icon" type="image/png" href="res/theyordanos-icon.png">
+		<link rel="stylesheet" href="styles/style.css">
 
-<body>
+		<script src="scripts/theme.js" defer></script>
+		<script src="scripts/nav.js" defer></script>
+	</head>
 
-	<!-- ======================== NAV ======================== -->
-	<nav class="site-nav">
-		<div class="nav-left">
-			<a href="">Yordanos</a>
-		</div>
+	<body>
 
-		<button class="nav-toggle" id="nav-toggle">☰</button>
-
-		<div class="nav-links" id="nav-links">
-			<a href="#articles">Articles</a>
-			<a href="#projects">Projects</a>
-			<a href="#now">Now</a>
-			<a href="#books">Books</a>
-			<button id="theme-toggle">[dark]</button>
-		</div>
-	</nav>
-
-
-	<!-- ======================== HERO ======================== -->
-	<header class="hero">
-		<div class="img">
-			<img src="res/caricature.webp" alt="">
-		</div>
-
-		<div>
-			<h1>Yordanos Z.</h1>
-			<p class="hero-sub">Game Developer and Designer.</p>
-			<p>Small-time hobbyist working as developer & artist, crafting games with intention and a lot of coffee. I try to make games that are <b>fun</b> to play.</p>
-
-			<blockquote>
-				<p>Jack of all trades, Master of none.</p>
-				<cite>- William Shakespeare</cite>
-			</blockquote>
-
-			<nav>
-				<a href="https://t.me/theyordanos" target="_blank">Telegram</a>
-				<a href="https://medium.com/@theyordanos" target="_blank">Medium</a>
-				<a href="https://github.com/theyordanos" target="_blank">Github</a>
-				<a href="https://codeberg.org/yordanos" target="_blank">Codeberg</a>
-				<a href="https://yordanos.itch.io" target="_blank">Itch.io</a>
-				<a href="mailto:yordanoszt15@gmail.com" target="_blank">Email</a>
-				<a href="tel:+251949860385" target="_blank">Mobile</a>
-			</nav>
-		</div>
-	</header>
-
-	<!-- ======================== ARTICLES ======================== -->
-	<section id="articles">
-		<h2>Articles</h2>
-
-		<ul>
-			<li><a target="_blank" href="#">Chess in Odin</a></li>
-			<li><a target="_blank" href="https://medium.com/@theyordanos/how-you-do-anything-is-how-you-do-everything-805e24b00559">How you do anything is how you do everything</a></li>
-			<li><a target="_blank" href="https://medium.com/@theyordanos/implementing-conways-game-of-life-in-c-e80f4448cd89">John Conway's Game of Life</a></li>
-
-			<!--<li><a target="_blank" href="#">Staring at an ink scribbled on a dead tree (a.k.a. Reading a Book)</a></li>
-			<li><a target="_blank" href="#">Jack of All trades, Master of None</a></li>
-			<li><a target="_blank" href="#">Minimalism (Simple vs Complex and Easy vs Difficult)</a></li>
-			<li><a target="_blank" href="#">Greatest art form to ever exist</a></li>
-			<li><a target="_blank" href="#">John Conway's Game of Life</a></li>
-			<li><a target="_blank" href="#">How does a rock think? (Language Models, AI)</a></li>-->
-		</ul>
-
-	</section>
-
-	<!-- ======================== PRODUCTS ======================== -->
-	<!--
-	<section id="products">
-		<h2>Products</h2>
-	</section>
-	-->
-
-
-	<!-- ======================== PROJECTS ======================== -->
-	<section id="projects">
-		<h2>Projects</h2>
-		<p class="meta">Game jams, Experiments, Simulations, and other fun stuff</p>
-
-		<div class="projects-grid">
-			<a href="https://yordanos.itch.io/17" target="_blank" class="project">
-				<img src="res/projects/17.webp" alt="17" class="project-image" loading="lazy">
-			</a>
-
-			<a href="https://yordanos.itch.io/doom-scroll" target="_blank" class="project">
-				<img src="res/projects/doom_scroll.webp" alt="Doom Scroll" class="project-image" loading="lazy">
-			</a>
-
-			<a href="https://yordanos.itch.io/shape-con" target="_blank" class="project">
-				<img src="res/projects/shape_con.webp" alt="Shape Con" class="project-image" loading="lazy">
-			</a>
-
-			<a href="https://yordanos.itch.io/cereal-hell" target="_blank" class="project">
-				<img src="res/projects/cereal_hell.webp" alt="Cereal Hell" class="project-image" loading="lazy">
-			</a>
-
-			<a href="https://yordanos.itch.io/hellish-invasion" target="_blank" class="project">
-				<img src="res/projects/hellish_invasion.webp" alt="Hellish Invasion" class="project-image" loading="lazy">
-			</a>
-
-			<a href="https://yordanos.itch.io/top-down-shooter" target="_blank" class="project">
-				<img src="res/projects/top_down_shooter.webp" alt="Top Down Shooter" class="project-image" loading="lazy">
-			</a>
-
-			<a href="#" class="project">
-				<img src="res/projects/podo.webp" alt="Podo" class="project-image" loading="lazy">
-			</a>
-
-			<a href="https://yordanos.itch.io/car-vs-zombies" target="_blank" class="project">
-				<img src="res/projects/car_vs_zombies.webp" alt="Car vs Zombies" class="project-image" loading="lazy">
-			</a>
-
-			<a href="https://yordanos.itch.io/bike-run" target="_blank" class="project">
-				<img src="res/projects/bike_run.webp" alt="Bike Run" class="project-image" loading="lazy">
-			</a>
-
-			<a href="https://yordanos.itch.io/just-survive" target="_blank" class="project">
-				<img src="res/projects/just_survive.webp" alt="Just Survive" class="project-image" loading="lazy">
-			</a>
-
-			<a href="https://yordanos.itch.io/dodge-em-balls" target="_blank" class="project">
-				<img src="res/projects/dodge_balls.webp" alt="Dodge Balls" class="project-image" loading="lazy">
-			</a>
-
-			<a href="#" class="project">
-				<img src="res/projects/drunk_delivery.webp" alt="Drunk Delivery" class="project-image" loading="lazy">
-			</a>
-
-			<a href="https://yordanos.itch.io/trip-addis" target="_blank" class="project">
-				<img src="res/projects/flappy_bird.webp" alt="Flappy Bird" class="project-image" loading="lazy">
-			</a>
-
-			<a href="#" class="project">
-				<img src="res/projects/first_person_shooter.webp" alt="First Person Shooter" class="project-image" loading="lazy">
-			</a>
-
-			<a href="#" class="project">
-				<img src="res/projects/archers.webp" alt="Archers" class="project-image" loading="lazy">
-			</a>
-
-			<a href="https://github.com/TheYordanos/Bingo" class="project">
-				<img src="res/projects/bingo.webp" alt="Bingo" class="project-image" loading="lazy">
-			</a>
-
-			<a href="https://github.com/TheYordanos/Carrom" class="project">
-				<img src="res/projects/carrom.webp" alt="Carrom" class="project-image" loading="lazy">
-			</a>
-
-			<a href="https://github.com/theyordanos/tetris" class="project">
-				<img src="res/projects/tetris.webp" alt="Tetris" class="project-image" loading="lazy">
-			</a>
-
-			<a href="https://github.com/TheYordanos/Dama" class="project">
-				<img src="res/projects/dama.webp" alt="Dama" class="project-image" loading="lazy">
-			</a>
-
-			<a href="https://github.com/TheYordanos/Snake" class="project">
-				<img src="res/projects/snake.webp" alt="Snake" class="project-image" loading="lazy">
-			</a>
-
-			<a href="https://codeberg.org/Yordanos/Chess" class="project">
-				<img src="res/projects/chess.webp" alt="Chess" class="project-image" loading="lazy">
-			</a>
-
-			<a href="https://github.com/TheYordanos/Minesweeper" class="project">
-				<img src="res/projects/minesweeper.webp" alt="Minesweeper" class="project-image" loading="lazy">
-			</a>
-
-			<a href="https://github.com/TheYordanos/pong-web" class="project">
-				<img src="res/projects/pong.webp" alt="Pong" class="project-image" loading="lazy">
-			</a>
-
-			<a href="https://github.com/TheYordanos/Arkanoid" class="project">
-				<img src="res/projects/arkanoid.webp" alt="Arkanoid" class="project-image" loading="lazy">
-			</a>
-
-			<a href="https://github.com/TheYordanos/Game-of-Life-Odin" class="project">
-				<img src="res/projects/game_of_life.webp" alt="Game of Life" class="project-image" loading="lazy">
-			</a>
-
-			<a href="#" class="project">
-				<img src="res/projects/portal_runner.webp" alt="Portal Runner" class="project-image" loading="lazy">
-			</a>
-
-			<a href="#" class="project">
-				<img src="res/projects/asteroids.webp" alt="Asteroids" class="project-image" loading="lazy">
-			</a>
-		</div>
-	</section>
-
-	<!-- ======================== NOW ======================== -->
-	<section id="now">
-		<h2>Now</h2>
-
-		<div class="now-grid">
-			<div class="now-card">
-				<h3>Dev</h3>
-				<p>Games for jams and experimenting with <a href="https://odin-lang.org" target="_blank">The Odin Programming Language</a>.</p>
+		<!-- ======================== NAV ======================== -->
+		<nav class="site-nav">
+			<div class="nav-left">
+				<a href="">Yordanos</a>
 			</div>
 
-			<div class="now-card">
-				<h3>Learning</h3>
-				<p>Art and Audio</p>
+			<button class="nav-toggle" id="nav-toggle">☰</button>
+
+			<div class="nav-links" id="nav-links">
+				<a href="#articles">Articles</a>
+				<a href="#projects">Projects</a>
+				<a href="#now">Now</a>
+				<a href="#books">Books</a>
+				<button id="theme-toggle">[dark]</button>
+			</div>
+		</nav>
+
+
+		<!-- ======================== HERO ======================== -->
+		<header class="hero">
+			<div class="img">
+				<img src="res/caricature.webp" alt="">
 			</div>
 
-			<div class="now-card">
-				<h3>Reading</h3>
-				<p>Currently reading a few books on tech, philosophy, and fiction.</p>
+			<div>
+				<h1>Yordanos Z.</h1>
+				<p class="hero-sub">Game Developer and Designer.</p>
+				<p>Small-time hobbyist working as developer & artist, crafting games with intention and a lot of coffee. I try to make games that are <b>fun</b> to play.</p>
+
+				<blockquote>
+					<p>Jack of all trades, Master of none.</p>
+					<cite>- William Shakespeare</cite>
+				</blockquote>
+
+				<nav>
+					<a href="https://t.me/theyordanos" target="_blank">Telegram</a>
+					<a href="https://medium.com/@theyordanos" target="_blank">Medium</a>
+					<a href="https://github.com/theyordanos" target="_blank">Github</a>
+					<a href="https://codeberg.org/yordanos" target="_blank">Codeberg</a>
+					<a href="https://yordanos.itch.io" target="_blank">Itch.io</a>
+					<a href="mailto:yordanoszt15@gmail.com" target="_blank">Email</a>
+					<a href="tel:+251949860385" target="_blank">Mobile</a>
+				</nav>
+			</div>
+		</header>
+
+		<!-- ======================== ARTICLES ======================== -->
+		<section id="articles">
+			<h2>Articles</h2>
+
+			<ul>
+				<li><a target="_blank" href="#">Chess in Odin</a></li>
+				<li><a target="_blank" href="https://medium.com/@theyordanos/how-you-do-anything-is-how-you-do-everything-805e24b00559">How you do anything is how you do everything</a></li>
+				<li><a target="_blank" href="https://medium.com/@theyordanos/conways-game-of-life-dfc2e8609a88">John Conway's Game of Life</a></li>
+				<li><a href="articles/first.html">First</a></li>
+
+				<!--<li><a target="_blank" href="#">Staring at an ink scribbled on a dead tree (a.k.a. Reading a Book)</a></li>
+					<li><a target="_blank" href="#">Jack of All trades, Master of None</a></li>
+					<li><a target="_blank" href="#">Minimalism (Simple vs Complex and Easy vs Difficult)</a></li>
+					<li><a target="_blank" href="#">Greatest art form to ever exist</a></li>
+					<li><a target="_blank" href="#">John Conway's Game of Life</a></li>
+				<li><a target="_blank" href="#">How does a rock think? (Language Models, AI)</a></li>-->
+			</ul>
+
+		</section>
+
+		<!-- ======================== PRODUCTS ======================== -->
+		<!--
+			<section id="products">
+			<h2>Products</h2>
+			</section>
+		-->
+
+
+		<!-- ======================== PROJECTS ======================== -->
+		<section id="projects">
+			<h2>Projects</h2>
+			<p class="meta">Game jams, Experiments, Simulations, and other fun stuff</p>
+
+			<div class="projects-grid">
+				<a href="https://yordanos.itch.io/17" target="_blank" class="project">
+					<img src="res/projects/17.webp" alt="17" class="project-image" loading="lazy">
+				</a>
+
+				<a href="https://yordanos.itch.io/doom-scroll" target="_blank" class="project">
+					<img src="res/projects/doom_scroll.webp" alt="Doom Scroll" class="project-image" loading="lazy">
+				</a>
+
+				<a href="https://yordanos.itch.io/shape-con" target="_blank" class="project">
+					<img src="res/projects/shape_con.webp" alt="Shape Con" class="project-image" loading="lazy">
+				</a>
+
+				<a href="https://yordanos.itch.io/cereal-hell" target="_blank" class="project">
+					<img src="res/projects/cereal_hell.webp" alt="Cereal Hell" class="project-image" loading="lazy">
+				</a>
+
+				<a href="https://yordanos.itch.io/hellish-invasion" target="_blank" class="project">
+					<img src="res/projects/hellish_invasion.webp" alt="Hellish Invasion" class="project-image" loading="lazy">
+				</a>
+
+				<a href="https://yordanos.itch.io/top-down-shooter" target="_blank" class="project">
+					<img src="res/projects/top_down_shooter.webp" alt="Top Down Shooter" class="project-image" loading="lazy">
+				</a>
+
+				<a href="#" class="project">
+					<img src="res/projects/podo.webp" alt="Podo" class="project-image" loading="lazy">
+				</a>
+
+				<a href="https://yordanos.itch.io/car-vs-zombies" target="_blank" class="project">
+					<img src="res/projects/car_vs_zombies.webp" alt="Car vs Zombies" class="project-image" loading="lazy">
+				</a>
+
+				<a href="https://yordanos.itch.io/bike-run" target="_blank" class="project">
+					<img src="res/projects/bike_run.webp" alt="Bike Run" class="project-image" loading="lazy">
+				</a>
+
+				<a href="https://yordanos.itch.io/just-survive" target="_blank" class="project">
+					<img src="res/projects/just_survive.webp" alt="Just Survive" class="project-image" loading="lazy">
+				</a>
+
+				<a href="https://yordanos.itch.io/dodge-em-balls" target="_blank" class="project">
+					<img src="res/projects/dodge_balls.webp" alt="Dodge Balls" class="project-image" loading="lazy">
+				</a>
+
+				<a href="#" class="project">
+					<img src="res/projects/drunk_delivery.webp" alt="Drunk Delivery" class="project-image" loading="lazy">
+				</a>
+
+				<a href="https://yordanos.itch.io/trip-addis" target="_blank" class="project">
+					<img src="res/projects/flappy_bird.webp" alt="Flappy Bird" class="project-image" loading="lazy">
+				</a>
+
+				<a href="#" class="project">
+					<img src="res/projects/first_person_shooter.webp" alt="First Person Shooter" class="project-image" loading="lazy">
+				</a>
+
+				<a href="#" class="project">
+					<img src="res/projects/archers.webp" alt="Archers" class="project-image" loading="lazy">
+				</a>
+
+				<a href="https://github.com/TheYordanos/Bingo" class="project">
+					<img src="res/projects/bingo.webp" alt="Bingo" class="project-image" loading="lazy">
+				</a>
+
+				<a href="https://github.com/TheYordanos/Carrom" class="project">
+					<img src="res/projects/carrom.webp" alt="Carrom" class="project-image" loading="lazy">
+				</a>
+
+				<a href="https://github.com/theyordanos/tetris" class="project">
+					<img src="res/projects/tetris.webp" alt="Tetris" class="project-image" loading="lazy">
+				</a>
+
+				<a href="https://github.com/TheYordanos/Dama" class="project">
+					<img src="res/projects/dama.webp" alt="Dama" class="project-image" loading="lazy">
+				</a>
+
+				<a href="https://github.com/TheYordanos/Snake" class="project">
+					<img src="res/projects/snake.webp" alt="Snake" class="project-image" loading="lazy">
+				</a>
+
+				<a href="https://codeberg.org/Yordanos/Chess" class="project">
+					<img src="res/projects/chess.webp" alt="Chess" class="project-image" loading="lazy">
+				</a>
+
+				<a href="https://github.com/TheYordanos/Minesweeper" class="project">
+					<img src="res/projects/minesweeper.webp" alt="Minesweeper" class="project-image" loading="lazy">
+				</a>
+
+				<a href="https://github.com/TheYordanos/pong-web" class="project">
+					<img src="res/projects/pong.webp" alt="Pong" class="project-image" loading="lazy">
+				</a>
+
+				<a href="https://github.com/TheYordanos/Arkanoid" class="project">
+					<img src="res/projects/arkanoid.webp" alt="Arkanoid" class="project-image" loading="lazy">
+				</a>
+
+				<a href="https://github.com/TheYordanos/Game-of-Life-Odin" class="project">
+					<img src="res/projects/game_of_life.webp" alt="Game of Life" class="project-image" loading="lazy">
+				</a>
+
+				<a href="#" class="project">
+					<img src="res/projects/portal_runner.webp" alt="Portal Runner" class="project-image" loading="lazy">
+				</a>
+
+				<a href="#" class="project">
+					<img src="res/projects/asteroids.webp" alt="Asteroids" class="project-image" loading="lazy">
+				</a>
+			</div>
+		</section>
+
+		<!-- ======================== NOW ======================== -->
+		<section id="now">
+			<h2>Now</h2>
+
+			<div class="now-grid">
+				<div class="now-card">
+					<h3>Dev</h3>
+					<p>Games for jams and experimenting with <a href="https://odin-lang.org" target="_blank">The Odin Programming Language</a>.</p>
+				</div>
+
+				<div class="now-card">
+					<h3>Learning</h3>
+					<p>Art and Audio</p>
+				</div>
+
+				<div class="now-card">
+					<h3>Reading</h3>
+					<p>Currently reading a few books on tech, philosophy, and fiction.</p>
+				</div>
+
+				<div class="now-card">
+					<h3>Job</h3>
+					<p>
+						Available for hire! You can contact me anytime on
+						<a href="https://t.me/theyordanos" target="_blank">telegram</a>,
+						<a href="mailto:yordanoszt15@gmail.com" target="_blank">email</a> or
+						<a href="tel:+251949860385" target="_blank">phone number</a>.
+					</p>
+				</div>
 			</div>
 
-			<div class="now-card">
-				<h3>Job</h3>
-				<p>
-					Available for hire! You can contact me anytime on
-					<a href="https://t.me/theyordanos" target="_blank">telegram</a>,
-					<a href="mailto:yordanoszt15@gmail.com" target="_blank">email</a> or
-					<a href="tel:+251949860385" target="_blank">phone number</a>.
-				</p>
-			</div>
-		</div>
+			<p class="now-updated">Last updated: September 2026</p>
+		</section>
 
-		<p class="now-updated">Last updated: September 2026</p>
-	</section>
+		<!-- ======================== BOOKS ======================== -->
+		<section id="books">
+			<h2>Books</h2>
 
-	<!-- ======================== BOOKS ======================== -->
-	<section id="books">
-		<h2>Books</h2>
+			<div class="books-grid">
+				<div class="book-card">
+					<img src="res/books/yebashaye-wugoch.webp" alt="የባሻዬ ውጎች">
+					<h3>የባሻዬ ውጎች</h3>
+					<p class="author">ተስፋዬ ኃ/ማርያም</p>
+				</div>
+				<div class="book-card">
+					<img src="res/books/mamush.webp" alt="ማሙሽ">
+					<h3>ማሙሽ</h3>
+					<p class="author">ማይክል አዝመራው</p>
+				</div>
+				<div class="book-card">
+					<img src="res/books/brkrkta.webp" alt="ብርቅርቅታ">
+					<h3>ብርቅርቅታ</h3>
+					<p class="author">ዳኒኤላ ስቲል (ተርጓሚ ዓብይ ደምሴ)</p>
+				</div>
+				<div class="book-card">
+					<img src="res/books/the-midnight-library.webp" alt="The Midnight Library">
+					<h3>The Midnight Library</h3>
+					<p class="author">Matt Haig</p>
+				</div>
+				<div class="book-card">
+					<img src="res/books/kibur-dingay.webp" alt="ክቡር ድንጋይ">
+					<h3>ክቡር ድንጋይ</h3>
+					<p class="author">ይስማዕከ ወርቁ</p>
+				</div>
+				<div class="book-card">
+					<img src="res/books/mahlet.webp" alt="ማህሌት">
+					<h3>ማህሌት</h3>
+					<p class="author">አዳም ረታ</p>
+				</div>
+				<div class="book-card">
+					<img src="res/books/altezewawerechim.webp" alt="አልተዘዋወረችም">
+					<h3>አልተዘዋወረችም</h3>
+					<p class="author">አሌክስ አብርሀም</p>
+				</div>
+				<div class="book-card">
+					<img src="res/books/before-the-coffee-gets-cold.webp" alt="Before the coffee gets cold">
+					<h3>Before the coffee gets cold</h3>
+					<p class="author">Toshikazu Kawaguchi</p>
+				</div>
+				<div class="book-card">
+					<img src="res/books/fikir-eske-mekabir.webp" alt="ፍቅር እስከ መቃብር">
+					<h3>ፍቅር እስከ መቃብር</h3>
+					<p class="author">ዶ/ር ሀዲስ አለማየሁ</p>
+				</div>
+				<div class="book-card">
+					<img src="res/books/all-your-perfects.webp" alt="All Your Perfects">
+					<h3>All Your Perfects</h3>
+					<p class="author">Colleen Hoover</p>
+				</div>
+				<div class="book-card">
+					<img src="res/books/verity.webp" alt="Verity">
+					<h3>Verity</h3>
+					<p class="author">Colleen Hoover</p>
+				</div>
+				<div class="book-card">
+					<img src="res/books/kidase.webp" alt="ቅዳሴ">
+					<h3>ቅዳሴ</h3>
+					<p class="author">ቀሲስ መብራቱ ኪሮስ (ዶ/ር)</p>
+				</div>
+				<div class="book-card">
+					<img src="res/books/maebe-teri-wef.webp" alt="ማዕበል ጠሪ ወፍ">
+					<h3>ማዕበል ጠሪ ወፍ</h3>
+					<p class="author">አለማየሁ ገላጋይ</p>
+				</div>
+				<div class="book-card">
+					<img src="res/books/shuk-tus.webp" alt="ሹክ ቱስ">
+					<h3>ሹክ ቱስ</h3>
+					<p class="author">አዘርግ</p>
+				</div>
+				<div class="book-card">
+					<img src="res/books/keadmas-bashager.webp" alt="ከአድማስ ባሻገር">
+					<h3>ከአድማስ ባሻገር</h3>
+					<p class="author">በአሉ ግርማ</p>
+				</div>
+				<div class="book-card">
+					<img src="res/books/the-art-of-being-alone.webp" alt="The Art of Being Alone">
+					<h3>The Art of Being Alone</h3>
+					<p class="author">Renuka Gavrani</p>
+				</div>
+				<div class="book-card">
+					<img src="res/books/befikir-sim.webp" alt="በፍቅር ስም">
+					<h3>በፍቅር ስም</h3>
+					<p class="author">አለማየሁ ገላጋይ</p>
+				</div>
+				<div class="book-card">
+					<img src="res/books/conversations_with_god_book_one.webp" alt="Conversations With God - Book One">
+					<h3>Conversations With God - Book One</h3>
+					<p class="author">Neale Donald Walsch</p>
+				</div>
+				<div class="book-card">
+					<img src="res/books/oh_zendeki.webp" alt="ኦ... ዘንደኪ">
+					<h3>ኦ... ዘንደኪ</h3>
+					<p class="author">አዘርግ</p>
+				</div>
+				<div class="book-card">
+					<img src="res/books/ke_amen_bashager.webp" alt="ከአሜን ባሻገር">
+					<h3>ከአሜን ባሻገር</h3>
+					<p class="author">በውቀቱ ስዩም</p>
+				</div>
+				<div class="book-card">
+					<img src="res/books/sememen.webp" alt="ሰመመን">
+					<h3>ሰመመን</h3>
+					<p class="author">ሲሳይ ንጉሱ</p>
+				</div>
+				<div class="book-card">
+					<img src="res/books/chi.webp" alt="ቺ">
+					<h3>ቺ</h3>
+					<p class="author">አዘርግ</p>
+				</div>
+				<div class="book-card">
+					<img src="res/books/oromay.webp" alt="ኦሮማይ">
+					<h3>ኦሮማይ</h3>
+					<p class="author">በኣሉ ግርማ</p>
+				</div>
+				<div class="book-card">
+					<img src="res/books/odin_book.webp" alt="Odin Book">
+					<h3>Odin Book</h3>
+					<p class="author">Karl Zylinski</p>
+				</div>
+				<div class="book-card">
+					<img src="res/books/eyariko999.webp" alt="ኢያሪኮ 999">
+					<h3>ኢያሪኮ 999</h3>
+					<p class="author">አዘርግ </p>
+				</div>
+				<div class="book-card">
+					<img src="res/books/eyariko888.webp" alt="ኢያሪኮ 888">
+					<h3>ኢያሪኮ 888</h3>
+					<p class="author">አዘርግ </p>
+				</div>
+				<div class="book-card">
+					<img src="res/books/eyariko777.webp" alt="ኢያሪኮ 777">
+					<h3>ኢያሪኮ 777</h3>
+					<p class="author">አዘርግ </p>
+				</div>
+				<div class="book-card">
+					<img src="res/books/adamnahewan.webp" alt="አዳም እና ሄዋን">
+					<h3>አዳም እና ሄዋን</h3>
+					<p class="author">አዘርግ </p>
+				</div>
+				<div class="book-card">
+					<img src="res/books/steal_like_an_artist.webp" alt="Steal Like an Artist">
+					<h3>Steal Like an Artist</h3>
+					<p class="author">Austin Kleon</p>
+				</div>
+			</div>
+		</section>
 
-		<div class="books-grid">
-			<div class="book-card">
-				<img src="res/books/yebashaye-wugoch.webp" alt="የባሻዬ ውጎች">
-				<h3>የባሻዬ ውጎች</h3>
-				<p class="author">ተስፋዬ ኃ/ማርያም</p>
-			</div>
-			<div class="book-card">
-				<img src="res/books/mamush.webp" alt="ማሙሽ">
-				<h3>ማሙሽ</h3>
-				<p class="author">ማይክል አዝመራው</p>
-			</div>
-			<div class="book-card">
-				<img src="res/books/brkrkta.webp" alt="ብርቅርቅታ">
-				<h3>ብርቅርቅታ</h3>
-				<p class="author">ዳኒኤላ ስቲል (ተርጓሚ ዓብይ ደምሴ)</p>
-			</div>
-			<div class="book-card">
-				<img src="res/books/the-midnight-library.webp" alt="The Midnight Library">
-				<h3>The Midnight Library</h3>
-				<p class="author">Matt Haig</p>
-			</div>
-			<div class="book-card">
-				<img src="res/books/kibur-dingay.webp" alt="ክቡር ድንጋይ">
-				<h3>ክቡር ድንጋይ</h3>
-				<p class="author">ይስማዕከ ወርቁ</p>
-			</div>
-			<div class="book-card">
-				<img src="res/books/mahlet.webp" alt="ማህሌት">
-				<h3>ማህሌት</h3>
-				<p class="author">አዳም ረታ</p>
-			</div>
-			<div class="book-card">
-				<img src="res/books/altezewawerechim.webp" alt="አልተዘዋወረችም">
-				<h3>አልተዘዋወረችም</h3>
-				<p class="author">አሌክስ አብርሀም</p>
-			</div>
-			<div class="book-card">
-				<img src="res/books/before-the-coffee-gets-cold.webp" alt="Before the coffee gets cold">
-				<h3>Before the coffee gets cold</h3>
-				<p class="author">Toshikazu Kawaguchi</p>
-			</div>
-			<div class="book-card">
-				<img src="res/books/fikir-eske-mekabir.webp" alt="ፍቅር እስከ መቃብር">
-				<h3>ፍቅር እስከ መቃብር</h3>
-				<p class="author">ዶ/ር ሀዲስ አለማየሁ</p>
-			</div>
-			<div class="book-card">
-				<img src="res/books/all-your-perfects.webp" alt="All Your Perfects">
-				<h3>All Your Perfects</h3>
-				<p class="author">Colleen Hoover</p>
-			</div>
-			<div class="book-card">
-				<img src="res/books/verity.webp" alt="Verity">
-				<h3>Verity</h3>
-				<p class="author">Colleen Hoover</p>
-			</div>
-			<div class="book-card">
-				<img src="res/books/kidase.webp" alt="ቅዳሴ">
-				<h3>ቅዳሴ</h3>
-				<p class="author">ቀሲስ መብራቱ ኪሮስ (ዶ/ር)</p>
-			</div>
-			<div class="book-card">
-				<img src="res/books/maebe-teri-wef.webp" alt="ማዕበል ጠሪ ወፍ">
-				<h3>ማዕበል ጠሪ ወፍ</h3>
-				<p class="author">አለማየሁ ገላጋይ</p>
-			</div>
-			<div class="book-card">
-				<img src="res/books/shuk-tus.webp" alt="ሹክ ቱስ">
-				<h3>ሹክ ቱስ</h3>
-				<p class="author">አዘርግ</p>
-			</div>
-			<div class="book-card">
-				<img src="res/books/keadmas-bashager.webp" alt="ከአድማስ ባሻገር">
-				<h3>ከአድማስ ባሻገር</h3>
-				<p class="author">በአሉ ግርማ</p>
-			</div>
-			<div class="book-card">
-				<img src="res/books/the-art-of-being-alone.webp" alt="The Art of Being Alone">
-				<h3>The Art of Being Alone</h3>
-				<p class="author">Renuka Gavrani</p>
-			</div>
-			<div class="book-card">
-				<img src="res/books/befikir-sim.webp" alt="በፍቅር ስም">
-				<h3>በፍቅር ስም</h3>
-				<p class="author">አለማየሁ ገላጋይ</p>
-			</div>
-			<div class="book-card">
-				<img src="res/books/conversations_with_god_book_one.webp" alt="Conversations With God - Book One">
-				<h3>Conversations With God - Book One</h3>
-				<p class="author">Neale Donald Walsch</p>
-			</div>
-			<div class="book-card">
-				<img src="res/books/oh_zendeki.webp" alt="ኦ... ዘንደኪ">
-				<h3>ኦ... ዘንደኪ</h3>
-				<p class="author">አዘርግ</p>
-			</div>
-			<div class="book-card">
-				<img src="res/books/ke_amen_bashager.webp" alt="ከአሜን ባሻገር">
-				<h3>ከአሜን ባሻገር</h3>
-				<p class="author">በውቀቱ ስዩም</p>
-			</div>
-			<div class="book-card">
-				<img src="res/books/sememen.webp" alt="ሰመመን">
-				<h3>ሰመመን</h3>
-				<p class="author">ሲሳይ ንጉሱ</p>
-			</div>
-			<div class="book-card">
-				<img src="res/books/chi.webp" alt="ቺ">
-				<h3>ቺ</h3>
-				<p class="author">አዘርግ</p>
-			</div>
-			<div class="book-card">
-				<img src="res/books/oromay.webp" alt="ኦሮማይ">
-				<h3>ኦሮማይ</h3>
-				<p class="author">በኣሉ ግርማ</p>
-			</div>
-			<div class="book-card">
-				<img src="res/books/odin_book.webp" alt="Odin Book">
-				<h3>Odin Book</h3>
-				<p class="author">Karl Zylinski</p>
-			</div>
-			<div class="book-card">
-				<img src="res/books/eyariko999.webp" alt="ኢያሪኮ 999">
-				<h3>ኢያሪኮ 999</h3>
-				<p class="author">አዘርግ </p>
-			</div>
-			<div class="book-card">
-				<img src="res/books/eyariko888.webp" alt="ኢያሪኮ 888">
-				<h3>ኢያሪኮ 888</h3>
-				<p class="author">አዘርግ </p>
-			</div>
-			<div class="book-card">
-				<img src="res/books/eyariko777.webp" alt="ኢያሪኮ 777">
-				<h3>ኢያሪኮ 777</h3>
-				<p class="author">አዘርግ </p>
-			</div>
-			<div class="book-card">
-				<img src="res/books/adamnahewan.webp" alt="አዳም እና ሄዋን">
-				<h3>አዳም እና ሄዋን</h3>
-				<p class="author">አዘርግ </p>
-			</div>
-			<div class="book-card">
-				<img src="res/books/steal_like_an_artist.webp" alt="Steal Like an Artist">
-				<h3>Steal Like an Artist</h3>
-				<p class="author">Austin Kleon</p>
-			</div>
-		</div>
-	</section>
+		<hr>
 
-	<hr>
-
-	<footer>Creator of Worlds & a Coffee Addict ;p</footer>
-
-	<script src="script.js"></script>
-</body>
+		<footer>Creator of Worlds & a Coffee Addict ;p</footer>
+	</body>
 </html>
