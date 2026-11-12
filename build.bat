@@ -14,7 +14,7 @@ rem   ---
 setlocal
 cd /d "%~dp0"
 
-set "CONTENT_DIR=articles\content"
+set "CONTENT_DIR=articles_md"
 set "OUT_DIR=articles"
 set "ARTICLE_TPL=articles\template.txt"
 set "INDEX=%~dp0index.html"

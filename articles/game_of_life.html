@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="John Conway’s Cellular Automata">
+		<title>Game of Life</title>
+
+		<link rel="icon" type="image/png" href="../res/theyordanos-icon.png">
+		<link rel="stylesheet" href="../styles/style.css">
+		<link rel="stylesheet" href="../styles/article.css">
+
+		<script src="../scripts/theme.js" defer></script>
+		<script src="../scripts/nav.js" defer></script>
+	</head>
+	<body>
+		<nav class="site-nav">
+			<div class="nav-left"><a href="../index.html#articles">Articles</a></div>
+			<button class="nav-toggle" id="nav-toggle">☰</button>
+			<div class="nav-links" id="nav-links">
+				<button id="theme-toggle">[dark]</button>
+			</div>
+		</nav>
+
+		<main>
+			<h1>Game of Life</h1>
+			<p>The <a
+href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">Game of
+Life</a> is a cellular automata made by a British mathematician name <a
+href="https://en.wikipedia.org/wiki/John_Horton_Conway">John Horton
+Conway</a> in 1970.</p>
+<p>Conway’s Game of Life is a zero-player game, meaning that if you
+don’t have any friends to play with and are playing solo, it will ignore
+you more than your imaginary friends would.</p>
+<p>According to Wikipedia:</p>
+<blockquote>
+<p>A cellular automaton consists of a regular grid of <em>cells</em>,
+each in one of a finite number of states, such as <em>on</em> and
+<em>off</em>. The grid can be in any finite number of dimensions. For
+each cell, a set of cells called its <em>neighborhood</em> is defined
+relative to the specified cell.</p>
+</blockquote>
+<p>In simpler terms, a cellular automata is a bunch of cells in a grid
+acting according to some specified rules.</p>
+<p>Conway’s Game of Life is a good example of how complex behaviors can
+emerge from simple inputs and rules. I’ll show you how to implement this
+algorithm using <a href="https://odin-lang.org">Odin</a> and <a
+href="https://raylib.com">Raylib</a>.</p>
+<p>A cell in GOL is one square in the grid. A cell can have two states,
+on or off, alive or dead, call it whatever you like. GOL considers a
+cell’s neighbors to be the Moore neighborhood which are the 8
+surrounding cells instead of the 4 (N, E, W and S).</p>
+<figure>
+<img src="../res/articles/gol/moores_neighborhood.png"
+alt="Moore’s Neighborhood" />
+<figcaption aria-hidden="true">Moore’s Neighborhood</figcaption>
+</figure>
+<p>The Game of Life follows these simple rules for each cell:</p>
+<ol type="1">
+<li>A live cell with fewer than two live neighbors dies
+(<strong>underpopulation</strong>).</li>
+<li>A live cell with two or three live neighbors <strong>stays
+alive</strong>.</li>
+<li>A live cell with more than three live neighbors dies
+(<strong>overpopulation</strong>).</li>
+<li>A dead cell with exactly three live neighbors becomes alive
+(<strong>reproduction</strong>).</li>
+</ol>
+<figure>
+<img src="../res/articles/gol/rules.png" alt="Game of Life rules" />
+<figcaption aria-hidden="true">Game of Life rules</figcaption>
+</figure>
+<p>Let’s start by declaring imports, constants, and cell state.</p>
+<pre class="odin"><code>package main
+
+import &quot;core:math/rand&quot;
+import rl &quot;vendor:raylib&quot;
+
+SCREEN_WIDTH :: 1280
+SCREEN_HEIGHT :: 720
+CELL_SIZE :: 5
+ROWS :: SCREEN_HEIGHT / CELL_SIZE
+COLS :: SCREEN_WIDTH / CELL_SIZE
+
+State :: enum byte { DEAD, ALIVE }
+
+grid: [COLS][ROWS]State // Active Grid
+next: [COLS][ROWS]State // Next Generation</code></pre>
+<p>Why is there a another ‘next’ array? The Game of Life algorithm does
+not update each individual cell alone. Its a generational algorithm,
+meaning it calculates every cells next state and then update the grid
+all at once instead of calculate and update each cell separately.</p>
+<p>Initialize raylib in the main function:</p>
+<pre class="odin"><code>main :: proc() {
+    // Initial grid here...
+
+    rl.SetTraceLogLevel(.ERROR)
+    rl.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, &quot;Game of Life&quot;)
+    defer rl.CloseWindow()
+
+    rl.SetTargetFPS(60)
+
+    for rl.WindowShouldClose() == false {
+    
+        // Update the grid here...
+
+        rl.BeginDrawing()
+        rl.ClearBackground(rl.RAYWHITE)
+
+        // Draw the grid here...
+        
+        rl.EndDrawing()
+    }
+}</code></pre>
+<h2 id="initialize">Initialize</h2>
+<p>Game of life implementation use mouse input to toggle between cell’s
+state. but for our implementation we’ll initialize all grid cells with a
+random 50/50 chance state.</p>
+<pre class="odin"><code>for x in 0..&lt;COLS {
+    for y in 0..&lt;ROWS {
+        grid[x][y] = rand.float32() &gt; 0.5 ? .ALIVE : .DEAD
+    }
+}</code></pre>
+<h2 id="draw">Draw</h2>
+<p>We draw ALIVE cells as white and DEAD cells as black.</p>
+<pre class="odin"><code>for x in 0..&lt;COLS {
+    dx := i32(x * CELL_SIZE)
+
+    for y in 0..&lt;ROWS {
+        dy := i32(y * CELL_SIZE)
+
+        color: rl.Color = grid[x][y] == .ALIVE ? rl.WHITE : rl.BLACK
+
+        rl.DrawRectangle(dx, dy, CELL_SIZE, CELL_SIZE, color)
+    }
+}</code></pre>
+<h2 id="update">Update</h2>
+<pre><code>for x in 0..&lt;COLS {
+    for y in 0..&lt;ROWS {
+
+        neighbours_count: i32 = 0
+        for i in -1..=1 {
+            for j in -1..=1 {
+                if i == 0 &amp;&amp; j == 0 do continue
+
+                dx := (x + i + COLS) % COLS
+                dy := (y + j + ROWS) % ROWS
+
+                if grid[dx][dy] == .ALIVE do neighbours_count += 1
+            }
+        }
+
+        if grid[x][y] == .ALIVE {
+            next[x][y] = (neighbours_count == 2 || neighbours_count == 3) ? .ALIVE : .DEAD
+        } else {
+            next[x][y] = neighbours_count == 3 ? .ALIVE : .DEAD
+        }
+
+    }
+}
+
+grid = next</code></pre>
+<p>Here is what’s happening: 1. We iterate through every single cell 2.
+We calculate how many neighbors the cell has. 3. Based on the rules of
+Game of Life we laid out earlier we set its state. - A cell stays alive
+if and only if it has exactly 2 or 3 neighbors. Otherwise it dies. - A
+cell becomes alive if it has exactly 3 neighbors. 4. We update the grid
+all at once by setting <code>grid = next</code></p>
+<p>This is how the next for loops work to find Moore’s neighborhood.</p>
+<pre class="odin"><code>for i in -1..=1 {
+    for j in -1..=1 {
+        // ...
+    }
+}</code></pre>
+<p><img src="../res/articles/gol/neighbors_calc.png" /></p>
+<p>Notice which cells we consider to be neighbors:</p>
+<pre class="odin"><code>dx := (x + i + COLS) % COLS
+dy := (y + j + ROWS) % ROWS</code></pre>
+<p>This is what we call a <a
+href="https://en.wikipedia.org/wiki/Torus">Torus</a> world. It simply
+means that the world wraps around. To make it clear, this is what it
+looks: <img src="../res/articles/gol/wrap1.png" /> <img
+src="../res/articles/gol/wrap2.png" /></p>
+<p>Normally to get the neighbors of the cell you write it like this</p>
+<pre class="odin"><code>dx := x + i
+dy := y + j</code></pre>
+<p>But this will give us an out of bounds error. If the max columns is
+10 and i = 9, then 9 + 1 = 10 which is out of bound since odin uses 0
+based indexing.</p>
+<p>So we use the modulus operator, which return the reminder</p>
+<pre class="odin"><code>dx := (x + i) % COLS
+dy := (y + j) % ROWS</code></pre>
+<p>So why do we need to add COLS or ROWS before we divide it using
+modulus? What if</p>
+<pre class="odin"><code>// x = 0 and i = -1, can happen to first column cells
+// that would result in...
+
+dx := (x + i) % COLS  
+dx := (0 - 1) % COLS  
+dx := -1 % COLS // This wouldn&#39;t return the right most column
+
+// Soo we have to add COLS and ROWS to resolve this problem  
+int dx = (i + x + COLS) % COLS;
+int dy = (j + y + ROWS) % ROWS;</code></pre>
+<h2 id="run">Run</h2>
+<p>Now rut it and look</p>
+<pre><code>odin run .</code></pre>
+<p><img src="../res/articles/gol/gol.png" /></p>
+<p>Try adding additional features like pausing, steping with a key
+press, clicking to toggle cell state, restart/clearing the grid and and
+explore how initial conditions affect the patterns that emerge. You can
+find on <a
+href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">Game of
+Life Wiki</a>. Enjoy :)</p>
+<h2 id="full-source-code">Full source code</h2>
+<pre class="odin"><code>package main
+
+import &quot;core:math/rand&quot;
+import rl &quot;vendor:raylib&quot;
+
+SCREEN_WIDTH :: 1280
+SCREEN_HEIGHT :: 720
+CELL_SIZE :: 5
+ROWS :: SCREEN_HEIGHT / CELL_SIZE
+COLS :: SCREEN_WIDTH / CELL_SIZE
+
+State :: enum byte { DEAD, ALIVE }
+
+grid: [COLS][ROWS]State
+next: [COLS][ROWS]State
+
+main :: proc() {
+    for x in 0..&lt;COLS {
+        for y in 0..&lt;ROWS {
+            grid[x][y] = rand.float32() &gt; 0.5 ? .ALIVE : .DEAD
+        }
+    }
+
+    rl.SetTraceLogLevel(.ERROR)
+    rl.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, &quot;Game of Life&quot;)
+    defer rl.CloseWindow()
+
+    rl.SetTargetFPS(60)
+
+    for rl.WindowShouldClose() == false {
+        for x in 0..&lt;COLS {
+            for y in 0..&lt;ROWS {
+
+                neighbours_count: i32 = 0
+                for i in -1..=1 {
+                    for j in -1..=1 {
+                        if i == 0 &amp;&amp; j == 0 do continue
+
+                        dx := (x + i + COLS) % COLS
+                        dy := (y + j + ROWS) % ROWS
+
+                        if grid[dx][dy] == .ALIVE do neighbours_count += 1
+                    }
+                }
+
+                if grid[x][y] == .ALIVE {
+                    next[x][y] = (neighbours_count == 2 || neighbours_count == 3) ? .ALIVE : .DEAD
+                } else {
+                    next[x][y] = neighbours_count == 3 ? .ALIVE : .DEAD
+                }
+
+            }
+        }
+
+        grid = next
+
+        rl.BeginDrawing()
+        rl.ClearBackground(rl.WHITE)
+
+        for x in 0..&lt;COLS {
+            dx := i32(x * CELL_SIZE)
+
+            for y in 0..&lt;ROWS {
+                dy := i32(y * CELL_SIZE)
+
+                color: rl.Color = grid[x][y] == .ALIVE ? rl.WHITE : rl.BLACK
+
+                rl.DrawRectangle(dx, dy, CELL_SIZE, CELL_SIZE, color)
+            }
+        }
+
+        rl.EndDrawing()
+    }
+}</code></pre>
+<h2 id="in-honor-of-john-horton-conway">In honor of John Horton
+Conway</h2>
+<figure>
+<img src="../res/articles/gol/john.jpg" alt="John Conway" />
+<figcaption aria-hidden="true">John Conway</figcaption>
+</figure>
+		</main>
+
+		<hr />
+		<footer><p>Creator of Worlds &amp; a Coffee Addict ;p</p></footer>
+	</body>
+</html>

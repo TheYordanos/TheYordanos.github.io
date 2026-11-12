@@ -27,6 +27,7 @@
 			$body$
 		</main>
 
+		<hr />
 		<footer><p>Creator of Worlds &amp; a Coffee Addict ;p</p></footer>
 	</body>
 </html>
