@@ -14,7 +14,7 @@
 	--hl-error: #c62828;
 }
 
-body.dark {
+html.dark {
 	--code-bg: #191d24;
 	--code-fg: #e6e6e6;
 

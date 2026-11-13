@@ -8,6 +8,11 @@
 		<title>Yordanos</title>
 
 		<link rel="icon" type="image/png" href="res/theyordanos-icon.png">
+		<script>
+		try {
+			if (localStorage.getItem("ty_theme") === "dark") document.documentElement.classList.add("dark");
+		} catch (e) {}
+		</script>
 		<link rel="stylesheet" href="styles/style.css">
 
 		<script src="scripts/theme.js" defer></script>
