@@ -1,38 +1,51 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="Yordanos' articles archive.">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content="Yordanos' articles archive." />
 
-	<title>All articles</title>
+		<title>All articles</title>
 
-	<link rel="icon" type="image/png" href="res/theyordanos-icon.png">
-	<script>
-	try {
-		if (localStorage.getItem("ty_theme") === "dark") document.documentElement.classList.add("dark");
-	} catch (e) {}
-	</script>
-	<link rel="stylesheet" href="styles/style.css">
+		<link rel="icon" type="image/png" href="res/theyordanos-icon.png" />
+		<script>
+			try {
+				if (localStorage.getItem("ty_theme") === "dark")
+					document.documentElement.classList.add("dark");
+			} catch (e) {}
+		</script>
+		<link rel="stylesheet" href="styles/style.css" />
 
-	<script src="scripts/theme.js" defer></script>
-	<script src="scripts/nav.js" defer></script>
-</head>
-<body>
-	<nav class="site-nav">
-		<div class="nav-left"><a href="index.html#articles">Articles</a></div>
-		<button class="nav-toggle" id="nav-toggle">☰</button>
-		<div class="nav-links" id="nav-links">
-			<button id="theme-toggle">[dark]</button>
-		</div>
-	</nav>
+		<script src="scripts/theme.js" defer></script>
+		<script src="scripts/nav.js" defer></script>
+	</head>
 
-	<h1>All articles</h1>
-	<section class="articles">
-		<ul>
-			<!-- ARTICLES:START -->
-			<!-- ARTICLES:END -->
-		</ul>
-	</section>
-</body>
+	<body>
+
+		<nav class="site-nav">
+			<div class="nav-left">
+				<a href="index.html">Yordanos</a>
+			</div>
+			<button class="nav-toggle" id="nav-toggle">☰</button>
+			<div class="nav-links" id="nav-links">
+				<button id="theme-toggle">[dark]</button>
+			</div>
+		</nav>
+
+		<h1>All articles</h1>
+		<section class="articles archive">
+			<ul>
+				<!-- ARTICLES:START -->
+				<li class="year">2026</li>
+				<li><time>2026-11-14</time><a href="articles/game_of_life.html">Game of Life</a></li>
+				<li><time>2026-11-13</time><a href="articles/pandoc.html">Pandoc cheatsheet</a></li>
+				<li><time>2026-11-03</time><a href="articles/hydaihyde.html">How you do anything is how you do everything</a></li>
+				<!-- ARTICLES:END -->
+			</ul>
+		</section>
+
+		<hr>
+
+		<footer>Creator of Worlds &amp; a Coffee Addict ;p</footer>
+	</body>
 </html>
