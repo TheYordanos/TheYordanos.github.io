@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Yordanos' articles archive.">
+
+	<title>All articles</title>
+
+	<link rel="icon" type="image/png" href="res/theyordanos-icon.png">
+	<script>
+	try {
+		if (localStorage.getItem("ty_theme") === "dark") document.documentElement.classList.add("dark");
+	} catch (e) {}
+	</script>
+	<link rel="stylesheet" href="styles/style.css">
+
+	<script src="scripts/theme.js" defer></script>
+	<script src="scripts/nav.js" defer></script>
+</head>
+<body>
+	<nav class="site-nav">
+		<div class="nav-left"><a href="index.html#articles">Articles</a></div>
+		<button class="nav-toggle" id="nav-toggle">☰</button>
+		<div class="nav-links" id="nav-links">
+			<button id="theme-toggle">[dark]</button>
+		</div>
+	</nav>
+
+	<h1>All articles</h1>
+	<section class="articles">
+		<ul>
+			<!-- ARTICLES:START -->
+			<!-- ARTICLES:END -->
+		</ul>
+	</section>
+</body>
+</html>

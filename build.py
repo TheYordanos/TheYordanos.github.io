@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Build articles/*.html from articles_md/*.md with Pandoc and refresh the
-article list in index.html.
+"""Build articles/*.html from articles_md/*.md with Pandoc, then refresh the
+article lists in index.html (latest few) and archive.html (everything).
 
 Front matter per article:
     ---
@@ -27,6 +27,9 @@ CONTENT_DIR = ROOT / "articles_md"
 OUT_DIR = ROOT / "articles"
 TEMPLATE = OUT_DIR / "template.txt"
 INDEX = ROOT / "index.html"
+ARCHIVE = ROOT / "archive.html"
+
+INDEX_LIMIT = 20  # how many articles to show on the index page
 
 START_MARK = "<!-- ARTICLES:START -->"
 END_MARK = "<!-- ARTICLES:END -->"
@@ -45,7 +48,7 @@ def fail(msg):
 def read_front_matter(path):
     """Tiny `key: value` parser for the --- block at the top of a file."""
     text = path.read_text(encoding="utf-8-sig")
-    m = re.match(r"---[ \t]*\r?\n(.*?)\r?\n(?:---|\.\.\.)[ \t]*(?:\r?\n|$)", text, re.S)
+    m = re.match(r"---[ \t]*\r?\n(.*?)\r?\n(?:---|\.\.\.)[ \t]*(?:\r?\n|$)", text, re.DOTALL)
     meta = {}
     if not m:
         return meta
@@ -69,24 +72,43 @@ def build(job):
     src, out, force, template_mtime = job
     if not force and is_up_to_date(src, out, template_mtime):
         return src, "ok", ""
+    # no check=True on purpose: we report failures ourselves below
     result = subprocess.run(
         ["pandoc", str(src), "--from", "markdown", "--to", "html5",
          "--template", str(TEMPLATE), "-o", str(out), *PANDOC_EXTRA],
         capture_output=True,
+        check=True
     )
     if result.returncode != 0:
         return src, "failed", result.stderr.decode("utf-8", "replace")
     return src, "built", ""
 
 
-def splice_index(items):
-    data = INDEX.read_bytes().decode("utf-8")
+def render_items(items, year_headings=False):
+    """items: (date, slug, title) tuples, already sorted. Returns <li> lines."""
+    lines, last_year = [], None
+    for date, slug, title in items:
+        year = date[:4]
+        dated = year != "0000"
+        if year_headings and dated and year != last_year:
+            lines.append(f'{ITEM_INDENT}<li class="year">{year}</li>')
+            last_year = year
+        lines.append(
+            f'{ITEM_INDENT}<li><time>{date if dated else ""}</time>'
+            f'<a href="articles/{slug}.html">{html.escape(title)}</a></li>'
+        )
+    return lines
+
+
+def splice(path, lines):
+    """Replace everything between the ARTICLES markers in `path`."""
+    data = path.read_bytes().decode("utf-8")
     nl = "\r\n" if "\r\n" in data else "\n"
 
     s = data.find(START_MARK)
     e = data.find(END_MARK)
     if s < 0 or e < 0 or e < s:
-        fail(f"index.html needs these two lines inside the articles list:\n"
+        fail(f"{path.name} needs these two lines inside the articles list:\n"
              f"  {START_MARK}\n  {END_MARK}")
 
     # keep the END marker's indentation
@@ -95,17 +117,11 @@ def splice_index(items):
     if indent.strip():
         indent = ""
 
-    lines = [
-        f'{ITEM_INDENT}<li><time>{date if date != "0000-00-00" else ""}</time>'
-        f'<a href="articles/{slug}.html">{html.escape(title)}</a></li>'
-        for date, slug, title in items
-    ]
     body = nl.join(lines) + nl if lines else ""
     new = data[: s + len(START_MARK)] + nl + body + indent + data[e:]
 
     if new != data:
-        INDEX.write_bytes(new.encode("utf-8"))  # UTF-8, no BOM, newlines preserved
-    return len(lines)
+        path.write_bytes(new.encode("utf-8"))  # UTF-8, no BOM, newlines preserved
 
 
 def main():
@@ -166,9 +182,17 @@ def main():
     # newest first, then title A-Z
     items.sort(key=lambda r: r[2])
     items.sort(key=lambda r: r[0], reverse=True)
-    count = splice_index(items)
 
-    print(f"done: {count} article(s), {built} rebuilt, index.html updated")
+    splice(INDEX, render_items(items[:INDEX_LIMIT]))
+
+    if ARCHIVE.exists():
+        splice(ARCHIVE, render_items(items, year_headings=True))
+        archive_note = "archive.html updated"
+    else:
+        archive_note = "archive.html not found, skipped"
+
+    print(f"done: {len(items)} article(s), {built} rebuilt, "
+          f"index.html shows {min(len(items), INDEX_LIMIT)}, {archive_note}")
 
 
 if __name__ == "__main__":
