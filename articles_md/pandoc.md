@@ -1,323 +1,228 @@
 ---
-title: Pandoc
-description: A cheat sheet of every Markdown element available when writing articles for this site, with the syntax and the result.
+title: Pandoc cheatsheet
+description: Reference for the Markdown syntax Pandoc turns into styled HTML on this site.
 date: 2026-11-13
 ---
 
-Everything in `articles_md/` is written in Markdown and turned into HTML by Pandoc when the build script runs. Pandoc's flavour of Markdown can do a lot, but this site only styles a specific set of elements. This article is the cheat sheet: each element, how to write it, and what it looks like once built.
+Everything here is styled by `article.css`. Anything not listed has no styling.
 
-## The basics
+## Workflow
 
-### Front matter
+```bat
+build.bat      # build.sh on Unix
+```
 
-Every article starts with a block of metadata between two lines of three dashes.
+- Write `articles_md/name.md`. It builds to `articles/name.html`, and the filename is the URL.
+- Every build deletes `articles/*.html` first, then regenerates the list in `index.html`.
+- `draft: true` in the front matter skips an article completely.
+
+## Front matter
 
 ```yaml
 ---
 title: Chess in Odin
-description: Shown in search results and link previews.
+description: Meta description for search and link previews.
 date: 2026-09-12
 draft: true
 ---
 ```
 
-- `title` becomes the page title, the big heading at the top, and the entry in the articles list on the home page.
-- `description` goes into the page's meta description.
-- `date` uses `YYYY-MM-DD`. The articles list is sorted by it, newest first.
-- `draft: true` is optional. Drafts are skipped by the build, so they are never built or listed.
+| Field         | Purpose                                                        |
+|:--------------|:---------------------------------------------------------------|
+| `title`       | Page title, the `<h1>`, and the entry in the index list.       |
+| `description` | Meta description.                                              |
+| `date`        | `YYYY-MM-DD`. The index list is sorted newest first.           |
+| `draft`       | Optional. `true` skips the article.                            |
 
-### Paragraphs and line breaks
+## Inline
 
-A paragraph is any run of text. Start a new paragraph by leaving a blank line. To break a line without starting a new paragraph, end the line with a backslash.
+| Write                         | Get                         |
+|:------------------------------|:----------------------------|
+| `*italic*`                    | *italic*                    |
+| `**bold**`                    | **bold**                    |
+| `***bold italic***`           | ***bold italic***           |
+| `~~strike~~`                  | ~~strike~~                  |
+| `H~2~O`                       | H~2~O                       |
+| `E = mc^2^`                   | E = mc^2^                   |
+| `` `code` ``                  | `code`                      |
+| `[text](https://example.com)` | [text](https://example.com) |
+| `<https://example.com>`       | <https://example.com>       |
+| `[jump](#headings)`           | [jump](#headings)           |
+| `\*not italic\*`              | \*not italic\*              |
+| `"quotes" -- en --- em ...`   | "quotes" -- en --- em ...   |
 
-```markdown
-First line\
-Second line, same paragraph.
-```
+Sub and superscript can't contain spaces. Escape them as `H~2\ O~` if you must.
 
-Renders as:
-
-First line\
-Second line, same paragraph.
-
-### Headings
-
-The title already becomes the page's single top-level heading, so start your own headings at two hashes. Using a single `#` would add a second top-level heading.
+## Headings
 
 ```markdown
 ## Section
 ### Subsection
 #### Level 4
-##### Level 5
-###### Level 6
 ```
 
-Levels two and three are used throughout this article. Here are the smaller ones:
+- Start at `##`. The title already is the `<h1>`.
+- Every heading gets an id from its text: `## Some Title` is linkable as `#some-title`.
 
-#### Level 4 heading
-
-##### Level 5 heading
-
-###### Level 6 heading
-
-Each heading also gets an automatic anchor made from its text, lowercased with dashes between words. That means you can link to any section, for example `[see lists](#lists)`.
-
-## Inline text
-
-### Emphasis and strong
+## Paragraphs and line breaks
 
 ```markdown
-*italic*, **bold**, and ***both***.
+A blank line starts a new paragraph.
+
+A backslash at the end of a line\
+forces a line break.
 ```
-
-Renders as: *italic*, **bold**, and ***both***.
-
-### Strikethrough
-
-```markdown
-~~deleted ideas~~
-```
-
-Renders as: ~~deleted ideas~~
-
-### Superscript and subscript
-
-Wrap text in carets for superscript and tildes for subscript. No spaces are allowed inside; escape a space with a backslash if you really need one.
-
-```markdown
-H~2~O and E = mc^2^
-```
-
-Renders as: H~2~O and E = mc^2^
-
-### Inline code
-
-Wrap code in backticks.
-
-```markdown
-Run `./build.sh` to rebuild.
-```
-
-Renders as: Run `./build.sh` to rebuild.
-
-### Links
-
-```markdown
-[Pandoc's manual](https://pandoc.org/MANUAL.html)
-<https://pandoc.org>
-[jump to lists](#lists)
-```
-
-Renders as: [Pandoc's manual](https://pandoc.org/MANUAL.html), <https://pandoc.org>, and [jump to lists](#lists).
-
-### Smart typography
-
-Pandoc quietly improves punctuation: straight quotes become curly quotes, two dashes become an en dash, three become an em dash, and three dots become an ellipsis.
-
-```markdown
-"Quotes" -- dashes --- and ellipses...
-```
-
-Renders as: "Quotes" -- dashes --- and ellipses...
 
 ## Lists
 
-### Unordered lists
-
-Start each item with `-`. Indent nested items by four spaces. Leave a blank line before the list.
+A blank line is required before a list. Nest with four spaces.
 
 ```markdown
-- Never trust a suspicious-looking sandwich.
-- The deeper you go, the stranger things become.
-    - First, you find a spoon.
-    - Then, you find another spoon.
+- item
+- item
+    - nested
 ```
 
-Renders as:
+Result:
 
-- Never trust a suspicious-looking sandwich.
-- The deeper you go, the stranger things become.
-    - First, you find a spoon.
-    - Then, you find another spoon.
-
-### Ordered lists
-
-Use numbers followed by a dot. The first number sets where the list starts, and the rest are renumbered automatically.
+- item
+- item
+    - nested
 
 ```markdown
-3. Stare at the ceiling.
-4. Question the existence of ceilings.
-5. Repeat until further notice.
+3. starts at 3
+4. renumbers itself
 ```
 
-Renders as:
+Result:
 
-3. Stare at the ceiling.
-4. Question the existence of ceilings.
-5. Repeat until further notice.
-
-### Task lists
-
-Put `[ ]` or `[x]` after the dash for checkboxes.
+3. starts at 3
+4. renumbers itself
 
 ```markdown
-- [x] Write the article
-- [ ] Proofread it
+- [x] done
+- [ ] todo
 ```
 
-Renders as:
+Result:
 
-- [x] Write the article
-- [ ] Proofread it
-
-### Definition lists
-
-Put the term on its own line, then start the definition on the next line with a colon and spaces.
+- [x] done
+- [ ] todo
 
 ```markdown
-Debugging
-:   Removing bugs from software while introducing new problems.
+Term
+:   Definition
 ```
 
-Renders as:
+Result:
 
-Debugging
-:   Removing bugs from software while introducing new problems.
+Term
+:   Definition
 
-## Quotes and breaks
-
-### Blockquotes
-
-Start each line with `>`. For an attribution, add a final paragraph that begins with an em dash. The stylesheet right-aligns and shrinks the last paragraph of any quote that has two or more paragraphs, so keep the attribution as the last one.
+## Quotes and rules
 
 ```markdown
-> The moon is just the sun's night shift.
+> Quote text.
 >
-> — Anonymous Moon Economist
+> — Attribution
 ```
 
-Renders as:
+Result:
 
-> The moon is just the sun's night shift.
+> Quote text.
 >
-> — Anonymous Moon Economist
+> — Attribution
 
-### Line blocks
-
-Line blocks keep each line break exactly as written. Start every line with a vertical bar and a space. They suit addresses and poems.
+The last paragraph of a quote with two or more paragraphs is right-aligned and smaller, so use it for the attribution only.
 
 ```markdown
-| Written somewhere on Earth,
-| Probably near a coffee shop,
-| Planet Earth, Solar System.
+| line one
+| line two
 ```
 
-Renders as:
+Result (a line block keeps its line breaks, good for addresses and poems):
 
-| Written somewhere on Earth,
-| Probably near a coffee shop,
-| Planet Earth, Solar System.
+| line one
+| line two
 
-### Horizontal rules
+A horizontal rule is `---` on its own line with a blank line on each side.
 
-Put three dashes on a line by themselves, with a blank line on each side.
+## Code
 
-```markdown
----
-```
-
-Renders as:
-
----
-
-## Media
-
-Image and media paths are relative to the built page, which lives in `articles/`. A file in `res/` is therefore written as `../res/file.png`. These are shown as code only, so no broken images appear on this page.
-
-### Images with captions
-
-An image on its own in a paragraph becomes a figure, and its alt text is used as the caption.
-
-```markdown
-![Figure 1. The finished board.](../res/board.png)
-```
-
-### Images without captions
-
-To keep an image as a plain image, add a backslash straight after it. The backslash becomes a line break, which stops Pandoc from treating the image as a figure.
-
-```markdown
-![The finished board](../res/board.png)\
-```
-
-Images fill the width of the article and are capped at 500 pixels tall.
-
-### Video and audio
-
-Use the image syntax with a video or audio file. Pandoc recognises the file extension and builds a video or audio player instead of an image.
-
-```markdown
-![](../res/demo.mp4)
-
-![](../res/theme.mp3)
-```
-
-## Code and tables
-
-### Code blocks
-
-Fence the code with three backticks and name the language after the opening fence. Pandoc highlights the code when it builds the page, and the colors switch along with the light and dark toggle. Names that work include `javascript`, `typescript`, `python`, `c`, `cpp`, `rust`, `go`, `java`, `lua`, `bash`, `html`, `css`, `json`, `yaml` and `markdown`. Run `pandoc --list-highlight-languages` to see the full list. A block with no language, or one Pandoc doesn't know, is shown in plain text.
+Fence with three backticks and add the language after the opening fence. Use four backticks to show a fence inside a block.
 
 ````markdown
-```javascript
-function makeSandwich() {
-	return { bread: "bread", cheese: "cheese" };
+```odin
+main :: proc() {
+	fmt.println("Hellope!")
 }
 ```
 ````
 
-Renders as:
+Result:
 
-```javascript
-function makeSandwich() {
-	return { bread: "bread", cheese: "cheese" };
+```odin
+package main
+
+import "core:fmt"
+
+main :: proc() {
+	fmt.println("Hellope!")
 }
 ```
 
-To show a code block inside a code block, as above, use four backticks for the outer fence.
+- Names that work include `odin`, `javascript`, `typescript`, `python`, `c`, `cpp`, `rust`, `go`, `java`, `lua`, `bash`, `html`, `css`, `json`, `yaml` and `markdown`.
+- Full list: `pandoc --list-highlight-languages`.
+- No language, or an unknown one, gives plain text.
+- Inline code is single backticks. To put a backtick inside it, wrap it in double backticks with a space on each side.
 
-### Tables
-
-Separate columns with vertical bars. The dashes under the header row can have colons to set alignment.
+## Tables
 
 ```markdown
-| Object       | Quantity | Importance     |
-|:-------------|---------:|:--------------:|
-| Potatoes     |       17 | Very high      |
-| Rubber ducks |       42 | Extremely high |
+| Left | Right | Center |
+|:-----|------:|:------:|
+| a    |     1 |   x    |
+| b    |    22 |   y    |
 ```
 
-Renders as:
+Result:
 
-| Object       | Quantity | Importance     |
-|:-------------|---------:|:--------------:|
-| Potatoes     |       17 | Very high      |
-| Rubber ducks |       42 | Extremely high |
+| Left | Right | Center |
+|:-----|------:|:------:|
+| a    |     1 |   x    |
+| b    |    22 |   y    |
+
+The colons in the divider row set alignment. Wide tables scroll sideways on a phone.
+
+## Images and media
+
+Paths are relative to the built page in `articles/`, so a file in `res/` is `../res/`.
+
+| Write                    | Get                                               |
+|:-------------------------|:--------------------------------------------------|
+| `![Caption](../res/a.png)`  | Figure. The alt text becomes the caption.      |
+| `![Alt](../res/a.png)\`     | Plain image. The trailing backslash stops the figure. |
+| `![](../res/a.mp4)`         | Video player.                                  |
+| `![](../res/a.mp3)`         | Audio player.                                  |
+
+Images are full width and capped at 500px tall.
 
 ## Footnotes
 
-Mark the spot with `[^label]` and write the note anywhere in the file as `[^label]: The note`. All footnotes are collected at the bottom of the page, each with a link back to where it came from.
-
 ```markdown
-Footnotes are tidy.[^tidy]
+Text with a note.[^1]
 
-[^tidy]: They are collected at the bottom of the article.
+[^1]: The note. It can sit anywhere in the file.
 ```
 
-Renders as: Footnotes are tidy.[^tidy]
+Result: Text with a note.[^demo]
 
-[^tidy]: They are collected at the bottom of the article.
+[^demo]: Notes collect at the bottom of the page and link back to where they came from.
 
-## What is not covered
+## Gotchas
 
-Pandoc passes raw HTML through untouched, but the stylesheet has no rules for tags such as `<kbd>`, `<mark>`, `<details>`, `<abbr>` or `<iframe>`, so they will look unstyled. Stick to the elements above and every article will match the rest of the site.
+- Put a blank line before lists, quotes, tables and code fences, or they render as plain text.
+- Raw HTML passes through, but `article.css` has no rules for `kbd`, `mark`, `details`, `abbr` or `iframe`. Avoid them.
+- Escape special characters with a backslash: `\*`, `\_`, `\#`, `\|`.
+- Two `$` in one paragraph can be read as math. Write `\$` for a literal dollar sign.
+- Straight quotes, `--` and `...` are converted to curly quotes, dashes and an ellipsis. Escape with a backslash to keep them literal.

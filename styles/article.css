@@ -39,6 +39,10 @@ main {
 	overflow-wrap: break-word;
 }
 
+main [id] {
+	scroll-margin-top: 70px;
+}
+
 main p {
 	margin: 0 0 22px;
 }
