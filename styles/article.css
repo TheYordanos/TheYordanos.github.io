@@ -294,6 +294,44 @@ main pre code span.op { color: var(--hl-operator); }
 main pre code span.al,
 main pre code span.wa { color: var(--hl-error); font-weight: 700; }
 
+/* COPY BUTTON */
+.code-wrap {
+	position: relative;
+}
+
+.copy-btn {
+	position: absolute;
+	top: 8px;
+	right: 8px;
+	padding: 3px 9px;
+	font: inherit;
+	font-size: 12px;
+	line-height: 1.5;
+	color: var(--hl-comment);
+	background: var(--code-bg);
+	border: 1px solid var(--border);
+	border-radius: 4px;
+	cursor: pointer;
+	opacity: 0;
+	transition: opacity 0.15s;
+}
+
+.code-wrap:hover .copy-btn,
+.copy-btn:focus-visible,
+.copy-btn.done {
+	opacity: 1;
+}
+
+.copy-btn:hover {
+	color: var(--text);
+	border-color: var(--hl-comment);
+}
+
+/* No hover on touch screens, so keep the button visible there */
+@media (hover: none) {
+	.copy-btn { opacity: 1; }
+}
+
 /* TABLES */
 main table {
 	display: block;
