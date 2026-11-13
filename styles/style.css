@@ -233,12 +233,6 @@ footer {
 	font-size: 14px;
 }
 
-.now-updated {
-	margin-top: 18px;
-	font-size: 13px;
-	color: var(--meta);
-}
-
 /* BOOKS SECTION ========================= */
 .books-grid {
 	display: grid;
