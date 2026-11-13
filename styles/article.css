@@ -1,3 +1,34 @@
+/* CODE COLORS */
+:root {
+	--code-bg: #e9e9e9;
+	--code-fg: #252525;
+
+	--hl-keyword: #8e24aa;
+	--hl-string: #1b6e2a;
+	--hl-number: #b03a00;
+	--hl-comment: #5c6370;
+	--hl-function: #0b5cad;
+	--hl-type: #00695c;
+	--hl-meta: #8a5200;
+	--hl-operator: #3b4252;
+	--hl-error: #c62828;
+}
+
+body.dark {
+	--code-bg: #191d24;
+	--code-fg: #e6e6e6;
+
+	--hl-keyword: #c792ea;
+	--hl-string: #a5d46f;
+	--hl-number: #f78c6c;
+	--hl-comment: #8b95a5;
+	--hl-function: #82aaff;
+	--hl-type: #4ec9b0;
+	--hl-meta: #e0af68;
+	--hl-operator: #a9b7c6;
+	--hl-error: #ff6b6b;
+}
+
 body {
 	max-width: 680px;
 }
@@ -192,21 +223,17 @@ main code {
 
 /* CODE BLOCKS */
 main pre {
-	background: #e9e9e9;
-	color: #252525;
+	background: var(--code-bg);
+	color: var(--code-fg);
 	border: 1px solid var(--border);
 	border-radius: 6px;
 	padding: 0;
 	margin: 25px 0;
 	overflow-x: auto;
+	scrollbar-color: var(--hl-comment) transparent;
 	line-height: 1.6;
 	font-size: 13px;
 	tab-size: 4;
-}
-
-body.dark main pre {
-	background: #191d24;
-	color: #e6e6e6;
 }
 
 main pre code {
@@ -222,6 +249,46 @@ main pre code {
 	overflow-wrap: normal;
 	white-space: pre;
 }
+
+/* SYNTAX HIGHLIGHTING */
+main pre code span.kw,
+main pre code span.cf { color: var(--hl-keyword); }
+
+main pre code span.st,
+main pre code span.ss,
+main pre code span.vs,
+main pre code span.ch,
+main pre code span.sc { color: var(--hl-string); }
+
+main pre code span.dv,
+main pre code span.bn,
+main pre code span.fl,
+main pre code span.cn { color: var(--hl-number); }
+
+main pre code span.co,
+main pre code span.do,
+main pre code span.an,
+main pre code span.cv,
+main pre code span.in {
+	color: var(--hl-comment);
+	font-style: italic;
+}
+
+main pre code span.fu { color: var(--hl-function); }
+
+main pre code span.dt,
+main pre code span.bu,
+main pre code span.ex { color: var(--hl-type); }
+
+main pre code span.pp,
+main pre code span.im,
+main pre code span.ot,
+main pre code span.at { color: var(--hl-meta); }
+
+main pre code span.op { color: var(--hl-operator); }
+
+main pre code span.al,
+main pre code span.wa { color: var(--hl-error); font-weight: 700; }
 
 /* TABLES */
 main table {
@@ -310,8 +377,6 @@ main dd {
 
 	main pre {
 		font-size: 12px;
-		margin-left: -4px;
-		margin-right: -4px;
 	}
 
 	main pre code {

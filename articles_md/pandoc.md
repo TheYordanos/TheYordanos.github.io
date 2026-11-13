@@ -4,7 +4,7 @@ description: A cheat sheet of every Markdown element available when writing arti
 date: 2026-11-13
 ---
 
-Everything in `content/` is written in Markdown and turned into HTML by Pandoc when the build script runs. Pandoc's flavour of Markdown can do a lot, but this site only styles a specific set of elements. This article is the cheat sheet: each element, how to write it, and what it looks like once built.
+Everything in `articles_md/` is written in Markdown and turned into HTML by Pandoc when the build script runs. Pandoc's flavour of Markdown can do a lot, but this site only styles a specific set of elements. This article is the cheat sheet: each element, how to write it, and what it looks like once built.
 
 ## The basics
 
@@ -266,7 +266,7 @@ Use the image syntax with a video or audio file. Pandoc recognises the file exte
 
 ### Code blocks
 
-Fence the code with three backticks and name the language after the opening fence. Syntax highlighting is turned off in the build, so code blocks use the colors from the stylesheet and follow light and dark mode.
+Fence the code with three backticks and name the language after the opening fence. Pandoc highlights the code when it builds the page, and the colors switch along with the light and dark toggle. Names that work include `javascript`, `typescript`, `python`, `c`, `cpp`, `rust`, `go`, `java`, `lua`, `bash`, `html`, `css`, `json`, `yaml` and `markdown`. Run `pandoc --list-highlight-languages` to see the full list. A block with no language, or one Pandoc doesn't know, is shown in plain text.
 
 ````markdown
 ```javascript

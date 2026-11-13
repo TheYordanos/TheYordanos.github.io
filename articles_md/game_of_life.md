@@ -54,7 +54,7 @@ Why is there a another 'next' array? The Game of Life algorithm does not update 
 Initialize raylib in the main function:
 ```odin
 main :: proc() {
-	// Initial grid here...
+	// Initialize grid here...
 
 	rl.SetTraceLogLevel(.ERROR)
 	rl.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Game of Life")
@@ -77,7 +77,7 @@ main :: proc() {
 ```
 
 ## Initialize
-Game of life implementation use mouse input to toggle between cell's state. but for our implementation we'll initialize all grid cells with a random 50/50 chance state.
+Many Game of life implementations use mouse input to toggle between cell's state, but for our implementation we'll initialize all grid cells with a random 50/50 chance state.
 ```odin
 for x in 0..<COLS {
 	for y in 0..<ROWS {
@@ -131,6 +131,7 @@ grid = next
 ```
 
 Here is what's happening:
+
 1. We iterate through every single cell
 2. We calculate how many neighbors the cell has.
 3. Based on the rules of Game of Life we laid out earlier we set its state.

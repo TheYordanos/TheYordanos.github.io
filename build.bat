@@ -1,5 +1,5 @@
 @echo off
-rem Builds articles\*.html from content\*.md with Pandoc, then regenerates the
+rem Builds articles\*.html from articles_md\*.md with Pandoc, then regenerates the
 rem article list in index.html using the PowerShell code embedded at the bottom
 rem of this file (everything after the #PS-BEGIN line).
 rem
@@ -99,7 +99,7 @@ if /i "%STATUS:~0,5%"=="draft" (
 	exit /b 0
 )
 
-pandoc "%SRC%" --from markdown --to html5 --template="%ARTICLE_TPL%" --syntax-highlighting=none -o "%OUT_DIR%\%SLUG%.html"
+pandoc "%SRC%" --from markdown --to html5 --template="%ARTICLE_TPL%" -o"%OUT_DIR%\%SLUG%.html"
 if errorlevel 1 (
 	echo error: pandoc failed on %SRC%
 	set "RC=1"

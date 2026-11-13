@@ -26,21 +26,22 @@ and the result.">
 
 		<main>
 			<h1>Pandoc</h1>
-			<p>Everything in <code>content/</code> is written in Markdown and turned
-into HTML by Pandoc when the build script runs. Pandoc’s flavour of
-Markdown can do a lot, but this site only styles a specific set of
+			<p>Everything in <code>articles_md/</code> is written in Markdown and
+turned into HTML by Pandoc when the build script runs. Pandoc’s flavour
+of Markdown can do a lot, but this site only styles a specific set of
 elements. This article is the cheat sheet: each element, how to write
 it, and what it looks like once built.</p>
 <h2 id="the-basics">The basics</h2>
 <h3 id="front-matter">Front matter</h3>
 <p>Every article starts with a block of metadata between two lines of
 three dashes.</p>
-<pre class="yaml"><code>---
-title: Chess in Odin
-description: Shown in search results and link previews.
-date: 2026-09-12
-draft: true
----</code></pre>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span><span class="kw">:</span><span class="at"> Chess in Odin</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">description</span><span class="kw">:</span><span class="at"> Shown in search results and link previews.</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">date</span><span class="kw">:</span><span class="at"> </span><span class="bn">2026-09-12</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">draft</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span></code></pre></div>
 <ul>
 <li><code>title</code> becomes the page title, the big heading at the
 top, and the entry in the articles list on the home page.</li>
@@ -54,8 +55,9 @@ build, so they are never built or listed.</li>
 <p>A paragraph is any run of text. Start a new paragraph by leaving a
 blank line. To break a line without starting a new paragraph, end the
 line with a backslash.</p>
-<pre class="markdown"><code>First line\
-Second line, same paragraph.</code></pre>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>First line\</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>Second line, same paragraph.</span></code></pre></div>
 <p>Renders as:</p>
 <p>First line<br />
 Second line, same paragraph.</p>
@@ -63,11 +65,12 @@ Second line, same paragraph.</p>
 <p>The title already becomes the page’s single top-level heading, so
 start your own headings at two hashes. Using a single <code>#</code>
 would add a second top-level heading.</p>
-<pre class="markdown"><code>## Section
-### Subsection
-#### Level 4
-##### Level 5
-###### Level 6</code></pre>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">## Section</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">### Subsection</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Level 4</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">##### Level 5</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">###### Level 6</span></span></code></pre></div>
 <p>Levels two and three are used throughout this article. Here are the
 smaller ones:</p>
 <h4 id="level-4-heading">Level 4 heading</h4>
@@ -78,26 +81,31 @@ lowercased with dashes between words. That means you can link to any
 section, for example <code>[see lists](#lists)</code>.</p>
 <h2 id="inline-text">Inline text</h2>
 <h3 id="emphasis-and-strong">Emphasis and strong</h3>
-<pre class="markdown"><code>*italic*, **bold**, and ***both***.</code></pre>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>*italic*, **bold**, and ***both***.</span></code></pre></div>
 <p>Renders as: <em>italic</em>, <strong>bold</strong>, and
 <strong><em>both</em></strong>.</p>
 <h3 id="strikethrough">Strikethrough</h3>
-<pre class="markdown"><code>~~deleted ideas~~</code></pre>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>~~deleted ideas~~</span></code></pre></div>
 <p>Renders as: <del>deleted ideas</del></p>
 <h3 id="superscript-and-subscript">Superscript and subscript</h3>
 <p>Wrap text in carets for superscript and tildes for subscript. No
 spaces are allowed inside; escape a space with a backslash if you really
 need one.</p>
-<pre class="markdown"><code>H~2~O and E = mc^2^</code></pre>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>H~2~O and E = mc^2^</span></code></pre></div>
 <p>Renders as: H<sub>2</sub>O and E = mc<sup>2</sup></p>
 <h3 id="inline-code">Inline code</h3>
 <p>Wrap code in backticks.</p>
-<pre class="markdown"><code>Run `./build.sh` to rebuild.</code></pre>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Run <span class="in">`./build.sh`</span> to rebuild.</span></code></pre></div>
 <p>Renders as: Run <code>./build.sh</code> to rebuild.</p>
 <h3 id="links">Links</h3>
-<pre class="markdown"><code>[Pandoc&#39;s manual](https://pandoc.org/MANUAL.html)
-&lt;https://pandoc.org&gt;
-[jump to lists](#lists)</code></pre>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Pandoc&#39;s manual</span><span class="co">](https://pandoc.org/MANUAL.html)</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ot">&lt;https://pandoc.org&gt;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">jump to lists</span><span class="co">](#lists)</span></span></code></pre></div>
 <p>Renders as: <a href="https://pandoc.org/MANUAL.html">Pandoc’s
 manual</a>, <a href="https://pandoc.org"
 class="uri">https://pandoc.org</a>, and <a href="#lists">jump to
@@ -106,16 +114,18 @@ lists</a>.</p>
 <p>Pandoc quietly improves punctuation: straight quotes become curly
 quotes, two dashes become an en dash, three become an em dash, and three
 dots become an ellipsis.</p>
-<pre class="markdown"><code>&quot;Quotes&quot; -- dashes --- and ellipses...</code></pre>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>&quot;Quotes&quot; -- dashes --- and ellipses...</span></code></pre></div>
 <p>Renders as: “Quotes” – dashes — and ellipses…</p>
 <h2 id="lists">Lists</h2>
 <h3 id="unordered-lists">Unordered lists</h3>
 <p>Start each item with <code>-</code>. Indent nested items by four
 spaces. Leave a blank line before the list.</p>
-<pre class="markdown"><code>- Never trust a suspicious-looking sandwich.
-- The deeper you go, the stranger things become.
-    - First, you find a spoon.
-    - Then, you find another spoon.</code></pre>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Never trust a suspicious-looking sandwich.</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>The deeper you go, the stranger things become.</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>First, you find a spoon.</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Then, you find another spoon.</span></code></pre></div>
 <p>Renders as:</p>
 <ul>
 <li>Never trust a suspicious-looking sandwich.</li>
@@ -128,9 +138,10 @@ spaces. Leave a blank line before the list.</p>
 <h3 id="ordered-lists">Ordered lists</h3>
 <p>Use numbers followed by a dot. The first number sets where the list
 starts, and the rest are renumbered automatically.</p>
-<pre class="markdown"><code>3. Stare at the ceiling.
-4. Question the existence of ceilings.
-5. Repeat until further notice.</code></pre>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Stare at the ceiling.</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>Question the existence of ceilings.</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>Repeat until further notice.</span></code></pre></div>
 <p>Renders as:</p>
 <ol start="3" type="1">
 <li>Stare at the ceiling.</li>
@@ -140,8 +151,9 @@ starts, and the rest are renumbered automatically.</p>
 <h3 id="task-lists">Task lists</h3>
 <p>Put <code>[ ]</code> or <code>[x]</code> after the dash for
 checkboxes.</p>
-<pre class="markdown"><code>- [x] Write the article
-- [ ] Proofread it</code></pre>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[x]</span> Write the article</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[ ]</span> Proofread it</span></code></pre></div>
 <p>Renders as:</p>
 <ul class="task-list">
 <li><label><input type="checkbox" checked="" />Write the
@@ -151,8 +163,9 @@ article</label></li>
 <h3 id="definition-lists">Definition lists</h3>
 <p>Put the term on its own line, then start the definition on the next
 line with a colon and spaces.</p>
-<pre class="markdown"><code>Debugging
-:   Removing bugs from software while introducing new problems.</code></pre>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>Debugging</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>:   Removing bugs from software while introducing new problems.</span></code></pre></div>
 <p>Renders as:</p>
 <dl>
 <dt>Debugging</dt>
@@ -166,9 +179,10 @@ Removing bugs from software while introducing new problems.
 final paragraph that begins with an em dash. The stylesheet right-aligns
 and shrinks the last paragraph of any quote that has two or more
 paragraphs, so keep the attribution as the last one.</p>
-<pre class="markdown"><code>&gt; The moon is just the sun&#39;s night shift.
-&gt;
-&gt; — Anonymous Moon Economist</code></pre>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; The moon is just the sun&#39;s night shift.</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; — Anonymous Moon Economist</span></span></code></pre></div>
 <p>Renders as:</p>
 <blockquote>
 <p>The moon is just the sun’s night shift.</p>
@@ -177,9 +191,10 @@ paragraphs, so keep the attribution as the last one.</p>
 <h3 id="line-blocks">Line blocks</h3>
 <p>Line blocks keep each line break exactly as written. Start every line
 with a vertical bar and a space. They suit addresses and poems.</p>
-<pre class="markdown"><code>| Written somewhere on Earth,
-| Probably near a coffee shop,
-| Planet Earth, Solar System.</code></pre>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Written somewhere on Earth,</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Probably near a coffee shop,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Planet Earth, Solar System.</span></code></pre></div>
 <p>Renders as:</p>
 <div class="line-block">Written somewhere on Earth,<br />
 Probably near a coffee shop,<br />
@@ -187,7 +202,8 @@ Planet Earth, Solar System.</div>
 <h3 id="horizontal-rules">Horizontal rules</h3>
 <p>Put three dashes on a line by themselves, with a blank line on each
 side.</p>
-<pre class="markdown"><code>---</code></pre>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span></code></pre></div>
 <p>Renders as:</p>
 <hr />
 <h2 id="media">Media</h2>
@@ -198,45 +214,58 @@ broken images appear on this page.</p>
 <h3 id="images-with-captions">Images with captions</h3>
 <p>An image on its own in a paragraph becomes a figure, and its alt text
 is used as the caption.</p>
-<pre class="markdown"><code>![Figure 1. The finished board.](../res/board.png)</code></pre>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="al">![Figure 1. The finished board.](../res/board.png)</span></span></code></pre></div>
 <h3 id="images-without-captions">Images without captions</h3>
 <p>To keep an image as a plain image, add a backslash straight after it.
 The backslash becomes a line break, which stops Pandoc from treating the
 image as a figure.</p>
-<pre class="markdown"><code>![The finished board](../res/board.png)\</code></pre>
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="al">![The finished board](../res/board.png)</span>\</span></code></pre></div>
 <p>Images fill the width of the article and are capped at 500 pixels
 tall.</p>
 <h3 id="video-and-audio">Video and audio</h3>
 <p>Use the image syntax with a video or audio file. Pandoc recognises
 the file extension and builds a video or audio player instead of an
 image.</p>
-<pre class="markdown"><code>![](../res/demo.mp4)
-
-![](../res/theme.mp3)</code></pre>
+<div class="sourceCode" id="cb19"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="al">![](../res/demo.mp4)</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="al">![](../res/theme.mp3)</span></span></code></pre></div>
 <h2 id="code-and-tables">Code and tables</h2>
 <h3 id="code-blocks">Code blocks</h3>
 <p>Fence the code with three backticks and name the language after the
-opening fence. Syntax highlighting is turned off in the build, so code
-blocks use the colors from the stylesheet and follow light and dark
-mode.</p>
-<pre class="markdown"><code>```javascript
-function makeSandwich() {
-    return { bread: &quot;bread&quot;, cheese: &quot;cheese&quot; };
-}
-```</code></pre>
+opening fence. Pandoc highlights the code when it builds the page, and
+the colors switch along with the light and dark toggle. Names that work
+include <code>javascript</code>, <code>typescript</code>,
+<code>python</code>, <code>c</code>, <code>cpp</code>,
+<code>rust</code>, <code>go</code>, <code>java</code>, <code>lua</code>,
+<code>bash</code>, <code>html</code>, <code>css</code>,
+<code>json</code>, <code>yaml</code> and <code>markdown</code>. Run
+<code>pandoc --list-highlight-languages</code> to see the full list. A
+block with no language, or one Pandoc doesn’t know, is shown in plain
+text.</p>
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="in">```javascript</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">makeSandwich</span>() {</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> { <span class="dt">bread</span><span class="op">:</span> <span class="st">&quot;bread&quot;</span><span class="op">,</span> <span class="dt">cheese</span><span class="op">:</span> <span class="st">&quot;cheese&quot;</span> }<span class="op">;</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
 <p>Renders as:</p>
-<pre class="javascript"><code>function makeSandwich() {
-    return { bread: &quot;bread&quot;, cheese: &quot;cheese&quot; };
-}</code></pre>
+<div class="sourceCode" id="cb21"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">makeSandwich</span>() {</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> { <span class="dt">bread</span><span class="op">:</span> <span class="st">&quot;bread&quot;</span><span class="op">,</span> <span class="dt">cheese</span><span class="op">:</span> <span class="st">&quot;cheese&quot;</span> }<span class="op">;</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>To show a code block inside a code block, as above, use four
 backticks for the outer fence.</p>
 <h3 id="tables">Tables</h3>
 <p>Separate columns with vertical bars. The dashes under the header row
 can have colons to set alignment.</p>
-<pre class="markdown"><code>| Object       | Quantity | Importance     |
-|:-------------|---------:|:--------------:|
-| Potatoes     |       17 | Very high      |
-| Rubber ducks |       42 | Extremely high |</code></pre>
+<div class="sourceCode" id="cb22"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Object       <span class="pp">|</span> Quantity <span class="pp">|</span> Importance     <span class="pp">|</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="pp">|:-------------|---------:|:--------------:|</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Potatoes     <span class="pp">|</span>       17 <span class="pp">|</span> Very high      <span class="pp">|</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Rubber ducks <span class="pp">|</span>       42 <span class="pp">|</span> Extremely high <span class="pp">|</span></span></code></pre></div>
 <p>Renders as:</p>
 <table>
 <thead>
@@ -264,9 +293,10 @@ can have colons to set alignment.</p>
 in the file as <code>[^label]: The note</code>. All footnotes are
 collected at the bottom of the page, each with a link back to where it
 came from.</p>
-<pre class="markdown"><code>Footnotes are tidy.[^tidy]
-
-[^tidy]: They are collected at the bottom of the article.</code></pre>
+<div class="sourceCode" id="cb23"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>Footnotes are tidy.<span class="ot">[^tidy]</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="ot">[^tidy]: </span>They are collected at the bottom of the article.</span></code></pre></div>
 <p>Renders as: Footnotes are tidy.<a href="#fn1" class="footnote-ref"
 id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
 <h2 id="what-is-not-covered">What is not covered</h2>
