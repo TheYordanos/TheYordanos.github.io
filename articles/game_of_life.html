@@ -139,31 +139,32 @@ class="sourceCode odin"><code class="sourceCode odin"><span id="cb4-1"><a href="
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <h2 id="update">Update</h2>
-<pre><code>for x in 0..&lt;COLS {
-    for y in 0..&lt;ROWS {
-
-        neighbours_count: i32 = 0
-        for i in -1..=1 {
-            for j in -1..=1 {
-                if i == 0 &amp;&amp; j == 0 do continue
-
-                dx := (x + i + COLS) % COLS
-                dy := (y + j + ROWS) % ROWS
-
-                if grid[dx][dy] == .ALIVE do neighbours_count += 1
-            }
-        }
-
-        if grid[x][y] == .ALIVE {
-            next[x][y] = (neighbours_count == 2 || neighbours_count == 3) ? .ALIVE : .DEAD
-        } else {
-            next[x][y] = neighbours_count == 3 ? .ALIVE : .DEAD
-        }
-
-    }
-}
-
-grid = next</code></pre>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> x <span class="cf">in</span> <span class="dv">0</span><span class="op">..&lt;</span>COLS <span class="op">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> y <span class="cf">in</span> <span class="dv">0</span><span class="op">..&lt;</span>ROWS <span class="op">{</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">neighbours_count</span><span class="op">:</span> <span class="dt">i32</span> <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i <span class="cf">in</span> <span class="op">-</span><span class="dv">1</span><span class="op">..=</span><span class="dv">1</span> <span class="op">{</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> j <span class="cf">in</span> <span class="op">-</span><span class="dv">1</span><span class="op">..=</span><span class="dv">1</span> <span class="op">{</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> i <span class="op">==</span> <span class="dv">0</span> <span class="op">&amp;&amp;</span> j <span class="op">==</span> <span class="dv">0</span> <span class="cf">do</span> <span class="cf">continue</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>                <span class="va">dx </span><span class="op">:=</span><span class="fu"> </span><span class="op">(</span>x <span class="op">+</span> i <span class="op">+</span> COLS<span class="op">)</span> <span class="op">%</span> COLS</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>                <span class="va">dy </span><span class="op">:=</span><span class="fu"> </span><span class="op">(</span>y <span class="op">+</span> j <span class="op">+</span> ROWS<span class="op">)</span> <span class="op">%</span> ROWS</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> grid<span class="op">[</span>dx<span class="op">][</span>dy<span class="op">]</span> <span class="op">==</span> <span class="op">.</span>ALIVE <span class="cf">do</span> neighbours_count <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>            <span class="op">}</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> grid<span class="op">[</span>x<span class="op">][</span>y<span class="op">]</span> <span class="op">==</span> <span class="op">.</span>ALIVE <span class="op">{</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>            next<span class="op">[</span>x<span class="op">][</span>y<span class="op">]</span> <span class="op">=</span><span class="fu"> </span><span class="op">(</span>neighbours_count <span class="op">==</span> <span class="dv">2</span> <span class="op">||</span> neighbours_count <span class="op">==</span> <span class="dv">3</span><span class="op">)</span> <span class="op">?</span> <span class="op">.</span>ALIVE <span class="op">:</span> <span class="op">.</span>DEAD</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>            next<span class="op">[</span>x<span class="op">][</span>y<span class="op">]</span> <span class="op">=</span> neighbours_count <span class="op">==</span> <span class="dv">3</span> <span class="op">?</span> <span class="op">.</span>ALIVE <span class="op">:</span> <span class="op">.</span>DEAD</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>grid <span class="op">=</span> next</span></code></pre></div>
 <p>Here is what’s happening:</p>
 <ol type="1">
 <li>We iterate through every single cell</li>

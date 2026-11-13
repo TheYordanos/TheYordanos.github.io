@@ -102,7 +102,7 @@ for x in 0..<COLS {
 }
 ```
 ## Update
-```
+```odin
 for x in 0..<COLS {
 	for y in 0..<ROWS {
 
