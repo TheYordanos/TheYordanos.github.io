@@ -194,7 +194,30 @@ odin run .
 
 ![](../res/articles/gol/gol.png)
 
-Try adding additional features like pausing, steping with a key press, clicking to toggle cell state, restart/clearing the grid and and explore how initial conditions affect the patterns that emerge. You can find on [Game of Life Wiki](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life). Enjoy :)
+Try adding additional features like pausing, steping with a key press, clicking to toggle cell state, restart/clearing the grid and and explore how initial conditions affect the patterns that emerge.
+
+Pausing can be achieved by holding a variable `is_running: bool` and updating it with a key press
+```odin
+if rl.IsKeyPressed(.SPACE) do is_running = !is_running
+
+if is_running {
+	// Update...
+}
+```
+
+Mouse interactions:
+```odin
+if rl.IsMouseButtonPressed(.LEFT) {
+	mouse_pos := rl.GetMousePosition()
+
+	x := i32(mouse_pos.x / f32(CELL_SIZE))
+	y := i32(mouse_pos.y / f32(CELL_SIZE))
+
+	grid[x][y] = grid[x][y] == .ALIVE ? .DEAD : .ALIVE
+}
+```
+
+You can find additional information on [Game of Life's Wiki](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life). Enjoy :)
 
 ## Full source code
 ```odin
