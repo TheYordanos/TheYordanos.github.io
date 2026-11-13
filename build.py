@@ -96,8 +96,9 @@ def splice_index(items):
         indent = ""
 
     lines = [
-        f'{ITEM_INDENT}<li><a href="articles/{slug}.html">{html.escape(title)}</a></li>'
-        for _, slug, title in items
+        f'{ITEM_INDENT}<li><time>{date if date != "0000-00-00" else ""}</time>'
+        f'<a href="articles/{slug}.html">{html.escape(title)}</a></li>'
+        for date, slug, title in items
     ]
     body = nl.join(lines) + nl if lines else ""
     new = data[: s + len(START_MARK)] + nl + body + indent + data[e:]

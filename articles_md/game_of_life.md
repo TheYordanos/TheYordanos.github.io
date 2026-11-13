@@ -1,7 +1,7 @@
 ---
 title: Game of Life
 description: John Conway's Cellular Automata
-date: 2026-11-13
+date: 2026-11-14
 ---
 
 The [Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life) is a cellular automata made by a British mathematician name [John Horton Conway](https://en.wikipedia.org/wiki/John_Horton_Conway) in 1970.

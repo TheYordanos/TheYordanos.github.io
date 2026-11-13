@@ -183,6 +183,27 @@ footer {
 	color: white;
 }
 
+/* ARTICLES SECTION ========================= */
+.articles ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	/*columns: 2 18rem;*/
+	/*column-gap: 2rem;*/
+}
+
+.articles ul li {
+	display: flex;
+	gap: 1.25rem;
+	/*break-inside: avoid;*/
+}
+
+.articles ul time {
+	flex: none;
+	opacity: 0.6;
+	font-variant-numeric: tabular-nums;
+}
+
 /* PROJECTS SECTION ========================= */
 .projects-grid {
 	margin-top: 25px;
