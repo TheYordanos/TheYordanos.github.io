@@ -215,6 +215,9 @@ class="sourceCode css"><code class="sourceCode css"><span id="cb7-1"><a href="#c
 easiest:</p>
 <div class="sourceCode" id="cb8"><pre
 class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>A sentence with a note.^<span class="co">[</span><span class="ot">The note sits right here in the source.</span><span class="co">]</span></span></code></pre></div>
+<h2 id="download-source">Download Source</h2>
+<p>Here is a <a href="../res/articles/minimal_blog/minimal_blog.zip">zip
+file (3.7 KB)</a> for you to download and checkout.</p>
 <h2 id="growing-it">Growing it</h2>
 <p>Later, in rough order of usefulness: skip articles whose Markdown has
 not changed, give Pandoc your own HTML with <code>--template</code>, add
@@ -512,6 +515,18 @@ this.</span></p>
 <li>A note with several paragraphs is joined into one block, so keep
 them short.</li>
 </ul>
+<h3 id="download-links">Download links</h3>
+<p>A browser downloads any file it can’t display. So you can use just
+normal markdown links.</p>
+<div class="sourceCode" id="cb23"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Download something.zip (2.3 MB)</span><span class="co">](files/something.zip)</span></span></code></pre></div>
+<p>But for files the browser would open instead. A PDF, image or text
+file opens in the tab rather than saving. Pandoc can add the HTML
+download attribute with a key and a value:</p>
+<div class="sourceCode" id="cb24"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Download the notes</span><span class="co">](files/notes.pdf)</span>{download=&quot;notes.pdf&quot;}</span></code></pre></div>
+<p>A bare {download} doesn’t work, because Pandoc prints it as literal
+text after the link. You always need download=“name”.</p>
 <h3 id="gotchas">Gotchas</h3>
 <ul>
 <li>A title containing a colon must be quoted:

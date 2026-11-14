@@ -159,6 +159,9 @@ Now write footnotes in Markdown as usual. The inline form is the easiest:
 A sentence with a note.^[The note sits right here in the source.]
 ```
 
+## Download Source
+Here is a [zip file (3.7 KB)](../res/articles/minimal_blog/minimal_blog.zip) for you to download and checkout.
+
 ## Growing it
 
 Later, in rough order of usefulness: skip articles whose Markdown has not changed, give Pandoc your own HTML with `--template`, add an archive page, write an RSS feed. Each is a few lines. The cheatsheet below lists the Markdown that Pandoc understands.
@@ -374,6 +377,22 @@ Result: Text with a note.[^demo] Or write the note right in the sentence.^[Like 
 
 - Notes are numbered in the order they appear.
 - A note with several paragraphs is joined into one block, so keep them short.
+
+### Download links
+
+A browser downloads any file it can’t display. So you can use just normal markdown links.
+
+```markdown
+[Download something.zip (2.3 MB)](files/something.zip)
+```
+
+But for files the browser would open instead. A PDF, image or text file opens in the tab rather than saving. Pandoc can add the HTML download attribute with a key and a value:
+
+```markdown
+[Download the notes](files/notes.pdf){download="notes.pdf"}
+```
+
+A bare {download} doesn’t work, because Pandoc prints it as literal text after the link. You always need download="name".
 
 ### Gotchas
 
