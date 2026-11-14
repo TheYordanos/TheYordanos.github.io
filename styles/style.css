@@ -10,6 +10,7 @@
 	--border: #ddd;
 	--blockquote-border: #ccc;
 	--blockquote-text: #555;
+	--page-pad: 20px;
 }
 
 /* DARK MODE ========================= */
@@ -31,7 +32,7 @@ body {
 	color: var(--text);
 	max-width: 900px;
 	margin: 60px auto;
-	padding: 0 20px;
+	padding: 0 var(--page-pad);
 	line-height: 1.7;
 	font-size: 16px;
 }
@@ -101,6 +102,14 @@ footer {
 	justify-content: space-between;
 
 	z-index: 1000;
+}
+
+.site-nav::before {
+	content: "";
+	position: absolute;
+	inset: 0 calc(var(--page-pad) * -1);
+	background: var(--bg);
+	z-index: -1;
 }
 
 .nav-left a {
@@ -347,9 +356,10 @@ footer {
 }
 
 @media (max-width: 425px) {
+	:root { --page-pad: 16px; }
+
 	body {
 		margin: 30px auto;
-		padding: 0 16px;
 		font-size: 15px;
 	}
 
