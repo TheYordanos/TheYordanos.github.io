@@ -173,6 +173,7 @@ def write_feed(items, descriptions):
     updated = f"{entries[0][0]}T00:00:00Z" if entries else "1970-01-01T00:00:00Z"
     out = [
         '<?xml version="1.0" encoding="utf-8"?>',
+        '<?xml-stylesheet type="text/css" href="styles/feed.css"?>',
         '<feed xmlns="http://www.w3.org/2005/Atom">',
         f"<title>{esc(SITE_TITLE)}</title>",
         f'<link href="{SITE_URL}/"/>',

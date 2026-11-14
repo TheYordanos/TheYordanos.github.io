@@ -1,0 +1,95 @@
+@font-face { font-family: "Lato"; src: url("../res/fonts/Lato-Regular.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Lato"; src: url("../res/fonts/Lato-Bold.ttf") format("truetype"); font-weight: 700; font-style: normal; font-display: swap; }
+
+feed {
+	--bg: #f5f5f5;
+	--text: #333;
+	--meta: #777;
+	--border: #ddd;
+
+	display: block;
+	box-sizing: border-box;
+	max-width: 680px;
+	margin: 0 auto;
+	padding: 60px 20px;
+	background: var(--bg);
+	color: var(--text);
+	font-family: 'Lato', Arial, sans-serif;
+	font-size: 16px;
+	line-height: 1.7;
+}
+
+@media (prefers-color-scheme: dark) {
+	feed {
+		--bg: #0f1115;
+		--text: #e6e6e6;
+		--meta: #9aa0a6;
+		--border: #2a2f36;
+	}
+}
+
+/* a note for people who landed here by clicking "RSS" */
+feed::before {
+	content: "This is a feed. Copy this page's address into a feed reader to follow along.";
+	display: block;
+	margin-bottom: 30px;
+	padding: 10px 16px;
+	border: 1px solid var(--border);
+	border-radius: 8px;
+	color: var(--meta);
+	font-size: 14px;
+}
+
+feed > title {
+	display: block;
+	margin-top: 30px;
+	font-size: 32px;
+	font-weight: 700;
+	line-height: 1.3;
+}
+
+feed > link:not([rel]) {
+	display: block;
+	margin-bottom: 25px;
+	color: var(--meta);
+	font-size: 14px;
+}
+
+feed > link:not([rel])::after {
+	content: attr(href);
+}
+
+/* not worth showing */
+link[rel="self"], id, updated, author, feed > subtitle {
+	display: none;
+}
+
+entry {
+	display: block;
+	padding: 18px 0;
+	border-top: 1px solid var(--border);
+}
+
+entry > title {
+	display: block;
+	font-size: 20px;
+	font-weight: 700;
+	line-height: 1.4;
+}
+
+entry > summary {
+	display: block;
+	margin-top: 4px;
+}
+
+entry > link {
+	display: block;
+	margin-top: 2px;
+	color: var(--meta);
+	font-size: 14px;
+	word-break: break-all;
+}
+
+entry > link::after {
+	content: attr(href);
+}
