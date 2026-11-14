@@ -393,7 +393,7 @@ But for files the browser would open instead. A PDF, image or text file opens in
 [Download the notes](files/notes.pdf){download="notes.pdf"}
 ```
 
-A bare {download} doesn’t work, because Pandoc prints it as literal text after the link. You always need download="name".
+A bare `{download}` doesn’t work, because Pandoc prints it as literal text after the link. You always need `download="name"`.
 
 ### Gotchas
 
