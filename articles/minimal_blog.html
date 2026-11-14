@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="The smallest useful blog setup.
+Markdown files turned into pages by Pandoc and one Python script, with
+no theme and no framework.">
+
+		<title>A minimal static blog</title>
+
+		<meta property="og:type" content="article">
+		<meta property="og:site_name" content="Yordanos">
+		<meta property="og:title" content="A minimal static blog">
+		<meta property="og:description" content="The smallest useful blog setup. Markdown files turned into pages by Pandoc and one Python script, with no theme and no framework.">
+		<meta property="og:url" content="https://theyordanos.github.io/articles/minimal_blog.html">
+		<meta property="og:image" content="https://theyordanos.github.io/res/og.png">
+		<meta name="twitter:card" content="summary_large_image">
+		<link rel="canonical" href="https://theyordanos.github.io/articles/minimal_blog.html">
+
+		<link rel="alternate" type="application/atom+xml" title="Yordanos" href="https://theyordanos.github.io/feed.xml">
+
+		<link rel="icon" type="image/png" href="../res/theyordanos-icon.png">
+		<script>
+		try {
+			if (localStorage.getItem("ty_theme") === "dark") document.documentElement.classList.add("dark");
+		} catch (e) {}
+		</script>
+		<link rel="stylesheet" href="../styles/style.css">
+		<link rel="stylesheet" href="../styles/article.css">
+
+		<script src="../scripts/theme.js" defer></script>
+		<script src="../scripts/nav.js" defer></script>
+		<script src="../scripts/copy.js" defer></script>
+	</head>
+	<body>
+		<nav class="site-nav">
+			<div class="nav-left"><a href="../index.html#articles">Articles</a></div>
+			<button class="nav-toggle" id="nav-toggle">☰</button>
+			<div class="nav-links" id="nav-links">
+				<a href="../feed.xml">RSS</a>
+				<button id="theme-toggle">[dark]</button>
+			</div>
+		</nav>
+
+		<main>
+			<h1>A minimal static blog</h1>
+			<p class="meta">2026-11-14</p>
+			<p>A blog is a folder of HTML files and one page that links to them.
+Everything else is
+optional.<label for="sn-1" class="sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"><span class="sidenote">Plenty
+of good personal sites stay this close to the metal. <a
+href="https://gingerbill.org">gingerbill.org</a> is one: a plain
+single-column list of articles and little else.</span> This is the
+smallest version of the workflow this site uses. You write Markdown, run
+one command and upload the
+folder.<label for="sn-2" class="sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle"><span class="sidenote">Any
+static host works. <a href="https://pages.github.com">GitHub Pages</a>
+serves a repository’s files as they are, and it is where this site
+lives.</span></p>
+<h2 id="the-files">The files</h2>
+<pre class="text"><code>index.html     front page, with a list the script fills in
+style.css      all the styling
+build.py       the build system
+articles_md/   your Markdown, one file per article
+articles/      generated HTML, never edited by hand</code></pre>
+<p>You need <a href="https://pandoc.org/installing.html">Pandoc</a> and
+Python 3. Pandoc turns Markdown into
+HTML,<label for="sn-3" class="sidenote-number"></label><input type="checkbox" id="sn-3" class="margin-toggle"><span class="sidenote">The
+<a href="https://pandoc.org/MANUAL.html">Pandoc manual</a> is long. You
+only need a handful of flags from it.</span> and Python does the
+rest.</p>
+<h2 id="an-article">An article</h2>
+<p>A Markdown file with a small header on top:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> Hello</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> 2026-11-14</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>Some text, a <span class="co">[</span><span class="ot">link</span><span class="co">](https://example.com)</span> and <span class="in">`code`</span>.</span></code></pre></div>
+<ul>
+<li>The filename is the URL: <code>articles_md/hello.md</code> becomes
+<code>articles/hello.html</code>.</li>
+<li><code>date</code> is <code>YYYY-MM-DD</code>. The list is sorted by
+it, newest first.</li>
+<li><code>draft: true</code> keeps an article out of the build.</li>
+</ul>
+<h2 id="the-index-page">The index page</h2>
+<p>An ordinary page with two comment lines where the list goes:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode html"><code class="sourceCode html"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;!doctype</span> html<span class="dt">&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">html</span><span class="ot"> lang</span><span class="op">=</span><span class="st">&quot;en&quot;</span><span class="dt">&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">head</span><span class="dt">&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">meta</span><span class="ot"> charset</span><span class="op">=</span><span class="st">&quot;utf-8&quot;</span><span class="dt">&gt;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">meta</span><span class="ot"> name</span><span class="op">=</span><span class="st">&quot;viewport&quot;</span><span class="ot"> content</span><span class="op">=</span><span class="st">&quot;width=device-width, initial-scale=1&quot;</span><span class="dt">&gt;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">title</span><span class="dt">&gt;</span>My blog<span class="dt">&lt;/</span><span class="kw">title</span><span class="dt">&gt;</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">link</span><span class="ot"> rel</span><span class="op">=</span><span class="st">&quot;stylesheet&quot;</span><span class="ot"> href</span><span class="op">=</span><span class="st">&quot;style.css&quot;</span><span class="dt">&gt;</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">head</span><span class="dt">&gt;</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">body</span><span class="dt">&gt;</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">h1</span><span class="dt">&gt;</span>My blog<span class="dt">&lt;/</span><span class="kw">h1</span><span class="dt">&gt;</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">ul</span><span class="dt">&gt;</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">&lt;!-- ARTICLES:START --&gt;</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">&lt;!-- ARTICLES:</span><span class="re">END</span><span class="co"> --&gt;</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;/</span><span class="kw">ul</span><span class="dt">&gt;</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">body</span><span class="dt">&gt;</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">html</span><span class="dt">&gt;</span></span></code></pre></div>
+<h2 id="the-build-script">The build script</h2>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> html, re, subprocess</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> front_matter(text):</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    m <span class="op">=</span> re.match(<span class="vs">r&quot;---</span><span class="ch">\n</span><span class="kw">(</span><span class="dv">.</span><span class="op">*?</span><span class="kw">)</span><span class="ch">\n</span><span class="vs">---&quot;</span>, text, re.S)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    lines <span class="op">=</span> m.group(<span class="dv">1</span>).splitlines() <span class="cf">if</span> m <span class="cf">else</span> []</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {k.strip(): v.strip().strip(<span class="st">&quot;</span><span class="ch">\&quot;</span><span class="st">&#39;&quot;</span>)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> k, v <span class="kw">in</span> (line.split(<span class="st">&quot;:&quot;</span>, <span class="dv">1</span>) <span class="cf">for</span> line <span class="kw">in</span> lines <span class="cf">if</span> <span class="st">&quot;:&quot;</span> <span class="kw">in</span> line)}</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>Path(<span class="st">&quot;articles&quot;</span>).mkdir(exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>posts <span class="op">=</span> []</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> md <span class="kw">in</span> <span class="bu">sorted</span>(Path(<span class="st">&quot;articles_md&quot;</span>).glob(<span class="st">&quot;*.md&quot;</span>)):</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    meta <span class="op">=</span> front_matter(md.read_text(encoding<span class="op">=</span><span class="st">&quot;utf-8&quot;</span>))</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> meta.get(<span class="st">&quot;draft&quot;</span>) <span class="op">==</span> <span class="st">&quot;true&quot;</span>:</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">continue</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    subprocess.run([<span class="st">&quot;pandoc&quot;</span>, <span class="bu">str</span>(md), <span class="st">&quot;--standalone&quot;</span>, <span class="st">&quot;--css&quot;</span>, <span class="st">&quot;../style.css&quot;</span>,</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&quot;-o&quot;</span>, <span class="ss">f&quot;articles/</span><span class="sc">{</span>md<span class="sc">.</span>stem<span class="sc">}</span><span class="ss">.html&quot;</span>], check<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    posts.append((meta.get(<span class="st">&quot;date&quot;</span>, <span class="st">&quot;&quot;</span>), md.stem, meta.get(<span class="st">&quot;title&quot;</span>, md.stem)))</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>posts.sort(reverse<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>items <span class="op">=</span> <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>.join(</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    <span class="ss">f&#39;    &lt;li&gt;</span><span class="sc">{</span>d<span class="sc">}</span><span class="ss"> &lt;a href=&quot;articles/</span><span class="sc">{</span>slug<span class="sc">}</span><span class="ss">.html&quot;&gt;</span><span class="sc">{</span>html<span class="sc">.</span>escape(t)<span class="sc">}</span><span class="ss">&lt;/a&gt;&lt;/li&gt;&#39;</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> d, slug, t <span class="kw">in</span> posts)</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>index <span class="op">=</span> Path(<span class="st">&quot;index.html&quot;</span>)</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>page <span class="op">=</span> index.read_text(encoding<span class="op">=</span><span class="st">&quot;utf-8&quot;</span>)</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>page <span class="op">=</span> re.sub(<span class="vs">r&quot;</span><span class="kw">(</span><span class="vs">&lt;!-- ARTICLES:START --&gt;</span><span class="kw">)</span><span class="dv">.</span><span class="op">*</span><span class="kw">(</span><span class="vs">&lt;!-- ARTICLES:END --&gt;</span><span class="kw">)</span><span class="vs">&quot;</span>,</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>              <span class="kw">lambda</span> m: <span class="ss">f&quot;</span><span class="sc">{</span>m[<span class="dv">1</span>]<span class="sc">}</span><span class="ch">\n</span><span class="sc">{</span>items<span class="sc">}</span><span class="ch">\n</span><span class="ss">    </span><span class="sc">{</span>m[<span class="dv">2</span>]<span class="sc">}</span><span class="ss">&quot;</span>, page, flags<span class="op">=</span>re.S)</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>index.write_text(page, encoding<span class="op">=</span><span class="st">&quot;utf-8&quot;</span>)</span></code></pre></div>
+<p>Run <code>python build.py</code> from the folder that holds
+<code>index.html</code>. It calls Pandoc once per article, then rewrites
+everything between the two comments. <code>--standalone</code> makes a
+complete page and <code>--css</code> links your stylesheet. The path is
+<code>../style.css</code> because articles live one folder down.</p>
+<h2 id="the-stylesheet">The stylesheet</h2>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode css"><code class="sourceCode css"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>body {</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">max-width</span><span class="ch">:</span> <span class="dv">40</span><span class="dt">rem</span><span class="op">;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">margin</span><span class="ch">:</span> <span class="dv">2</span><span class="dt">rem</span> <span class="bu">auto</span><span class="op">;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">padding</span><span class="ch">:</span> <span class="dv">0</span> <span class="dv">1</span><span class="dt">rem</span><span class="op">;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">font</span><span class="ch">:</span> <span class="dv">1.1</span><span class="dt">rem</span>/<span class="dv">1.6</span> <span class="dv">system-ui</span><span class="op">,</span> <span class="dv">sans-serif</span><span class="op">;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>pre { <span class="kw">overflow-x</span><span class="ch">:</span> <span class="bu">auto</span><span class="op">;</span> <span class="kw">padding</span><span class="ch">:</span> <span class="dv">1</span><span class="dt">rem</span><span class="op">;</span> <span class="kw">background</span><span class="ch">:</span> <span class="cn">#f4f4f4</span><span class="op">;</span> }</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>img { <span class="kw">max-width</span><span class="ch">:</span> <span class="dv">100</span><span class="dt">%</span><span class="op">;</span> }</span></code></pre></div>
+<p>That is all a page needs. Pandoc colors fenced code by itself, and
+because <code>--css</code> is given it leaves out its own page styles,
+so this file is in charge.</p>
+<h2 id="sidenotes">Sidenotes</h2>
+<p>Footnotes at the bottom of a page pull you away from the text.
+Sidenotes put the note next to it
+instead.<label for="sn-4" class="sidenote-number"></label><input type="checkbox" id="sn-4" class="margin-toggle"><span class="sidenote">This
+is the idea behind <a
+href="https://edwardtufte.github.io/tufte-css/">Tufte CSS</a>, a
+stylesheet that imitates Edward Tufte’s books and handouts. <a
+href="https://github.com/jez/tufte-pandoc-css">tufte-pandoc-css</a> is a
+ready-made way to use it with Pandoc.</span> Pandoc has no option for
+them, but a short Lua filter does the
+job.<label for="sn-5" class="sidenote-number"></label><input type="checkbox" id="sn-5" class="margin-toggle"><span class="sidenote">Pandoc
+runs <a href="https://pandoc.org/lua-filters.html">Lua filters</a> on
+the parsed document. Lua is built in, so there is nothing extra to
+install.</span> Save this as <code>sidenotes.lua</code>:</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode lua"><code class="sourceCode lua"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">local</span> <span class="va">n</span> <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> Note<span class="op">(</span><span class="va">note</span><span class="op">)</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="va">n</span> <span class="op">=</span> <span class="va">n</span> <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">local</span> <span class="va">id</span> <span class="op">=</span> <span class="st">&quot;sn-&quot;</span> <span class="op">..</span> <span class="va">n</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">local</span> <span class="va">out</span> <span class="op">=</span> <span class="op">{</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="va">pandoc</span><span class="op">.</span>RawInline<span class="op">(</span><span class="st">&quot;html&quot;</span><span class="op">,</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>      <span class="st">&#39;&lt;label for=&quot;&#39;</span> <span class="op">..</span> <span class="va">id</span> <span class="op">..</span> <span class="st">&#39;&quot; class=&quot;sidenote-number&quot;&gt;&lt;/label&gt;&#39;</span> <span class="op">..</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>      <span class="st">&#39;&lt;input type=&quot;checkbox&quot; id=&quot;&#39;</span> <span class="op">..</span> <span class="va">id</span> <span class="op">..</span> <span class="st">&#39;&quot; class=&quot;margin-toggle&quot;&gt;&#39;</span> <span class="op">..</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>      <span class="st">&#39;&lt;span class=&quot;sidenote&quot;&gt;&#39;</span><span class="op">)</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> <span class="cn">_</span><span class="op">,</span> <span class="va">inline</span> <span class="kw">in</span> <span class="fu">ipairs</span><span class="op">(</span><span class="va">pandoc</span><span class="op">.</span><span class="va">utils</span><span class="op">.</span>blocks_to_inlines<span class="op">(</span><span class="va">note</span><span class="op">.</span><span class="va">content</span><span class="op">))</span> <span class="cf">do</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">table.insert</span><span class="op">(</span><span class="va">out</span><span class="op">,</span> <span class="va">inline</span><span class="op">)</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">end</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">table.insert</span><span class="op">(</span><span class="va">out</span><span class="op">,</span> <span class="va">pandoc</span><span class="op">.</span>RawInline<span class="op">(</span><span class="st">&quot;html&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;/span&gt;&quot;</span><span class="op">))</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="va">out</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div>
+<p>Add <code>"--lua-filter", "sidenotes.lua"</code> to the Pandoc
+arguments in <code>build.py</code>, and this to
+<code>style.css</code>:</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode css"><code class="sourceCode css"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>body { <span class="kw">counter-reset</span><span class="ch">:</span> <span class="dv">sn</span><span class="op">;</span> }</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">.sidenote-number</span> { <span class="kw">counter-increment</span><span class="ch">:</span> <span class="dv">sn</span><span class="op">;</span> }</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">.sidenote-number</span><span class="in">::after</span><span class="op">,</span> <span class="fu">.sidenote</span><span class="in">::before</span> { <span class="kw">font-size</span><span class="ch">:</span> <span class="dv">.75</span><span class="dt">em</span><span class="op">;</span> <span class="kw">vertical-align</span><span class="ch">:</span> <span class="dv">super</span><span class="op">;</span> }</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">.sidenote-number</span><span class="in">::after</span> { <span class="kw">content</span><span class="ch">:</span> <span class="fu">counter(</span><span class="dv">sn</span><span class="fu">)</span><span class="op">;</span> }</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">.sidenote</span><span class="in">::before</span> { <span class="kw">content</span><span class="ch">:</span> <span class="fu">counter(</span><span class="dv">sn</span><span class="fu">)</span> <span class="st">&quot; &quot;</span><span class="op">;</span> }</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">.sidenote</span> { <span class="kw">font-size</span><span class="ch">:</span> <span class="dv">.85</span><span class="dt">em</span><span class="op">;</span> }</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">.margin-toggle</span> { <span class="kw">display</span><span class="ch">:</span> <span class="dv">none</span><span class="op">;</span> }</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="im">@media</span> <span class="fu">(</span><span class="kw">min-width</span><span class="ch">:</span> <span class="dv">72</span><span class="dt">rem</span><span class="fu">)</span> {   <span class="co">/* wide enough for a margin */</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">.sidenote</span> { <span class="kw">float</span><span class="ch">:</span> <span class="dv">right</span><span class="op">;</span> <span class="kw">clear</span><span class="ch">:</span> <span class="dv">right</span><span class="op">;</span> <span class="kw">width</span><span class="ch">:</span> <span class="dv">14</span><span class="dt">rem</span><span class="op">;</span> <span class="kw">margin-right</span><span class="ch">:</span> <span class="dv">-16</span><span class="dt">rem</span><span class="op">;</span> }</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="im">@media</span> <span class="fu">(</span><span class="kw">max-width</span><span class="ch">:</span> <span class="dv">71.99</span><span class="dt">rem</span><span class="fu">)</span> {   <span class="co">/* too narrow: tap the number instead */</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">.sidenote</span> { <span class="kw">display</span><span class="ch">:</span> <span class="dv">none</span><span class="op">;</span> }</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">.margin-toggle</span><span class="in">:checked</span> <span class="op">+</span> <span class="fu">.sidenote</span> { <span class="kw">display</span><span class="ch">:</span> <span class="dv">block</span><span class="op">;</span> <span class="kw">margin</span><span class="ch">:</span> <span class="dv">.5</span><span class="dt">rem</span> <span class="dv">0</span> <span class="dv">1</span><span class="dt">rem</span> <span class="dv">1</span><span class="dt">rem</span><span class="op">;</span> }</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>Now write footnotes in Markdown as usual. The inline form is the
+easiest:</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>A sentence with a note.^<span class="co">[</span><span class="ot">The note sits right here in the source.</span><span class="co">]</span></span></code></pre></div>
+<h2 id="growing-it">Growing it</h2>
+<p>Later, in rough order of usefulness: skip articles whose Markdown has
+not changed, give Pandoc your own HTML with <code>--template</code>, add
+an archive page, write an RSS feed. Each is a few lines. The cheatsheet
+below lists the Markdown that Pandoc understands.</p>
+<h2 id="cheatsheet">Cheatsheet</h2>
+<pre class="text"><code>python build.py     build every article and update the list</code></pre>
+<h3 id="front-matter">Front matter</h3>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span><span class="kw">:</span><span class="at"> Chess in Odin</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">date</span><span class="kw">:</span><span class="at"> </span><span class="bn">2026-09-12</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">draft</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Field</th>
+<th style="text-align: left;">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>title</code></td>
+<td style="text-align: left;">Page title, the <code>&lt;h1&gt;</code>,
+and the entry in the list.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>date</code></td>
+<td style="text-align: left;"><code>YYYY-MM-DD</code>. The list is
+sorted newest first.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>draft</code></td>
+<td style="text-align: left;">Optional. <code>true</code> skips the
+article.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="inline">Inline</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Write</th>
+<th style="text-align: left;">Get</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>*italic*</code></td>
+<td style="text-align: left;"><em>italic</em></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>**bold**</code></td>
+<td style="text-align: left;"><strong>bold</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>***bold italic***</code></td>
+<td style="text-align: left;"><strong><em>bold italic</em></strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>~~strike~~</code></td>
+<td style="text-align: left;"><del>strike</del></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>H~2~O</code></td>
+<td style="text-align: left;">H<sub>2</sub>O</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>E = mc^2^</code></td>
+<td style="text-align: left;">E = mc<sup>2</sup></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>`code`</code></td>
+<td style="text-align: left;"><code>code</code></td>
+</tr>
+<tr>
+<td
+style="text-align: left;"><code>[text](https://example.com)</code></td>
+<td style="text-align: left;"><a
+href="https://example.com">text</a></td>
+</tr>
+<tr>
+<td
+style="text-align: left;"><code>&lt;https://example.com&gt;</code></td>
+<td style="text-align: left;"><a href="https://example.com"
+class="uri">https://example.com</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>[jump](#headings)</code></td>
+<td style="text-align: left;"><a href="#headings">jump</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>\*not italic\*</code></td>
+<td style="text-align: left;">*not italic*</td>
+</tr>
+<tr>
+<td
+style="text-align: left;"><code>"quotes" -- en --- em ...</code></td>
+<td style="text-align: left;">“quotes” – en — em …</td>
+</tr>
+</tbody>
+</table>
+<p>Sub and superscript can’t contain spaces. Escape them as
+<code>H~2\ O~</code> if you must.</p>
+<h3 id="headings">Headings</h3>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">## Section</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">### Subsection</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Level 4</span></span></code></pre></div>
+<ul>
+<li>Start at <code>##</code>. The title already is the
+<code>&lt;h1&gt;</code>.</li>
+<li>Every heading gets an id from its text: <code>## Some Title</code>
+is linkable as <code>#some-title</code>.</li>
+</ul>
+<h3 id="paragraphs-and-line-breaks">Paragraphs and line breaks</h3>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>A blank line starts a new paragraph.</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>A backslash at the end of a line\</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>forces a line break.</span></code></pre></div>
+<h3 id="lists">Lists</h3>
+<p>A blank line is required before a list. Nest with four spaces.</p>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>item</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>item</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>nested</span></code></pre></div>
+<p>Result:</p>
+<ul>
+<li>item</li>
+<li>item
+<ul>
+<li>nested</li>
+</ul></li>
+</ul>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>starts at 3</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>renumbers itself</span></code></pre></div>
+<p>Result:</p>
+<ol start="3" type="1">
+<li>starts at 3</li>
+<li>renumbers itself</li>
+</ol>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[x]</span> done</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[ ]</span> todo</span></code></pre></div>
+<p>Result:</p>
+<ul class="task-list">
+<li><label><input type="checkbox" checked="" />done</label></li>
+<li><label><input type="checkbox" />todo</label></li>
+</ul>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>Term</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>:   Definition</span></code></pre></div>
+<p>Result:</p>
+<dl>
+<dt>Term</dt>
+<dd>
+Definition
+</dd>
+</dl>
+<h3 id="quotes-and-rules">Quotes and rules</h3>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; Quote text.</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; — Attribution</span></span></code></pre></div>
+<p>Result:</p>
+<blockquote>
+<p>Quote text.</p>
+<p>— Attribution</p>
+</blockquote>
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> line one</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> line two</span></code></pre></div>
+<p>Result (a line block keeps its line breaks, good for addresses and
+poems):</p>
+<div class="line-block">line one<br />
+line two</div>
+<p>A horizontal rule is <code>---</code> on its own line with a blank
+line on each side.</p>
+<h3 id="code">Code</h3>
+<p>Fence with three backticks and add the language after the opening
+fence. Use four backticks to show a fence inside a block.</p>
+<div class="sourceCode" id="cb19"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="in">```odin</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="in">main :: proc() {</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="in">    fmt.println(&quot;Hellope!&quot;)</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="in">}</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
+<p>Result:</p>
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">package</span> main</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="st">&quot;core:fmt&quot;</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="fu">main </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    fmt<span class="op">.</span><span class="fu">println</span><span class="op">(</span><span class="st">&quot;Hellope!&quot;</span><span class="op">)</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<ul>
+<li>Names that work include <code>odin</code>, <code>javascript</code>,
+<code>typescript</code>, <code>python</code>, <code>c</code>,
+<code>cpp</code>, <code>rust</code>, <code>go</code>, <code>java</code>,
+<code>lua</code>, <code>bash</code>, <code>html</code>,
+<code>css</code>, <code>json</code>, <code>yaml</code> and
+<code>markdown</code>.</li>
+<li>Full list: <code>pandoc --list-highlight-languages</code>.</li>
+<li>No language, or an unknown one, gives plain text.</li>
+<li>Inline code is single backticks. To put a backtick inside it, wrap
+it in double backticks with a space on each side.</li>
+</ul>
+<h3 id="tables">Tables</h3>
+<div class="sourceCode" id="cb21"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Left <span class="pp">|</span> Right <span class="pp">|</span> Center <span class="pp">|</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="pp">|:-----|------:|:------:|</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> a    <span class="pp">|</span>     1 <span class="pp">|</span>   x    <span class="pp">|</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> b    <span class="pp">|</span>    22 <span class="pp">|</span>   y    <span class="pp">|</span></span></code></pre></div>
+<p>Result:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Left</th>
+<th style="text-align: right;">Right</th>
+<th style="text-align: center;">Center</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">a</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: center;">x</td>
+</tr>
+<tr>
+<td style="text-align: left;">b</td>
+<td style="text-align: right;">22</td>
+<td style="text-align: center;">y</td>
+</tr>
+</tbody>
+</table>
+<p>The colons in the divider row set alignment.</p>
+<h3 id="images-and-media">Images and media</h3>
+<p>Paths are relative to the built page in <code>articles/</code>, so a
+file in <code>res/</code> is <code>../res/</code>.</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Write</th>
+<th style="text-align: left;">Get</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>![Caption](../res/a.png)</code></td>
+<td style="text-align: left;">Figure. The alt text becomes the
+caption.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>![Alt](../res/a.png)\</code></td>
+<td style="text-align: left;">Plain image. The trailing backslash stops
+the figure.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>![](../res/a.mp4)</code></td>
+<td style="text-align: left;">Video player.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>![](../res/a.mp3)</code></td>
+<td style="text-align: left;">Audio player.</td>
+</tr>
+</tbody>
+</table>
+<p>Images are shrunk to the page width by the <code>img</code> rule in
+<code>style.css</code>.</p>
+<h3 id="notes">Notes</h3>
+<p>With the filter above, footnotes become sidenotes, so write them as
+ordinary footnotes. Either form works:</p>
+<div class="sourceCode" id="cb22"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>Text with a note.<span class="ot">[^1]</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="ot">[^1]: </span>The note. It can sit anywhere in the file.</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>Or write the note right in the sentence.^<span class="co">[</span><span class="ot">Like this.</span><span class="co">]</span></span></code></pre></div>
+<p>Result: Text with a
+note.<label for="sn-6" class="sidenote-number"></label><input type="checkbox" id="sn-6" class="margin-toggle"><span class="sidenote">On
+a wide screen this sits in the right margin. On a narrow one, tap the
+number to show it.</span> Or write the note right in the
+sentence.<label for="sn-7" class="sidenote-number"></label><input type="checkbox" id="sn-7" class="margin-toggle"><span class="sidenote">Like
+this.</span></p>
+<ul>
+<li>Notes are numbered in the order they appear.</li>
+<li>A note with several paragraphs is joined into one block, so keep
+them short.</li>
+</ul>
+<h3 id="gotchas">Gotchas</h3>
+<ul>
+<li>A title containing a colon must be quoted:
+<code>title: "Chess: a story"</code>.</li>
+<li>Put a blank line before lists, quotes, tables and code fences, or
+they render as plain text.</li>
+<li>Escape special characters with a backslash: <code>\*</code>,
+<code>\_</code>, <code>\#</code>, <code>\|</code>.</li>
+<li>Two <code>$</code> in one paragraph can be read as math. Write
+<code>\$</code> for a literal dollar sign.</li>
+<li>Straight quotes, <code>--</code> and <code>...</code> are converted
+to curly quotes, dashes and an ellipsis. Escape with a backslash to keep
+them literal.</li>
+</ul>
+		</main>
+
+		<hr />
+		<footer><p>Creator of Worlds &amp; a Coffee Addict ;p</p></footer>
+	</body>
+</html>

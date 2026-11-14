@@ -7,18 +7,18 @@
 <updated>2026-11-14T00:00:00Z</updated>
 <author><name>Yordanos Z.</name></author>
 <entry>
+<title>A minimal static blog</title>
+<link href="https://theyordanos.github.io/articles/minimal_blog.html"/>
+<id>https://theyordanos.github.io/articles/minimal_blog.html</id>
+<updated>2026-11-14T00:00:00Z</updated>
+<summary>The smallest useful blog setup. Markdown files turned into pages by Pandoc and one Python script, with no theme and no framework.</summary>
+</entry>
+<entry>
 <title>Game of Life</title>
 <link href="https://theyordanos.github.io/articles/game_of_life.html"/>
 <id>https://theyordanos.github.io/articles/game_of_life.html</id>
-<updated>2026-11-14T00:00:00Z</updated>
-<summary>John Conway&#x27;s Cellular Automata</summary>
-</entry>
-<entry>
-<title>Pandoc cheatsheet</title>
-<link href="https://theyordanos.github.io/articles/pandoc.html"/>
-<id>https://theyordanos.github.io/articles/pandoc.html</id>
 <updated>2026-11-13T00:00:00Z</updated>
-<summary>Reference for the Markdown syntax Pandoc turns into styled HTML on this site.</summary>
+<summary>John Conway&#x27;s Cellular Automata</summary>
 </entry>
 <entry>
 <title>How you do anything is how you do everything</title>
