@@ -27,10 +27,7 @@ ROOT = Path(__file__).resolve().parent
 CONTENT_DIR = ROOT / "articles_md"
 OUT_DIR = ROOT / "articles"
 TEMPLATE = OUT_DIR / "template.txt"
-FILTERS = [
-    ROOT / "sidenotes.lua",  # footnotes become sidenotes
-    ROOT / "anchors.lua",    # a "#" link after each heading
-]
+FILTERS = ROOT / "filters.lua"
 INDEX = ROOT / "index.html"
 ARCHIVE = ROOT / "archive.html"
 
@@ -108,7 +105,7 @@ def build(job):
     result = subprocess.run(
         ["pandoc", str(src), "--from", "markdown", "--to", "html5",
          "--template", str(TEMPLATE),
-         *[arg for f in FILTERS for arg in ("--lua-filter", str(f))],
+         "--lua-filter", str(FILTERS),
          *extra_args, "-o", str(out), *PANDOC_EXTRA],
         capture_output=True,
     )
@@ -210,9 +207,8 @@ def main():
         fail("pandoc not found. Install it, then open a NEW terminal window.")
     if not TEMPLATE.exists():
         fail(f"missing {TEMPLATE}")
-    for f in FILTERS:
-        if not f.exists():
-            fail(f"missing {f}")
+    if not FILTERS.exists():
+        fail(f"missing {FILTERS}")
     if not INDEX.exists():
         fail("missing index.html")
     if not CONTENT_DIR.is_dir():
@@ -221,7 +217,7 @@ def main():
     OUT_DIR.mkdir(exist_ok=True)
     # editing the template, a filter or this script rebuilds every article
     template_mtime = max(TEMPLATE.stat().st_mtime,
-                         *(f.stat().st_mtime for f in FILTERS),
+                         FILTERS.stat().st_mtime,
                          Path(__file__).stat().st_mtime)
 
     jobs, items, keep, descriptions = [], [], set(), {}
