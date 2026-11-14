@@ -76,8 +76,7 @@ def build(job):
     result = subprocess.run(
         ["pandoc", str(src), "--from", "markdown", "--to", "html5",
          "--template", str(TEMPLATE), "-o", str(out), *PANDOC_EXTRA],
-        capture_output=True,
-        check=True
+        capture_output=True
     )
     if result.returncode != 0:
         return src, "failed", result.stderr.decode("utf-8", "replace")
