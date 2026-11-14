@@ -15,6 +15,8 @@
 
 /* DARK MODE ========================= */
 html.dark {
+	color-scheme: dark;
+
 	--bg: #0f1115;
 	--text: #e6e6e6;
 	--meta: #9aa0a6;
