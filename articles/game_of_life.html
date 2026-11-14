@@ -48,6 +48,7 @@
 				<p class="meta"><time datetime="2026-11-13">2026-11-13</time></p>
 			</header>
 
+			
 			<p>The <a
 href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">Game of
 Life</a> is a cellular automata made by a British mathematician name <a
@@ -138,7 +139,9 @@ class="sourceCode odin"><code class="sourceCode odin"><span id="cb2-1"><a href="
 <span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>        rl<span class="op">.</span><span class="fu">EndDrawing</span><span class="op">()</span></span>
 <span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
 <span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<h2 id="initialize">Initialize</h2>
+<h2 id="initialize">Initialize <a href="#initialize" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
 <p>Many Game of life implementations use mouse input to toggle between
 cell’s state, but for our implementation we’ll initialize all grid cells
 with a random 50/50 chance state.</p>
@@ -148,7 +151,9 @@ class="sourceCode odin"><code class="sourceCode odin"><span id="cb3-1"><a href="
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>        grid<span class="op">[</span>x<span class="op">][</span>y<span class="op">]</span> <span class="op">=</span> rand<span class="op">.</span><span class="fu">float32</span><span class="op">()</span> <span class="op">&gt;</span> <span class="fl">0.5</span> <span class="op">?</span> <span class="op">.</span>ALIVE <span class="op">:</span> <span class="op">.</span>DEAD</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<h2 id="draw">Draw</h2>
+<h2 id="draw">Draw <a href="#draw" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
 <p>We draw ALIVE cells as white and DEAD cells as black.</p>
 <div class="sourceCode" id="cb4"><pre
 class="sourceCode odin"><code class="sourceCode odin"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> x <span class="cf">in</span> <span class="dv">0</span><span class="op">..&lt;</span>COLS <span class="op">{</span></span>
@@ -162,7 +167,9 @@ class="sourceCode odin"><code class="sourceCode odin"><span id="cb4-1"><a href="
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        rl<span class="op">.</span><span class="fu">DrawRectangle</span><span class="op">(</span>dx<span class="op">,</span> dy<span class="op">,</span> CELL_SIZE<span class="op">,</span> CELL_SIZE<span class="op">,</span> color<span class="op">)</span></span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<h2 id="update">Update</h2>
+<h2 id="update">Update <a href="#update" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
 <div class="sourceCode" id="cb5"><pre
 class="sourceCode odin"><code class="sourceCode odin"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> x <span class="cf">in</span> <span class="dv">0</span><span class="op">..&lt;</span>COLS <span class="op">{</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> y <span class="cf">in</span> <span class="dv">0</span><span class="op">..&lt;</span>ROWS <span class="op">{</span></span>
@@ -244,7 +251,9 @@ class="sourceCode odin"><code class="sourceCode odin"><span id="cb10-1"><a href=
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co">// Soo we have to add COLS and ROWS to resolve this problem  </span></span>
 <span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> dx <span class="op">=</span><span class="fu"> </span><span class="op">(</span>i <span class="op">+</span> x <span class="op">+</span> COLS<span class="op">)</span> <span class="op">%</span> COLS<span class="op">;</span></span>
 <span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> dy <span class="op">=</span><span class="fu"> </span><span class="op">(</span>j <span class="op">+</span> y <span class="op">+</span> ROWS<span class="op">)</span> <span class="op">%</span> ROWS<span class="op">;</span></span></code></pre></div>
-<h2 id="run">Run</h2>
+<h2 id="run">Run <a href="#run" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
 <p>Now rut it and look</p>
 <pre><code>odin run .</code></pre>
 <p><img src="../res/articles/gol/gol.png" /></p>
@@ -272,7 +281,9 @@ class="sourceCode odin"><code class="sourceCode odin"><span id="cb13-1"><a href=
 <p>You can find additional information on <a
 href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">Game of
 Life’s Wiki</a>. Enjoy :)</p>
-<h2 id="full-source-code">Full source code</h2>
+<h2 id="full-source-code">Full source code <a href="#full-source-code"
+class="anchor" aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
 <div class="sourceCode" id="cb14"><pre
 class="sourceCode odin"><code class="sourceCode odin"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">package</span> main</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -348,8 +359,10 @@ class="sourceCode odin"><code class="sourceCode odin"><span id="cb14-1"><a href=
 <span id="cb14-72"><a href="#cb14-72" aria-hidden="true" tabindex="-1"></a>        rl<span class="op">.</span><span class="fu">EndDrawing</span><span class="op">()</span></span>
 <span id="cb14-73"><a href="#cb14-73" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
 <span id="cb14-74"><a href="#cb14-74" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<h2 id="in-honor-of-john-horton-conway">In honor of John Horton
-Conway</h2>
+<h2 id="in-honor-of-john-horton-conway">In honor of John Horton Conway
+<a href="#in-honor-of-john-horton-conway" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
 <figure>
 <img src="../res/articles/gol/john.jpg" alt="John Conway" />
 <figcaption aria-hidden="true">John Conway</figcaption>

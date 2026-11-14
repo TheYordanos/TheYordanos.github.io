@@ -2,6 +2,7 @@
 title: A minimal static blog
 description: The smallest useful blog setup. Markdown files turned into pages by Pandoc and one Python script, with no theme and no framework.
 date: 2026-11-14
+toc: true
 ---
 
 A blog is a folder of HTML files and one page that links to them. Everything else is optional.^[Plenty of good personal sites stay this close to the metal. [gingerbill.org](https://gingerbill.org) is one: a plain single-column list of articles and little else.] This is the smallest version of the workflow this site uses. You write Markdown, run one command and upload the folder.^[Any static host works. [GitHub Pages](https://pages.github.com) serves a repository's files as they are, and it is where this site lives.]

@@ -65,6 +65,70 @@ main > header .meta {
 	margin: 0;
 }
 
+/* TABLE OF CONTENTS (front matter: toc: true) */
+main #TOC {
+	margin: 0 0 40px;
+	padding: 16px 20px;
+	border: 1px solid var(--border);
+	border-radius: 6px;
+	font-size: 15px;
+}
+
+main #TOC .toc-title {
+	margin: 0 0 8px;
+	font-weight: 700;
+}
+
+main #TOC ul {
+	margin: 4px 0 0;
+	padding-left: 18px;
+}
+
+main #TOC > ul {
+	margin: 0;
+	padding-left: 0;
+	list-style: none;
+}
+
+main #TOC li {
+	padding-left: 0;
+	margin-bottom: 4px;
+}
+
+main #TOC a {
+	text-decoration: none;
+}
+
+main #TOC a:hover {
+	text-decoration: underline;
+}
+
+main #TOC .anchor-mark {
+	display: none;
+}
+
+/* HEADING ANCHORS */
+main .anchor {
+	margin-left: 0.4em;
+	color: var(--meta);
+	text-decoration: none;
+	opacity: 0;
+}
+
+main .anchor:hover {
+	color: var(--link);
+}
+
+main :is(h2, h3, h4, h5, h6):hover .anchor,
+main .anchor:focus-visible {
+	opacity: 0.6;
+}
+
+/* No hover on touch screens, so keep the anchors faintly visible there */
+@media (hover: none) {
+	main .anchor { opacity: 0.4; }
+}
+
 main p {
 	margin: 0 0 22px;
 }

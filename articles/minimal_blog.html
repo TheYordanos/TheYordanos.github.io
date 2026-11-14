@@ -52,6 +52,57 @@ framework.</p>
 				<p class="meta"><time datetime="2026-11-14">2026-11-14</time></p>
 			</header>
 
+						<nav id="TOC" role="doc-toc" aria-label="Table of contents">
+				<p class="toc-title">Contents</p>
+				<ul>
+<li><a href="#the-files" id="toc-the-files">The files <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#an-article" id="toc-an-article">An article <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#the-index-page" id="toc-the-index-page">The index page
+<span class="anchor-mark">#</span></a></li>
+<li><a href="#the-build-script" id="toc-the-build-script">The build
+script <span class="anchor-mark">#</span></a></li>
+<li><a href="#the-stylesheet" id="toc-the-stylesheet">The stylesheet
+<span class="anchor-mark">#</span></a></li>
+<li><a href="#sidenotes" id="toc-sidenotes">Sidenotes <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#download-source" id="toc-download-source">Download Source
+<span class="anchor-mark">#</span></a></li>
+<li><a href="#growing-it" id="toc-growing-it">Growing it <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#cheatsheet" id="toc-cheatsheet">Cheatsheet <span
+class="anchor-mark">#</span></a>
+<ul>
+<li><a href="#front-matter" id="toc-front-matter">Front matter <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#inline" id="toc-inline">Inline <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#headings" id="toc-headings">Headings <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#paragraphs-and-line-breaks"
+id="toc-paragraphs-and-line-breaks">Paragraphs and line breaks <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#lists" id="toc-lists">Lists <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#quotes-and-rules" id="toc-quotes-and-rules">Quotes and
+rules <span class="anchor-mark">#</span></a></li>
+<li><a href="#code" id="toc-code">Code <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#tables" id="toc-tables">Tables <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#images-and-media" id="toc-images-and-media">Images and
+media <span class="anchor-mark">#</span></a></li>
+<li><a href="#notes" id="toc-notes">Notes <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#download-links" id="toc-download-links">Download links
+<span class="anchor-mark">#</span></a></li>
+<li><a href="#gotchas" id="toc-gotchas">Gotchas <span
+class="anchor-mark">#</span></a></li>
+</ul></li>
+</ul>
+			</nav>
+			
 			<p>A blog is a folder of HTML files and one page that links to them.
 Everything else is
 optional.<label for="sn-1" class="sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"><span class="sidenote">Plenty
@@ -64,7 +115,9 @@ folder.<label for="sn-2" class="sidenote-number"></label><input type="checkbox" 
 static host works. <a href="https://pages.github.com">GitHub Pages</a>
 serves a repository’s files as they are, and it is where this site
 lives.</span></p>
-<h2 id="the-files">The files</h2>
+<h2 id="the-files">The files <a href="#the-files" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
 <pre class="text"><code>index.html     front page, with a list the script fills in
 style.css      all the styling
 build.py       the build system
@@ -76,7 +129,9 @@ HTML,<label for="sn-3" class="sidenote-number"></label><input type="checkbox" id
 <a href="https://pandoc.org/MANUAL.html">Pandoc manual</a> is long. You
 only need a handful of flags from it.</span> and Python does the
 rest.</p>
-<h2 id="an-article">An article</h2>
+<h2 id="an-article">An article <a href="#an-article" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
 <p>A Markdown file with a small header on top:</p>
 <div class="sourceCode" id="cb2"><pre
 class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
@@ -92,7 +147,9 @@ class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb2-1"><
 it, newest first.</li>
 <li><code>draft: true</code> keeps an article out of the build.</li>
 </ul>
-<h2 id="the-index-page">The index page</h2>
+<h2 id="the-index-page">The index page <a href="#the-index-page"
+class="anchor" aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
 <p>An ordinary page with two comment lines where the list goes:</p>
 <div class="sourceCode" id="cb3"><pre
 class="sourceCode html"><code class="sourceCode html"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;!doctype</span> html<span class="dt">&gt;</span></span>
@@ -111,7 +168,9 @@ class="sourceCode html"><code class="sourceCode html"><span id="cb3-1"><a href="
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;/</span><span class="kw">ul</span><span class="dt">&gt;</span></span>
 <span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">body</span><span class="dt">&gt;</span></span>
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">html</span><span class="dt">&gt;</span></span></code></pre></div>
-<h2 id="the-build-script">The build script</h2>
+<h2 id="the-build-script">The build script <a href="#the-build-script"
+class="anchor" aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
 <div class="sourceCode" id="cb4"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> html, re, subprocess</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
@@ -147,7 +206,9 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a hr
 everything between the two comments. <code>--standalone</code> makes a
 complete page and <code>--css</code> links your stylesheet. The path is
 <code>../style.css</code> because articles live one folder down.</p>
-<h2 id="the-stylesheet">The stylesheet</h2>
+<h2 id="the-stylesheet">The stylesheet <a href="#the-stylesheet"
+class="anchor" aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
 <div class="sourceCode" id="cb5"><pre
 class="sourceCode css"><code class="sourceCode css"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>body {</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">max-width</span><span class="ch">:</span> <span class="dv">40</span><span class="dt">rem</span><span class="op">;</span></span>
@@ -160,7 +221,9 @@ class="sourceCode css"><code class="sourceCode css"><span id="cb5-1"><a href="#c
 <p>That is all a page needs. Pandoc colors fenced code by itself, and
 because <code>--css</code> is given it leaves out its own page styles,
 so this file is in charge.</p>
-<h2 id="sidenotes">Sidenotes</h2>
+<h2 id="sidenotes">Sidenotes <a href="#sidenotes" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
 <p>Footnotes at the bottom of a page pull you away from the text.
 Sidenotes put the note next to it
 instead.<label for="sn-4" class="sidenote-number"></label><input type="checkbox" id="sn-4" class="margin-toggle"><span class="sidenote">This
@@ -215,17 +278,25 @@ class="sourceCode css"><code class="sourceCode css"><span id="cb7-1"><a href="#c
 easiest:</p>
 <div class="sourceCode" id="cb8"><pre
 class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>A sentence with a note.^<span class="co">[</span><span class="ot">The note sits right here in the source.</span><span class="co">]</span></span></code></pre></div>
-<h2 id="download-source">Download Source</h2>
+<h2 id="download-source">Download Source <a href="#download-source"
+class="anchor" aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
 <p>Here is a <a href="../res/articles/minimal_blog/minimal_blog.zip">zip
 file (3.7 KB)</a> for you to download and checkout.</p>
-<h2 id="growing-it">Growing it</h2>
+<h2 id="growing-it">Growing it <a href="#growing-it" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
 <p>Later, in rough order of usefulness: skip articles whose Markdown has
 not changed, give Pandoc your own HTML with <code>--template</code>, add
 an archive page, write an RSS feed. Each is a few lines. The cheatsheet
 below lists the Markdown that Pandoc understands.</p>
-<h2 id="cheatsheet">Cheatsheet</h2>
+<h2 id="cheatsheet">Cheatsheet <a href="#cheatsheet" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
 <pre class="text"><code>python build.py     build every article and update the list</code></pre>
-<h3 id="front-matter">Front matter</h3>
+<h3 id="front-matter">Front matter <a href="#front-matter"
+class="anchor" aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
 <div class="sourceCode" id="cb10"><pre
 class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span><span class="kw">:</span><span class="at"> Chess in Odin</span></span>
@@ -257,7 +328,9 @@ article.</td>
 </tr>
 </tbody>
 </table>
-<h3 id="inline">Inline</h3>
+<h3 id="inline">Inline <a href="#inline" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
 <table>
 <thead>
 <tr>
@@ -323,7 +396,9 @@ style="text-align: left;"><code>"quotes" -- en --- em ...</code></td>
 </table>
 <p>Sub and superscript can’t contain spaces. Escape them as
 <code>H~2\ O~</code> if you must.</p>
-<h3 id="headings">Headings</h3>
+<h3 id="headings">Headings <a href="#headings" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
 <div class="sourceCode" id="cb11"><pre
 class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">## Section</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">### Subsection</span></span>
@@ -334,13 +409,18 @@ class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb11-1">
 <li>Every heading gets an id from its text: <code>## Some Title</code>
 is linkable as <code>#some-title</code>.</li>
 </ul>
-<h3 id="paragraphs-and-line-breaks">Paragraphs and line breaks</h3>
+<h3 id="paragraphs-and-line-breaks">Paragraphs and line breaks <a
+href="#paragraphs-and-line-breaks" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
 <div class="sourceCode" id="cb12"><pre
 class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>A blank line starts a new paragraph.</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>A backslash at the end of a line\</span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>forces a line break.</span></code></pre></div>
-<h3 id="lists">Lists</h3>
+<h3 id="lists">Lists <a href="#lists" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
 <p>A blank line is required before a list. Nest with four spaces.</p>
 <div class="sourceCode" id="cb13"><pre
 class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>item</span>
@@ -380,7 +460,9 @@ class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb16-1">
 Definition
 </dd>
 </dl>
-<h3 id="quotes-and-rules">Quotes and rules</h3>
+<h3 id="quotes-and-rules">Quotes and rules <a href="#quotes-and-rules"
+class="anchor" aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
 <div class="sourceCode" id="cb17"><pre
 class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; Quote text.</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;</span></span>
@@ -399,7 +481,9 @@ poems):</p>
 line two</div>
 <p>A horizontal rule is <code>---</code> on its own line with a blank
 line on each side.</p>
-<h3 id="code">Code</h3>
+<h3 id="code">Code <a href="#code" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
 <p>Fence with three backticks and add the language after the opening
 fence. Use four backticks to show a fence inside a block.</p>
 <div class="sourceCode" id="cb19"><pre
@@ -429,7 +513,9 @@ class="sourceCode odin"><code class="sourceCode odin"><span id="cb20-1"><a href=
 <li>Inline code is single backticks. To put a backtick inside it, wrap
 it in double backticks with a space on each side.</li>
 </ul>
-<h3 id="tables">Tables</h3>
+<h3 id="tables">Tables <a href="#tables" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
 <div class="sourceCode" id="cb21"><pre
 class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Left <span class="pp">|</span> Right <span class="pp">|</span> Center <span class="pp">|</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="pp">|:-----|------:|:------:|</span></span>
@@ -458,7 +544,9 @@ class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb21-1">
 </tbody>
 </table>
 <p>The colons in the divider row set alignment.</p>
-<h3 id="images-and-media">Images and media</h3>
+<h3 id="images-and-media">Images and media <a href="#images-and-media"
+class="anchor" aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
 <p>Paths are relative to the built page in <code>articles/</code>, so a
 file in <code>res/</code> is <code>../res/</code>.</p>
 <table>
@@ -495,7 +583,9 @@ the figure.</td>
 </table>
 <p>Images are shrunk to the page width by the <code>img</code> rule in
 <code>style.css</code>.</p>
-<h3 id="notes">Notes</h3>
+<h3 id="notes">Notes <a href="#notes" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
 <p>With the filter above, footnotes become sidenotes, so write them as
 ordinary footnotes. Either form works:</p>
 <div class="sourceCode" id="cb22"><pre
@@ -515,7 +605,9 @@ this.</span></p>
 <li>A note with several paragraphs is joined into one block, so keep
 them short.</li>
 </ul>
-<h3 id="download-links">Download links</h3>
+<h3 id="download-links">Download links <a href="#download-links"
+class="anchor" aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
 <p>A browser downloads any file it can’t display. So you can use just
 normal markdown links.</p>
 <div class="sourceCode" id="cb23"><pre
@@ -527,7 +619,9 @@ download attribute with a key and a value:</p>
 class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Download the notes</span><span class="co">](files/notes.pdf)</span>{download=&quot;notes.pdf&quot;}</span></code></pre></div>
 <p>A bare {download} doesn’t work, because Pandoc prints it as literal
 text after the link. You always need download=“name”.</p>
-<h3 id="gotchas">Gotchas</h3>
+<h3 id="gotchas">Gotchas <a href="#gotchas" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
 <ul>
 <li>A title containing a colon must be quoted:
 <code>title: "Chess: a story"</code>.</li>

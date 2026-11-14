@@ -8,6 +8,7 @@ Front matter per article:
     description: Short summary for the meta tag.
     date: 2026-09-12        (YYYY-MM-DD, newest first)
     draft: true             (optional, skips the article)
+    toc: true               (optional, adds a table of contents)
     ---
 
 Usage:
@@ -26,7 +27,10 @@ ROOT = Path(__file__).resolve().parent
 CONTENT_DIR = ROOT / "articles_md"
 OUT_DIR = ROOT / "articles"
 TEMPLATE = OUT_DIR / "template.txt"
-FILTER = ROOT / "sidenotes.lua"  # turns footnotes into sidenotes
+FILTERS = [
+    ROOT / "sidenotes.lua",  # footnotes become sidenotes
+    ROOT / "anchors.lua",    # a "#" link after each heading
+]
 INDEX = ROOT / "index.html"
 ARCHIVE = ROOT / "archive.html"
 
@@ -103,7 +107,8 @@ def build(job):
     # no check=True on purpose: we report failures ourselves below
     result = subprocess.run(
         ["pandoc", str(src), "--from", "markdown", "--to", "html5",
-         "--template", str(TEMPLATE), "--lua-filter", str(FILTER),
+         "--template", str(TEMPLATE),
+         *[arg for f in FILTERS for arg in ("--lua-filter", str(f))],
          *extra_args, "-o", str(out), *PANDOC_EXTRA],
         capture_output=True,
     )
@@ -204,16 +209,18 @@ def main():
         fail("pandoc not found. Install it, then open a NEW terminal window.")
     if not TEMPLATE.exists():
         fail(f"missing {TEMPLATE}")
-    if not FILTER.exists():
-        fail(f"missing {FILTER}")
+    for f in FILTERS:
+        if not f.exists():
+            fail(f"missing {f}")
     if not INDEX.exists():
         fail("missing index.html")
     if not CONTENT_DIR.is_dir():
         fail(f"missing {CONTENT_DIR}")
 
     OUT_DIR.mkdir(exist_ok=True)
-    # editing the template, the filter or this script rebuilds every article
-    template_mtime = max(TEMPLATE.stat().st_mtime, FILTER.stat().st_mtime,
+    # editing the template, a filter or this script rebuilds every article
+    template_mtime = max(TEMPLATE.stat().st_mtime,
+                         *(f.stat().st_mtime for f in FILTERS),
                          Path(__file__).stat().st_mtime)
 
     jobs, items, keep, descriptions = [], [], set(), {}
@@ -236,8 +243,11 @@ def main():
         items.append((date, slug, title))
         descriptions[slug] = meta.get("description", "")
         keep.add(slug)
-        jobs.append((src, OUT_DIR / f"{slug}.html", force, template_mtime,
-                     page_vars(slug, title, descriptions[slug])))
+        extra = page_vars(slug, title, descriptions[slug])
+        if meta.get("toc", "").lower() in ("true", "yes", "1"):
+            # the template needs the flag, "toc: true" alone gives an empty box
+            extra.append("--toc")
+        jobs.append((src, OUT_DIR / f"{slug}.html", force, template_mtime, extra))
 
     # remove html for deleted/draft articles (template.txt is untouched)
     for old in OUT_DIR.glob("*.html"):
