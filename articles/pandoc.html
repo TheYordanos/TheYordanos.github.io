@@ -8,6 +8,15 @@ Pandoc turns into styled HTML on this site.">
 
 		<title>Pandoc cheatsheet</title>
 
+		<meta property="og:type" content="article">
+		<meta property="og:site_name" content="Yordanos">
+		<meta property="og:title" content="Pandoc cheatsheet">
+		<meta property="og:description" content="Reference for the Markdown syntax Pandoc turns into styled HTML on this site.">
+		<meta property="og:url" content="https://theyordanos.github.io/articles/pandoc.html">
+		<meta property="og:image" content="https://theyordanos.github.io/res/og.png">
+		<meta name="twitter:card" content="summary_large_image">
+		<link rel="canonical" href="https://theyordanos.github.io/articles/pandoc.html">
+
 		<link rel="alternate" type="application/atom+xml" title="Yordanos" href="https://theyordanos.github.io/feed.xml">
 
 		<link rel="icon" type="image/png" href="../res/theyordanos-icon.png">
@@ -40,7 +49,7 @@ Pandoc turns into styled HTML on this site.">
 listed has no styling.</p>
 <h2 id="workflow">Workflow</h2>
 <div class="sourceCode" id="cb1"><pre
-class="sourceCode bat"><code class="sourceCode dosbat"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>build.bat      # build.sh on Unix</span></code></pre></div>
+class="sourceCode bat"><code class="sourceCode dosbat"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>python build.py</span></code></pre></div>
 <ul>
 <li>Write <code>articles_md/name.md</code>. It builds to
 <code>articles/name.html</code>, and the filename is the URL.</li>

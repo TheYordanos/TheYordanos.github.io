@@ -7,6 +7,15 @@
 
 		<title>$title$</title>
 
+		<meta property="og:type" content="article">
+		$if(og_site)$<meta property="og:site_name" content="$og_site$">$endif$
+		<meta property="og:title" content="$og_title$">
+		$if(og_description)$<meta property="og:description" content="$og_description$">$endif$
+		<meta property="og:url" content="$og_url$">
+		<meta property="og:image" content="$og_image$">
+		<meta name="twitter:card" content="summary_large_image">
+		<link rel="canonical" href="$og_url$">
+
 		<link rel="alternate" type="application/atom+xml" title="Yordanos" href="https://theyordanos.github.io/feed.xml">
 
 		<link rel="icon" type="image/png" href="../res/theyordanos-icon.png">

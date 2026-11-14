@@ -39,6 +39,8 @@ SITE_AUTHOR = "Yordanos Z."
 FEED = ROOT / "feed.xml"
 FEED_LIMIT = 20  # newest articles in the feed
 
+OG_IMAGE = "res/og.png"
+
 START_MARK = "<!-- ARTICLES:START -->"
 END_MARK = "<!-- ARTICLES:END -->"
 ITEM_INDENT = "\t\t\t\t"
@@ -76,15 +78,33 @@ def is_up_to_date(src, out, newest_dep):
     return out.stat().st_mtime >= max(src.stat().st_mtime, newest_dep)
 
 
+def page_vars(slug, title, description):
+    """Template variables for link previews, as pandoc -V arguments.
+    Values are pre-escaped for use inside HTML attributes, so the template
+    can write content="$og_title$" directly."""
+    values = {
+        "og_title": title,
+        "og_description": description,
+        "og_url": f"{SITE_URL}/articles/{slug}.html",
+        "og_image": f"{SITE_URL}/{OG_IMAGE}",
+        "og_site": SITE_TITLE,
+    }
+    args = []
+    for key, value in values.items():
+        if value:
+            args += ["-V", f"{key}={html.escape(value, quote=True)}"]
+    return args
+
+
 def build(job):
-    src, out, force, template_mtime = job
+    src, out, force, template_mtime, extra_args = job
     if not force and is_up_to_date(src, out, template_mtime):
         return src, "ok", ""
     # no check=True on purpose: we report failures ourselves below
     result = subprocess.run(
         ["pandoc", str(src), "--from", "markdown", "--to", "html5",
          "--template", str(TEMPLATE), "--lua-filter", str(FILTER),
-         "-o", str(out), *PANDOC_EXTRA],
+         *extra_args, "-o", str(out), *PANDOC_EXTRA],
         capture_output=True,
     )
     if result.returncode != 0:
@@ -192,8 +212,9 @@ def main():
         fail(f"missing {CONTENT_DIR}")
 
     OUT_DIR.mkdir(exist_ok=True)
-    # editing the template or the filter rebuilds every article
-    template_mtime = max(TEMPLATE.stat().st_mtime, FILTER.stat().st_mtime)
+    # editing the template, the filter or this script rebuilds every article
+    template_mtime = max(TEMPLATE.stat().st_mtime, FILTER.stat().st_mtime,
+                         Path(__file__).stat().st_mtime)
 
     jobs, items, keep, descriptions = [], [], set(), {}
     for src in sorted(CONTENT_DIR.glob("*.md")):
@@ -215,7 +236,8 @@ def main():
         items.append((date, slug, title))
         descriptions[slug] = meta.get("description", "")
         keep.add(slug)
-        jobs.append((src, OUT_DIR / f"{slug}.html", force, template_mtime))
+        jobs.append((src, OUT_DIR / f"{slug}.html", force, template_mtime,
+                     page_vars(slug, title, descriptions[slug])))
 
     # remove html for deleted/draft articles (template.txt is untouched)
     for old in OUT_DIR.glob("*.html"):

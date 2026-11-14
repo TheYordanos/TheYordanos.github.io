@@ -9,7 +9,7 @@ Everything here is styled by `article.css`. Anything not listed has no styling.
 ## Workflow
 
 ```bat
-build.bat      # build.sh on Unix
+python build.py
 ```
 
 - Write `articles_md/name.md`. It builds to `articles/name.html`, and the filename is the URL.
