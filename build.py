@@ -26,6 +26,7 @@ ROOT = Path(__file__).resolve().parent
 CONTENT_DIR = ROOT / "articles_md"
 OUT_DIR = ROOT / "articles"
 TEMPLATE = OUT_DIR / "template.txt"
+FILTER = ROOT / "sidenotes.lua"  # turns footnotes into sidenotes
 INDEX = ROOT / "index.html"
 ARCHIVE = ROOT / "archive.html"
 
@@ -75,8 +76,9 @@ def build(job):
     # no check=True on purpose: we report failures ourselves below
     result = subprocess.run(
         ["pandoc", str(src), "--from", "markdown", "--to", "html5",
-         "--template", str(TEMPLATE), "-o", str(out), *PANDOC_EXTRA],
-        capture_output=True
+         "--template", str(TEMPLATE), "--lua-filter", str(FILTER),
+         "-o", str(out), *PANDOC_EXTRA],
+        capture_output=True,
     )
     if result.returncode != 0:
         return src, "failed", result.stderr.decode("utf-8", "replace")
@@ -130,13 +132,15 @@ def main():
         fail("pandoc not found. Install it, then open a NEW terminal window.")
     if not TEMPLATE.exists():
         fail(f"missing {TEMPLATE}")
+    if not FILTER.exists():
+        fail(f"missing {FILTER}")
     if not INDEX.exists():
         fail("missing index.html")
     if not CONTENT_DIR.is_dir():
         fail(f"missing {CONTENT_DIR}")
 
     OUT_DIR.mkdir(exist_ok=True)
-    template_mtime = TEMPLATE.stat().st_mtime
+    template_mtime = max(TEMPLATE.stat().st_mtime, FILTER.stat().st_mtime)
 
     jobs, items, keep = [], [], set()
     for src in sorted(CONTENT_DIR.glob("*.md")):

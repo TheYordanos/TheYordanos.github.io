@@ -29,11 +29,8 @@ html.dark {
 	--hl-error: #ff6b6b;
 }
 
-body {
-	max-width: 680px;
-}
-
 main {
+	max-width: 680px;
 	margin: 0 auto;
 	line-height: 1.85;
 	overflow-wrap: break-word;
@@ -122,9 +119,7 @@ main .task-list input {
 	margin-right: 8px;
 }
 
-/* BLOCKQUOTES
-   Attribution: make the last paragraph of a quote start with an em dash,
-   e.g. "— Author". It is right-aligned when the quote has 2+ paragraphs. */
+/* BLOCKQUOTES */
 main blockquote {
 	margin: 30px 0;
 	padding: 16px 22px;
@@ -212,6 +207,40 @@ main .footnotes ol {
 
 main .footnotes p {
 	margin: 0 0 8px;
+}
+
+/* SIDENOTES */
+main {
+	counter-reset: sidenote;
+}
+
+.sidenote-number {
+	counter-increment: sidenote;
+}
+
+.sidenote-number::after,
+.sidenote::before {
+	color: var(--link);
+	font-size: 0.75em;
+	line-height: 0;
+	vertical-align: super;
+}
+
+.sidenote-number::after {
+	content: counter(sidenote);
+}
+
+.sidenote::before {
+	content: counter(sidenote) " ";
+}
+
+.sidenote {
+	font-size: 14px;
+	line-height: 1.55;
+}
+
+.margin-toggle {
+	display: none;
 }
 
 /* INLINE CODE */
@@ -391,6 +420,38 @@ main dd {
 }
 
 /* RESPONSIVE */
+@media (min-width: 920px) {
+	main:has(.sidenote) {
+		max-width: 620px;
+		margin: 0;
+		display: flow-root; /* contains floated notes at the very end */
+	}
+
+	.sidenote {
+		float: right;
+		clear: right;
+		width: 220px;
+		margin: 0 -250px 1rem 0;
+	}
+}
+
+@media (max-width: 919px) {
+	.sidenote {
+		display: none;
+	}
+
+	.sidenote-number {
+		cursor: pointer;
+	}
+
+	.margin-toggle:checked + .sidenote {
+		display: block;
+		margin: 4px 0 18px;
+		padding-left: 12px;
+		border-left: 2px solid var(--border);
+	}
+}
+
 @media (max-width: 768px) {
 	main h2 {
 		font-size: 23px;
