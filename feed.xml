@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+<title>Yordanos</title>
+<link href="https://theyordanos.github.io/"/>
+<link rel="self" href="https://theyordanos.github.io/feed.xml"/>
+<id>https://theyordanos.github.io/</id>
+<updated>2026-11-14T00:00:00Z</updated>
+<author><name>Yordanos Z.</name></author>
+<entry>
+<title>Game of Life</title>
+<link href="https://theyordanos.github.io/articles/game_of_life.html"/>
+<id>https://theyordanos.github.io/articles/game_of_life.html</id>
+<updated>2026-11-14T00:00:00Z</updated>
+<summary>John Conway&#x27;s Cellular Automata</summary>
+</entry>
+<entry>
+<title>Pandoc cheatsheet</title>
+<link href="https://theyordanos.github.io/articles/pandoc.html"/>
+<id>https://theyordanos.github.io/articles/pandoc.html</id>
+<updated>2026-11-13T00:00:00Z</updated>
+<summary>Reference for the Markdown syntax Pandoc turns into styled HTML on this site.</summary>
+</entry>
+<entry>
+<title>How you do anything is how you do everything</title>
+<link href="https://theyordanos.github.io/articles/hydaihyde.html"/>
+<id>https://theyordanos.github.io/articles/hydaihyde.html</id>
+<updated>2026-11-03T00:00:00Z</updated>
+<summary>An intersting quote from John Wick&#x27;s antagonist</summary>
+</entry>
+</feed>

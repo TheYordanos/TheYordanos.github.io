@@ -184,9 +184,11 @@ footer {
 }
 
 /* ARTICLES SECTION ========================= */
-.articles .view-all {
-	display: inline-block;
-	margin-top: 1rem;
+.articles nav {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 1rem;
 }
 
 .articles ul {

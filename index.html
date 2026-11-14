@@ -7,6 +7,8 @@
 
 		<title>Yordanos</title>
 
+		<link rel="alternate" type="application/atom+xml" title="Yordanos" href="https://theyordanos.github.io/feed.xml">
+
 		<link rel="icon" type="image/png" href="res/theyordanos-icon.png">
 		<script>
 		try {
@@ -30,6 +32,7 @@
 			<button class="nav-toggle" id="nav-toggle">☰</button>
 
 			<div class="nav-links" id="nav-links">
+				<a href="feed.xml">RSS</a>
 				<a href="#articles">Articles</a>
 				<a href="#projects">Projects</a>
 				<a href="#now">Now</a>
@@ -70,6 +73,11 @@
 		<section class="articles" id="articles">
 			<h2>Articles</h2>
 
+			<nav>
+				<a href="archive.html">View all articles</a>
+				<a href="feed.xml">RSS</a>
+			</nav>
+
 			<ul>
 				<!-- ARTICLES:START -->
 				<li><time>2026-11-14</time><a href="articles/game_of_life.html">Game of Life</a></li>
@@ -86,8 +94,6 @@
 					<li><a target="_blank" href="#">John Conway's Game of Life</a></li>
 				<li><a target="_blank" href="#">How does a rock think? (Language Models, AI)</a></li>-->
 			</ul>
-
-			<a href="archive.html" class="view-all">View all articles</a>
 		</section>
 
 		<!-- ======================== PRODUCTS ======================== -->

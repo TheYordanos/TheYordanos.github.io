@@ -32,6 +32,13 @@ ARCHIVE = ROOT / "archive.html"
 
 INDEX_LIMIT = 20  # how many articles to show on the index page
 
+# RSS/Atom feed (feed.xml).
+SITE_URL = "https://theyordanos.github.io"
+SITE_TITLE = "Yordanos"
+SITE_AUTHOR = "Yordanos Z."
+FEED = ROOT / "feed.xml"
+FEED_LIMIT = 20  # newest articles in the feed
+
 START_MARK = "<!-- ARTICLES:START -->"
 END_MARK = "<!-- ARTICLES:END -->"
 ITEM_INDENT = "\t\t\t\t"
@@ -125,6 +132,51 @@ def splice(path, lines):
         path.write_bytes(new.encode("utf-8"))  # UTF-8, no BOM, newlines preserved
 
 
+def write_feed(items, descriptions):
+    """Atom feed of the newest articles. items: sorted (date, slug, title)."""
+    esc = html.escape
+    entries = []
+    for date, slug, title in items:
+        if date == "0000-00-00":
+            continue  # undated articles stay out of the feed
+        if re.fullmatch(r"\d{4}-\d{2}-\d{2}", date):
+            entries.append((date, slug, title))
+        else:
+            print(f"warning: {slug} date '{date}' is not YYYY-MM-DD; left out of feed.xml")
+    entries = entries[:FEED_LIMIT]
+
+    updated = f"{entries[0][0]}T00:00:00Z" if entries else "1970-01-01T00:00:00Z"
+    out = [
+        '<?xml version="1.0" encoding="utf-8"?>',
+        '<feed xmlns="http://www.w3.org/2005/Atom">',
+        f"<title>{esc(SITE_TITLE)}</title>",
+        f'<link href="{SITE_URL}/"/>',
+        f'<link rel="self" href="{SITE_URL}/feed.xml"/>',
+        f"<id>{SITE_URL}/</id>",
+        f"<updated>{updated}</updated>",
+        f"<author><name>{esc(SITE_AUTHOR)}</name></author>",
+    ]
+    for date, slug, title in entries:
+        url = f"{SITE_URL}/articles/{slug}.html"
+        out += [
+            "<entry>",
+            f"<title>{esc(title)}</title>",
+            f'<link href="{url}"/>',
+            f"<id>{url}</id>",
+            f"<updated>{date}T00:00:00Z</updated>",
+        ]
+        if descriptions.get(slug):
+            out.append(f"<summary>{esc(descriptions[slug])}</summary>")
+        out.append("</entry>")
+    out.append("</feed>")
+
+    text = "\n".join(out) + "\n"
+    old = FEED.read_bytes().decode("utf-8") if FEED.exists() else ""
+    if text != old:
+        FEED.write_bytes(text.encode("utf-8"))
+    return len(entries)
+
+
 def main():
     force = "--force" in sys.argv or "-f" in sys.argv
 
@@ -140,9 +192,10 @@ def main():
         fail(f"missing {CONTENT_DIR}")
 
     OUT_DIR.mkdir(exist_ok=True)
+    # editing the template or the filter rebuilds every article
     template_mtime = max(TEMPLATE.stat().st_mtime, FILTER.stat().st_mtime)
 
-    jobs, items, keep = [], [], set()
+    jobs, items, keep, descriptions = [], [], set(), {}
     for src in sorted(CONTENT_DIR.glob("*.md")):
         meta = read_front_matter(src)
         slug = src.stem
@@ -160,6 +213,7 @@ def main():
             title = slug
 
         items.append((date, slug, title))
+        descriptions[slug] = meta.get("description", "")
         keep.add(slug)
         jobs.append((src, OUT_DIR / f"{slug}.html", force, template_mtime))
 
@@ -194,8 +248,14 @@ def main():
     else:
         archive_note = "archive.html not found, skipped"
 
+    feed_count = write_feed(items, descriptions)
+    if "example.com" in SITE_URL:
+        print("warning: SITE_URL in build.py is still the placeholder; "
+              "feed links will be wrong until you set it")
+
     print(f"done: {len(items)} article(s), {built} rebuilt, "
-          f"index.html shows {min(len(items), INDEX_LIMIT)}, {archive_note}")
+          f"index.html shows {min(len(items), INDEX_LIMIT)}, {archive_note}, "
+          f"feed.xml has {feed_count}")
 
 
 if __name__ == "__main__":
