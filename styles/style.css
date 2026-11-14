@@ -28,7 +28,7 @@ html.dark {
 /* FONT ========================= */
 @font-face {
 	font-family: "Lato";
-	src: url("res/fonts/Lato-Regular.ttf") format("ttf");
+	src: url("../res/fonts/Lato-Regular.ttf") format("truetype");
 	font-weight: 400;
 	font-style: normal;
 	font-display: swap;
@@ -36,7 +36,7 @@ html.dark {
 
 @font-face {
 	font-family: "Lato";
-	src: url("res/fonts/Lato-Italic.ttf") format("ttf");
+	src: url("../res/fonts/Lato-Italic.ttf") format("truetype");
 	font-weight: 400;
 	font-style: italic;
 	font-display: swap;
@@ -44,8 +44,8 @@ html.dark {
 
 @font-face {
 	font-family: "Lato";
-	src: url("res/fonts/Lato-Bold.ttf") format("ttf");
-	font-weight: 800;
+	src: url("../res/fonts/Lato-Bold.ttf") format("truetype");
+	font-weight: 700;
 	font-style: normal;
 	font-display: swap;
 }
@@ -138,7 +138,7 @@ footer {
 }
 
 .nav-left a {
-	font-style: bold;
+	font-weight: 700;
 	font-size: 15px;
 }
 
