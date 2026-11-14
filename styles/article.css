@@ -40,6 +40,29 @@ main [id] {
 	scroll-margin-top: 70px;
 }
 
+/* ARTICLE HEADER: title, description, date */
+main > header {
+	margin-bottom: 40px;
+	padding-bottom: 24px;
+	border-bottom: 1px solid var(--border);
+}
+
+main > header h1 {
+	margin-bottom: 10px;
+	line-height: 1.25;
+}
+
+main > header .description {
+	margin: 0 0 14px;
+	font-size: 19px;
+	line-height: 1.5;
+	opacity: 0.85;
+}
+
+main > header .meta {
+	margin: 0;
+}
+
 main p {
 	margin: 0 0 22px;
 }
@@ -462,6 +485,10 @@ main dd {
 	main {
 		font-size: 15px;
 		line-height: 1.8;
+	}
+
+	main > header .description {
+		font-size: 17px;
 	}
 
 	main h2 {
