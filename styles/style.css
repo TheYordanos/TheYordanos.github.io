@@ -254,6 +254,32 @@ footer {
 	break-after: avoid;
 }
 
+/* BLOGROLL ========================= */
+.blogroll {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	columns: 2 18rem;
+	column-gap: 32px;
+}
+
+.blogroll li {
+	break-inside: avoid;
+	padding: 8px 0;
+	border-bottom: 1px solid var(--border);
+}
+
+.blogroll a {
+	font-weight: 700;
+}
+
+.blogroll span {
+	display: block;
+	color: var(--meta);
+	font-size: 14px;
+	line-height: 1.5;
+}
+
 /* PROJECTS SECTION ========================= */
 .projects-grid {
 	margin-top: 25px;
