@@ -9,6 +9,8 @@ Front matter per article:
     date: 2026-09-12        (YYYY-MM-DD, newest first)
     draft: true             (optional, skips the article)
     toc: true               (optional, adds a table of contents)
+    image: ../res/cover.png (optional, link preview image; default is the
+                             first image in the article, then OG_IMAGE)
     ---
 
 Usage:
@@ -22,6 +24,7 @@ import subprocess
 import sys
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+from urllib.parse import urljoin
 
 ROOT = Path(__file__).resolve().parent
 CONTENT_DIR = ROOT / "articles_md"
@@ -40,7 +43,8 @@ SITE_AUTHOR = "Yordanos Z."
 FEED = ROOT / "feed.xml"
 FEED_LIMIT = 20  # newest articles in the feed
 
-OG_IMAGE = "res/og.png"
+OG_IMAGE = "res/article_og.png"  # used when an article has no image
+NOT_PREVIEW = (".mp4", ".webm", ".mov", ".mp3", ".ogg", ".wav", ".m4a", ".svg")
 
 START_MARK = "<!-- ARTICLES:START -->"
 END_MARK = "<!-- ARTICLES:END -->"
@@ -79,7 +83,19 @@ def is_up_to_date(src, out, newest_dep):
     return out.stat().st_mtime >= max(src.stat().st_mtime, newest_dep)
 
 
-def page_vars(slug, title, description):
+def first_image(text):
+    """Path or URL of the first ![](image) in the Markdown, or ''.
+    Images inside code fences and inline code are examples, so they are skipped."""
+    text = re.sub(r"^(`{3,}|~{3,}).*?^\1", "", text, flags=re.DOTALL | re.MULTILINE)
+    text = re.sub(r"`[^`\n]*`", "", text)
+    for m in re.finditer(r"!\[[^\]]*\]\(\s*<?([^)\s>]+)", text):
+        path = m.group(1)
+        if not path.lower().split("?")[0].endswith(NOT_PREVIEW):
+            return path
+    return ""
+
+
+def page_vars(slug, title, description, image=""):
     """Template variables for link previews, as pandoc -V arguments.
     Values are pre-escaped for use inside HTML attributes, so the template
     can write content="$og_title$" directly."""
@@ -87,7 +103,9 @@ def page_vars(slug, title, description):
         "og_title": title,
         "og_description": description,
         "og_url": f"{SITE_URL}/articles/{slug}.html",
-        "og_image": f"{SITE_URL}/{OG_IMAGE}",
+        # paths are relative to the built page, like in the article itself
+        "og_image": urljoin(f"{SITE_URL}/articles/{slug}.html", image)
+                    if image else f"{SITE_URL}/{OG_IMAGE}",
         "og_site": SITE_TITLE,
     }
     args = []
@@ -240,7 +258,8 @@ def main():
         items.append((date, slug, title))
         descriptions[slug] = meta.get("description", "")
         keep.add(slug)
-        extra = page_vars(slug, title, descriptions[slug])
+        image = meta.get("image") or first_image(src.read_text(encoding="utf-8-sig"))
+        extra = page_vars(slug, title, descriptions[slug], image)
         if meta.get("toc", "").lower() in ("true", "yes", "1"):
             # the template needs the flag, "toc: true" alone gives an empty box
             extra.append("--toc")
