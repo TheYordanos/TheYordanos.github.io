@@ -74,5 +74,5 @@ If you got bored by my programming language comparisons, here are some good arti
 
 - [James Clear - Minimalism](https://jamesclear.com/minimalism)
 - [Mark Mason - Minimalism](https://markmanson.net/minimalism)
-- [Become Minimalism Website](https://www.becomingminimalist.com/)
+- [Becoming Minimalist Website](https://www.becomingminimalist.com/)
 - [Wiki, of course](https://en.wikipedia.org/wiki/Minimalism)
