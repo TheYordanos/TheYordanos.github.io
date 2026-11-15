@@ -65,6 +65,34 @@ main > header .meta {
 	margin: 0;
 }
 
+/* SERIES (front matter: series: Name) */
+main .series {
+	margin: 0 0 40px;
+	padding: 16px 20px;
+	border: 1px solid var(--border);
+	border-radius: 6px;
+	font-size: 15px;
+}
+
+main .series-title {
+	margin: 0 0 8px;
+	font-weight: 700;
+}
+
+main .series ol {
+	margin: 0;
+	padding-left: 22px;
+}
+
+main .series li {
+	margin-bottom: 4px;
+	padding-left: 0;
+}
+
+main .series [aria-current] {
+	font-weight: 700;
+}
+
 /* TABLE OF CONTENTS (front matter: toc: true) */
 main #TOC {
 	margin: 0 0 40px;

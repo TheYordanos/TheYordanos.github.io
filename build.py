@@ -9,6 +9,8 @@ Front matter per article:
     date: 2026-09-12        (YYYY-MM-DD, newest first)
     draft: true             (optional, skips the article)
     toc: true               (optional, adds a table of contents)
+    series: Chess in Odin   (optional, lists the parts at the top of each one)
+    part: 2                 (optional, order inside a series; default is by date)
     image: ../res/cover.png (optional, link preview image; default is the
                              first image in the article, then OG_IMAGE)
     ---
@@ -115,6 +117,20 @@ def page_vars(slug, title, description, image=""):
     return args
 
 
+def series_html(name, parts, current):
+    """Box listing every article of a series. parts: [(slug, title)] in order."""
+    lis = []
+    for slug, title in parts:
+        t = html.escape(title)
+        if slug == current:
+            lis.append(f'<li aria-current="page">{t}</li>')
+        else:
+            lis.append(f'<li><a href="{slug}.html">{t}</a></li>')
+    return (f'<nav class="series" aria-label="Series">'
+            f'<p class="series-title">Series: {html.escape(name)}</p>'
+            f'<ol>{"".join(lis)}</ol></nav>')
+
+
 def build(job):
     src, out, force, template_mtime, extra_args = job
     if not force and is_up_to_date(src, out, template_mtime):
@@ -132,18 +148,23 @@ def build(job):
     return src, "built", ""
 
 
-def render_items(items, year_headings=False):
-    """items: (date, slug, title) tuples, already sorted. Returns <li> lines."""
-    lines, last_year = [], None
-    for date, slug, title in items:
-        year = date[:4]
-        dated = year != "0000"
-        if year_headings and dated and year != last_year:
-            lines.append(f'{ITEM_INDENT}<li class="year">{year}</li>')
-            last_year = year
+def render_items(items, group_of=None, badges=None):
+    """items: (date, slug, title) tuples, already sorted. Returns <li> lines.
+    group_of(item) gives the heading an item belongs under, or None."""
+    lines, last = [], None
+    for item in items:
+        date, slug, title = item
+        label = group_of(item) if group_of else None
+        if label and label != last:
+            lines.append(f'{ITEM_INDENT}<li class="year">{html.escape(label)}</li>')
+            last = label
+        shown = date if date[:4] != "0000" else ""
+        text = html.escape(title)
+        if badges and slug in badges:
+            text += f" [{badges[slug]}]"  # e.g. "Chess in Odin [Part 1/4]"
         lines.append(
-            f'{ITEM_INDENT}<li><time>{date if dated else ""}</time>'
-            f'<a href="articles/{slug}.html">{html.escape(title)}</a></li>'
+            f'{ITEM_INDENT}<li><time>{shown}</time>'
+            f'<a href="articles/{slug}.html">{text}</a></li>'
         )
     return lines
 
@@ -239,9 +260,14 @@ def main():
                          Path(__file__).stat().st_mtime)
 
     jobs, items, keep, descriptions = [], [], set(), {}
+    pending = []                  # (src, slug, series key, extra pandoc args)
+    members, names, newest = {}, {}, {}  # series: parts, display name, newest file
     for src in sorted(CONTENT_DIR.glob("*.md")):
         meta = read_front_matter(src)
         slug = src.stem
+        skey = meta.get("series", "").strip().lower()
+        if skey:  # drafts count too: marking a part as draft changes its siblings
+            newest[skey] = max(newest.get(skey, 0), src.stat().st_mtime)
         if meta.get("draft", "").lower() in ("true", "yes", "1"):
             print(f"skip   {slug} [draft]")
             continue
@@ -263,7 +289,31 @@ def main():
         if meta.get("toc", "").lower() in ("true", "yes", "1"):
             # the template needs the flag, "toc: true" alone gives an empty box
             extra.append("--toc")
-        jobs.append((src, OUT_DIR / f"{slug}.html", force, template_mtime, extra))
+        if skey:
+            names.setdefault(skey, meta["series"].strip())
+            members.setdefault(skey, []).append(
+                (meta.get("part", "").strip(), date, slug, title))
+        pending.append((src, slug, skey, extra))
+
+    # order each series by "part:" if every part has one, otherwise by date
+    ordered, badges = {}, {}
+    for skey, rows in members.items():
+        if len(rows) < 2:
+            continue
+        by_part = all(r[0].isdigit() for r in rows)
+        rows = sorted(rows, key=lambda r: (int(r[0]) if by_part else 0, r[1], r[2]))
+        ordered[skey] = [(r[2], r[3]) for r in rows]
+        for n, (part_slug, _) in enumerate(ordered[skey], 1):
+            badges[part_slug] = f"Part {n}/{len(rows)}"
+
+    for src, slug, skey, extra in pending:
+        dep = template_mtime
+        if skey in ordered:
+            # this page lists its siblings, so it must rebuild when they change
+            parts = ordered[skey]
+            extra = extra + ["-V", "series_nav=" + series_html(names[skey], parts, slug)]
+            dep = max(dep, newest[skey])
+        jobs.append((src, OUT_DIR / f"{slug}.html", force, dep, extra))
 
     # remove html for deleted/draft articles (template.txt is untouched)
     for old in OUT_DIR.glob("*.html"):
@@ -288,10 +338,11 @@ def main():
     items.sort(key=lambda r: r[2])
     items.sort(key=lambda r: r[0], reverse=True)
 
-    splice(INDEX, render_items(items[:INDEX_LIMIT]))
+    splice(INDEX, render_items(items[:INDEX_LIMIT], badges=badges))
 
     if ARCHIVE.exists():
-        splice(ARCHIVE, render_items(items, year_headings=True))
+        year_of = lambda it: it[0][:4] if it[0][:4] != "0000" else None
+        splice(ARCHIVE, render_items(items, year_of, badges))
         archive_note = "archive.html updated"
     else:
         archive_note = "archive.html not found, skipped"

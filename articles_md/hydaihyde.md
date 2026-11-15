@@ -2,6 +2,7 @@
 title: How you do anything is how you do everything
 description: An intersting quote from John Wick's antagonist
 date: 2026-11-03
+topic: Rant
 ---
 
 ![Indie games by SKYLIOR778](../res/articles/hydaihyde/indie.webp)
