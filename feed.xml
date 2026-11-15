@@ -5,8 +5,15 @@
 <link href="https://theyordanos.github.io/"/>
 <link rel="self" href="https://theyordanos.github.io/feed.xml"/>
 <id>https://theyordanos.github.io/</id>
-<updated>2026-11-14T00:00:00Z</updated>
+<updated>2026-11-15T00:00:00Z</updated>
 <author><name>Yordanos Z.</name></author>
+<entry>
+<title>Minimalism</title>
+<link href="https://theyordanos.github.io/articles/minimalism.html"/>
+<id>https://theyordanos.github.io/articles/minimalism.html</id>
+<updated>2026-11-15T00:00:00Z</updated>
+<summary>Simple vs Complex and Easy vs Difficult</summary>
+</entry>
 <entry>
 <title>A minimal static blog</title>
 <link href="https://theyordanos.github.io/articles/minimal_blog.html"/>
