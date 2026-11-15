@@ -19,7 +19,7 @@ Okay obviously we're not just talking about art minimalism. Minimalism can be as
 
 > Minimalism is not a lack of something. It’s simply the perfect amount of something.
 > 
-> - Nicholas Burroughs^[[James Clear - Minimalism](https://jamesclear.com/minimalism)]
+> — Nicholas Burroughs^[[James Clear - Minimalism](https://jamesclear.com/minimalism)]
 
 I got the idea of a minimalist article and Simple vs Complex & Easy vs Difficult from Bill Hall's ^[Also know as GingerBill, Creator of The Odin Programming Language] [Good Tools are Invisible](https://www.gingerbill.org/article/2026/07/10/good-tools-are-invisible/) article.
 
