@@ -10,7 +10,7 @@ A *maze* is a complex network of paths, walls, and branches. There are different
 
 ![Perfect Vs. Imperfect](../res/articles/maze_generation/perfect_and_imperfect_maze.png)
 
-A perfect maze is equivalent to a **tree** in graph theory^[math field that studies about graphs, which are pairwise relationships between objects. You can read more on that on [graph theory wikipedia](https://en.wikipedia.org/wiki/Graph_theory)], meaning it is a minimal spanning tree over the set of cells. This is the stuctural guarantee for only one single solution unlike other (imperfect) maze types.
+A perfect maze is equivalent to a **tree** in graph theory^[math field that studies about graphs, which are pairwise relationships between objects. You can read more on that on [graph theory wikipedia](https://en.wikipedia.org/wiki/Graph_theory)], meaning it is a minimal spanning tree ^[The cheapest way to connect a set of points (like cities, houses, computers, or maze rooms in this case) together so that every point is reachable, with no loops or cycles] over the set of rooms. This is the stuctural guarantee for only one single solution unlike other (imperfect) maze types.
 
 ### Maze generation algorithms we'll be making in this series:
 
@@ -45,28 +45,27 @@ Before any algorithm, we need a grid to carve into and a way to look at the resu
 
 ### The grid
 
-The maze is a 2D grid of cells, where each cell is either a wall or a path. A maze starts as a solid block of walls, and a generator carves paths out of it.
+The maze is a 2D grid of rooms, where each room is either a wall or a path. A maze starts as a solid block of walls, and a generator carves paths out of it.
 
 ```odin
-Cell :: enum byte { WALL, PATH }
+Room :: enum byte { WALL, PATH }
 ```
 
 `WALL` comes first on purpose. Odin zero-initializes everything, so a freshly declared grid is already full of walls.
 
-The grid size needs to be **odd** ^[I saw this way of making a grid instead of cell + wall approach from [professor-l's page](https://professor-l.github.io/mazes/)]:
+The grid size needs to be **odd** ^[I saw this way of making a grid with everything being a room instead of cell + wall approach from [professor-l's page](https://professor-l.github.io/mazes/)]:
 
 ```odin
-CELL_SIZE :: 20
+ROOM_SIZE :: 20
 COLS :: 65
 ROWS :: 37
 ```
 
-Here's why. Think of the maze *rooms* as sitting on odd coordinates `(1,1)`, `(3,1)`, `(5,1)`, and so on. The cells on the even coordinates between them are the *walls* that separate neighbouring rooms. Knocking down a wall means turning the cell between two rooms into a path. An odd size guarantees the outermost row and column are always walls, so the maze has a solid border and no algorithm ever has to worry about walking off the edge.
+Here's why. Think of the maze *rooms* as sitting on odd coordinates `(1,1)`, `(3,1)`, `(5,1)`, and so on. The rooms on the even coordinates between them are the *walls* that separate neighbouring rooms. Knocking down a wall means turning the room between two rooms into a path. An odd size guarantees the outermost row and column are always walls, so the maze has a solid border and no algorithm ever has to worry about walking off the edge.
 
 ### Helpers
 
 ```odin
-// A room is any cell with odd coordinates. Pick one at random.
 random_room :: proc() -> [2]i32 {
 	return {
 		rand.int31_max(COLS / 2) * 2 + 1,
@@ -76,7 +75,7 @@ random_room :: proc() -> [2]i32 {
 
 // The border (index 0 and the last index) is always wall, so a
 // valid room is strictly inside it.
-is_cell_in_bounds :: proc(c: [2]i32) -> bool {
+is_room_in_bounds :: proc(c: [2]i32) -> bool {
 	return c.x > 0 && c.x < COLS - 1 && c.y > 0 && c.y < ROWS - 1
 }
 ```
@@ -88,7 +87,7 @@ Note the bounds check is `> 0` and `< COLS - 1`. Index 0 and index `COLS - 1` ar
 Each article will implement one procedure with this shape:
 
 ```odin
-generate :: proc(maze: ^[COLS][ROWS]Cell) {
+generate :: proc(maze: ^[COLS][ROWS]Room) {
 	// the algorithm goes here
 }
 ```
@@ -97,7 +96,7 @@ It takes a pointer to the grid and carves into it. A fixed-size array is a value
 
 ### Window and drawing
 
-Finally, SDL3 gives us a window and a renderer, and we draw one filled square per cell:
+Finally, SDL3 gives us a window and a renderer, and we draw one filled square per room:
 
 ```odin
 package main
@@ -106,9 +105,9 @@ import "core:fmt"
 import "core:math/rand"
 import sdl "vendor:sdl3"
 
-Cell :: enum byte { WALL, PATH }
+Room :: enum byte { WALL, PATH }
 
-CELL_SIZE :: 20
+ROOM_SIZE :: 20
 COLS :: 65
 ROWS :: 37
 
@@ -122,23 +121,23 @@ random_room :: proc() -> [2]i32 {
 	}
 }
 
-is_cell_in_bounds :: proc(c: [2]i32) -> bool {
+is_room_in_bounds :: proc(c: [2]i32) -> bool {
 	return c.x > 0 && c.x < COLS - 1 && c.y > 0 && c.y < ROWS - 1
 }
 
-generate :: proc(maze: ^[COLS][ROWS]Cell) {
+generate :: proc(maze: ^[COLS][ROWS]Room) {
 	// the algorithm goes here
 }
 
-draw_maze :: proc(renderer: ^sdl.Renderer, maze: ^[COLS][ROWS]Cell) {
+draw_maze :: proc(renderer: ^sdl.Renderer, maze: ^[COLS][ROWS]Room) {
 	for x in 0 ..< COLS {
 		for y in 0 ..< ROWS {
 			clr := maze[x][y] == .WALL ? CLR_WALL : CLR_PATH
 			rect := sdl.FRect{
-				x = f32(x * CELL_SIZE),
-				y = f32(y * CELL_SIZE),
-				w = CELL_SIZE,
-				h = CELL_SIZE,
+				x = f32(x * ROOM_SIZE),
+				y = f32(y * ROOM_SIZE),
+				w = ROOM_SIZE,
+				h = ROOM_SIZE,
 			}
 
 			sdl.SetRenderDrawColor(renderer, clr.r, clr.g, clr.b, clr.a)
@@ -154,7 +153,7 @@ main :: proc() {
 	}
 	defer sdl.Quit()
 
-	window := sdl.CreateWindow("Maze", COLS * CELL_SIZE, ROWS * CELL_SIZE, {})
+	window := sdl.CreateWindow("Maze", COLS * ROOM_SIZE, ROWS * ROOM_SIZE, {})
 	if window == nil {
 		fmt.eprintln("sdl.CreateWindow:", sdl.GetError())
 		return
@@ -170,7 +169,7 @@ main :: proc() {
 
 	sdl.SetRenderVSync(renderer, 1)
 
-	maze: [COLS][ROWS]Cell
+	maze: [COLS][ROWS]Room
 	generate(&maze)
 
 	running := true

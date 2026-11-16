@@ -33,7 +33,7 @@ start: carve(a random room)
 ### Solution
 
 ```odin
-recursive_backtracker :: proc(maze: ^[COLS][ROWS]Cell, room: [2]i32) {
+recursive_backtracker :: proc(maze: ^[COLS][ROWS]Room, room: [2]i32) {
 	maze[room.x][room.y] = .PATH
 
 	dirs := [4][2]i32{{-1, 0}, {1, 0}, {0, -1}, {0, 1}}
@@ -42,7 +42,7 @@ recursive_backtracker :: proc(maze: ^[COLS][ROWS]Cell, room: [2]i32) {
 	for dir in dirs {
 		next := room + 2 * dir
 
-		if !is_cell_in_bounds(next) || maze[next.x][next.y] != .WALL do continue
+		if !is_room_in_bounds(next) || maze[next.x][next.y] != .WALL do continue
 
 		wall := room + dir
 		maze[wall.x][wall.y] = .PATH
@@ -51,7 +51,7 @@ recursive_backtracker :: proc(maze: ^[COLS][ROWS]Cell, room: [2]i32) {
 	}
 }
 
-generate :: proc(maze: ^[COLS][ROWS]Cell) {
+generate :: proc(maze: ^[COLS][ROWS]Room) {
 	recursive_backtracker(maze, random_room())
 }
 ```
