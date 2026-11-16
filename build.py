@@ -297,6 +297,7 @@ def main():
 
     # order each series by "part:" if every part has one, otherwise by date
     ordered, badges = {}, {}
+    series_of, part_pos = {}, {}
     for skey, rows in members.items():
         if len(rows) < 2:
             continue
@@ -305,6 +306,8 @@ def main():
         ordered[skey] = [(r[2], r[3]) for r in rows]
         for n, (part_slug, _) in enumerate(ordered[skey], 1):
             badges[part_slug] = f"Part {n}/{len(rows)}"
+            series_of[part_slug] = skey
+            part_pos[part_slug] = n
 
     for src, slug, skey, extra in pending:
         dep = template_mtime
@@ -334,8 +337,16 @@ def main():
     if errors:
         sys.exit(1)
 
-    # newest first, then title A-Z
-    items.sort(key=lambda r: r[2])
+    # newest first. Within a day: A-Z by title (or series name), with the
+    # parts of a series kept together and listed last part first.
+    def day_order(item):
+        _, slug, title = item
+        skey = series_of.get(slug)
+        if skey:
+            return (names[skey].lower(), -part_pos[slug])
+        return (title.lower(), 0)
+
+    items.sort(key=day_order)
     items.sort(key=lambda r: r[0], reverse=True)
 
     splice(INDEX, render_items(items[:INDEX_LIMIT], badges=badges))
