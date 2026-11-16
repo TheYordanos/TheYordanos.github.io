@@ -92,7 +92,7 @@ for you: Why is the neighbour <code>2 * direction</code> away and not
             knock out the wall between room and neighbour
             carve(neighbour)
 
-start: carve(a random room)</code></pre>
+start: carve(a random odd room)</code></pre>
 <h3 id="solution">Solution <a href="#solution" class="anchor"
 aria-label="Link to this section"><span
 class="anchor-mark">#</span></a></h3>
@@ -116,7 +116,7 @@ class="sourceCode odin"><code class="sourceCode odin"><span id="cb2-1"><a href="
 <span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
 <span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="fu">generate </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>maze<span class="op">:</span> <span class="op">^[</span>COLS<span class="op">][</span>ROWS<span class="op">]</span>Room<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">recursive_backtracker</span><span class="op">(</span>maze<span class="op">,</span> <span class="fu">random_room</span><span class="op">())</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">recursive_backtracker</span><span class="op">(</span>maze<span class="op">,</span> <span class="fu">random_odd_room</span><span class="op">())</span></span>
 <span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>Run it, press space a few times, and you’ll get a new maze each
 time.</p>
