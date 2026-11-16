@@ -8,6 +8,13 @@
 <updated>2026-11-16T00:00:00Z</updated>
 <author><name>Yordanos Z.</name></author>
 <entry>
+<title>Recursive Backtracker</title>
+<link href="https://theyordanos.github.io/articles/recursive_backtracker.html"/>
+<id>https://theyordanos.github.io/articles/recursive_backtracker.html</id>
+<updated>2026-11-16T00:00:00Z</updated>
+<summary>Carving a perfect maze with a depth-first walk</summary>
+</entry>
+<entry>
 <title>Maze Generation Algorithms Introduction</title>
 <link href="https://theyordanos.github.io/articles/maze_generation.html"/>
 <id>https://theyordanos.github.io/articles/maze_generation.html</id>
