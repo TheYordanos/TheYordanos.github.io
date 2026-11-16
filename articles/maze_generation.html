@@ -126,31 +126,23 @@ so we’ll write it once.</p>
 <h3 id="the-grid">The grid <a href="#the-grid" class="anchor"
 aria-label="Link to this section"><span
 class="anchor-mark">#</span></a></h3>
-<p>The maze is a 2D grid of rooms, where each room is either a wall or a
-path. A maze starts as a solid block of walls, and a generator carves
-paths out of it.</p>
+<p>The maze lives on a 2D grid. A single position in that grid is a
+<em>cell</em>, and every cell is either a wall or a path. A maze starts
+as a solid block of walls, and a generator carves paths out of it.</p>
 <div class="sourceCode" id="cb1"><pre
-class="sourceCode odin"><code class="sourceCode odin"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Room <span class="op">::</span> <span class="kw">enum</span> <span class="dt">byte</span> <span class="op">{</span> WALL<span class="op">,</span> PATH <span class="op">}</span></span></code></pre></div>
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Cell <span class="op">::</span> <span class="kw">enum</span> <span class="dt">byte</span> <span class="op">{</span> WALL<span class="op">,</span> PATH <span class="op">}</span></span></code></pre></div>
 <p><code>WALL</code> comes first on purpose. Odin zero-initializes
 everything, so a freshly declared grid is already full of walls.</p>
 <p>The grid size needs to be <strong>odd</strong>
 <label for="sn-3" class="sidenote-number"></label><input type="checkbox" id="sn-3" class="margin-toggle"><span class="sidenote">I
-saw this way of making a grid with everything being a room instead of
-cell + wall approach from <a
+saw this way of making a grid, where rooms and walls are all cells of
+one grid instead of storing walls separately from rooms, from <a
 href="https://professor-l.github.io/mazes/">professor-l’s
 page</a></span>:</p>
 <div class="sourceCode" id="cb2"><pre
-class="sourceCode odin"><code class="sourceCode odin"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>ROOM_SIZE <span class="op">::</span> <span class="dv">20</span></span>
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>CELL_SIZE <span class="op">::</span> <span class="dv">20</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>COLS <span class="op">::</span> <span class="dv">65</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>ROWS <span class="op">::</span> <span class="dv">37</span></span></code></pre></div>
-<p>Here’s why. Think of the maze <em>rooms</em> as sitting on odd
-coordinates <code>(1,1)</code>, <code>(3,1)</code>, <code>(5,1)</code>,
-and so on. The rooms on the even coordinates between them are the
-<em>walls</em> that separate neighbouring rooms. Knocking down a wall
-means turning the room between two rooms into a path. An odd size
-guarantees the outermost row and column are always walls, so the maze
-has a solid border and no algorithm ever has to worry about walking off
-the edge.</p>
 <h3 id="helpers">Helpers <a href="#helpers" class="anchor"
 aria-label="Link to this section"><span
 class="anchor-mark">#</span></a></h3>
@@ -162,21 +154,21 @@ class="sourceCode odin"><code class="sourceCode odin"><span id="cb3-1"><a href="
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">// The border (index 0 and the last index) is always wall, so a</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">// The border (index 0 and the last index) is always outside, so a</span></span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">// valid room is strictly inside it.</span></span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">is_room_in_bounds </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>c<span class="op">:</span> <span class="op">[</span><span class="dv">2</span><span class="op">]</span><span class="dt">i32</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="dt">bool</span> <span class="op">{</span></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> c<span class="op">.</span>x <span class="op">&gt;</span> <span class="dv">0</span> <span class="op">&amp;&amp;</span> c<span class="op">.</span>x <span class="op">&lt;</span> COLS <span class="op">-</span> <span class="dv">1</span> <span class="op">&amp;&amp;</span> c<span class="op">.</span>y <span class="op">&gt;</span> <span class="dv">0</span> <span class="op">&amp;&amp;</span> c<span class="op">.</span>y <span class="op">&lt;</span> ROWS <span class="op">-</span> <span class="dv">1</span></span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>Note the bounds check is <code>&gt; 0</code> and
 <code>&lt; COLS - 1</code>. Index 0 and index <code>COLS - 1</code> are
-the border walls, so they are off limits.</p>
+the outside cells, so they are off limits.</p>
 <h3 id="the-generator-hook">The generator hook <a
 href="#the-generator-hook" class="anchor"
 aria-label="Link to this section"><span
 class="anchor-mark">#</span></a></h3>
 <p>Each article will implement one procedure with this shape:</p>
 <div class="sourceCode" id="cb4"><pre
-class="sourceCode odin"><code class="sourceCode odin"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">generate </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>maze<span class="op">:</span> <span class="op">^[</span>COLS<span class="op">][</span>ROWS<span class="op">]</span>Room<span class="op">)</span> <span class="op">{</span></span>
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">generate </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>maze<span class="op">:</span> <span class="op">^[</span>COLS<span class="op">][</span>ROWS<span class="op">]</span>Cell<span class="op">)</span> <span class="op">{</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">// the algorithm goes here</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>It takes a pointer to the grid and carves into it. A fixed-size array
@@ -192,7 +184,7 @@ href="#window-and-drawing" class="anchor"
 aria-label="Link to this section"><span
 class="anchor-mark">#</span></a></h3>
 <p>Finally, SDL3 gives us a window and a renderer, and we draw one
-filled square per room:</p>
+filled square per cell:</p>
 <div class="sourceCode" id="cb5"><pre
 class="sourceCode odin"><code class="sourceCode odin"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">package</span> main</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -200,9 +192,9 @@ class="sourceCode odin"><code class="sourceCode odin"><span id="cb5-1"><a href="
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="st">&quot;core:math/rand&quot;</span></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sdl <span class="st">&quot;vendor:sdl3&quot;</span></span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>Room <span class="op">::</span> <span class="kw">enum</span> <span class="dt">byte</span> <span class="op">{</span> WALL<span class="op">,</span> PATH <span class="op">}</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>Cell <span class="op">::</span> <span class="kw">enum</span> <span class="dt">byte</span> <span class="op">{</span> WALL<span class="op">,</span> PATH <span class="op">}</span></span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>ROOM_SIZE <span class="op">::</span> <span class="dv">20</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>CELL_SIZE <span class="op">::</span> <span class="dv">20</span></span>
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>COLS <span class="op">::</span> <span class="dv">65</span></span>
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>ROWS <span class="op">::</span> <span class="dv">37</span></span>
 <span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
@@ -220,19 +212,19 @@ class="sourceCode odin"><code class="sourceCode odin"><span id="cb5-1"><a href="
 <span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> c<span class="op">.</span>x <span class="op">&gt;</span> <span class="dv">0</span> <span class="op">&amp;&amp;</span> c<span class="op">.</span>x <span class="op">&lt;</span> COLS <span class="op">-</span> <span class="dv">1</span> <span class="op">&amp;&amp;</span> c<span class="op">.</span>y <span class="op">&gt;</span> <span class="dv">0</span> <span class="op">&amp;&amp;</span> c<span class="op">.</span>y <span class="op">&lt;</span> ROWS <span class="op">-</span> <span class="dv">1</span></span>
 <span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
 <span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="fu">generate </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>maze<span class="op">:</span> <span class="op">^[</span>COLS<span class="op">][</span>ROWS<span class="op">]</span>Room<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="fu">generate </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>maze<span class="op">:</span> <span class="op">^[</span>COLS<span class="op">][</span>ROWS<span class="op">]</span>Cell<span class="op">)</span> <span class="op">{</span></span>
 <span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    <span class="co">// the algorithm goes here</span></span>
 <span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
 <span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="fu">draw_maze </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>renderer<span class="op">:</span> <span class="op">^</span>sdl<span class="op">.</span>Renderer<span class="op">,</span> maze<span class="op">:</span> <span class="op">^[</span>COLS<span class="op">][</span>ROWS<span class="op">]</span>Room<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="fu">draw_maze </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>renderer<span class="op">:</span> <span class="op">^</span>sdl<span class="op">.</span>Renderer<span class="op">,</span> maze<span class="op">:</span> <span class="op">^[</span>COLS<span class="op">][</span>ROWS<span class="op">]</span>Cell<span class="op">)</span> <span class="op">{</span></span>
 <span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> x <span class="cf">in</span> <span class="dv">0</span> <span class="op">..&lt;</span> COLS <span class="op">{</span></span>
 <span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> y <span class="cf">in</span> <span class="dv">0</span> <span class="op">..&lt;</span> ROWS <span class="op">{</span></span>
 <span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>            <span class="va">clr </span><span class="op">:=</span> maze<span class="op">[</span>x<span class="op">][</span>y<span class="op">]</span> <span class="op">==</span> <span class="op">.</span>WALL <span class="op">?</span> CLR_WALL <span class="op">:</span> CLR_PATH</span>
 <span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>            <span class="va">rect </span><span class="op">:=</span> sdl<span class="op">.</span>FRect<span class="op">{</span></span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>                x <span class="op">=</span> <span class="dt">f32</span><span class="op">(</span>x <span class="op">*</span> ROOM_SIZE<span class="op">),</span></span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>                y <span class="op">=</span> <span class="dt">f32</span><span class="op">(</span>y <span class="op">*</span> ROOM_SIZE<span class="op">),</span></span>
-<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>                w <span class="op">=</span> ROOM_SIZE<span class="op">,</span></span>
-<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>                h <span class="op">=</span> ROOM_SIZE<span class="op">,</span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>                x <span class="op">=</span> <span class="dt">f32</span><span class="op">(</span>x <span class="op">*</span> CELL_SIZE<span class="op">),</span></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>                y <span class="op">=</span> <span class="dt">f32</span><span class="op">(</span>y <span class="op">*</span> CELL_SIZE<span class="op">),</span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>                w <span class="op">=</span> CELL_SIZE<span class="op">,</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>                h <span class="op">=</span> CELL_SIZE<span class="op">,</span></span>
 <span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>            <span class="op">}</span></span>
 <span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>            sdl<span class="op">.</span><span class="fu">SetRenderDrawColor</span><span class="op">(</span>renderer<span class="op">,</span> clr<span class="op">.</span>r<span class="op">,</span> clr<span class="op">.</span>g<span class="op">,</span> clr<span class="op">.</span>b<span class="op">,</span> clr<span class="op">.</span>a<span class="op">)</span></span>
@@ -248,7 +240,7 @@ class="sourceCode odin"><code class="sourceCode odin"><span id="cb5-1"><a href="
 <span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
 <span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>    <span class="kw">defer</span> sdl<span class="op">.</span><span class="fu">Quit</span><span class="op">()</span></span>
 <span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>    <span class="va">window </span><span class="op">:=</span> sdl<span class="op">.</span><span class="fu">CreateWindow</span><span class="op">(</span><span class="st">&quot;Maze&quot;</span><span class="op">,</span> COLS <span class="op">*</span> ROOM_SIZE<span class="op">,</span> ROWS <span class="op">*</span> ROOM_SIZE<span class="op">,</span> <span class="op">{})</span></span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>    <span class="va">window </span><span class="op">:=</span> sdl<span class="op">.</span><span class="fu">CreateWindow</span><span class="op">(</span><span class="st">&quot;Maze&quot;</span><span class="op">,</span> COLS <span class="op">*</span> CELL_SIZE<span class="op">,</span> ROWS <span class="op">*</span> CELL_SIZE<span class="op">,</span> <span class="op">{})</span></span>
 <span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> window <span class="op">==</span> <span class="kw">nil</span> <span class="op">{</span></span>
 <span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>        fmt<span class="op">.</span><span class="fu">eprintln</span><span class="op">(</span><span class="st">&quot;sdl.CreateWindow:&quot;</span><span class="op">,</span> sdl<span class="op">.</span><span class="fu">GetError</span><span class="op">())</span></span>
 <span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span></span>
@@ -264,7 +256,7 @@ class="sourceCode odin"><code class="sourceCode odin"><span id="cb5-1"><a href="
 <span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a>    sdl<span class="op">.</span><span class="fu">SetRenderVSync</span><span class="op">(</span>renderer<span class="op">,</span> <span class="dv">1</span><span class="op">)</span></span>
 <span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a>    maze<span class="op">:</span> <span class="op">[</span>COLS<span class="op">][</span>ROWS<span class="op">]</span>Room</span>
+<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a>    maze<span class="op">:</span> <span class="op">[</span>COLS<span class="op">][</span>ROWS<span class="op">]</span>Cell</span>
 <span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a>    <span class="fu">generate</span><span class="op">(&amp;</span>maze<span class="op">)</span></span>
 <span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a>    <span class="va">running </span><span class="op">:=</span> <span class="kw">true</span></span>

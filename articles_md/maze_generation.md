@@ -45,23 +45,21 @@ Before any algorithm, we need a grid to carve into and a way to look at the resu
 
 ### The grid
 
-The maze is a 2D grid of rooms, where each room is either a wall or a path. A maze starts as a solid block of walls, and a generator carves paths out of it.
+The maze lives on a 2D grid. A single position in that grid is a *cell*, and every cell is either a wall or a path. A maze starts as a solid block of walls, and a generator carves paths out of it.
 
 ```odin
-Room :: enum byte { WALL, PATH }
+Cell :: enum byte { WALL, PATH }
 ```
 
 `WALL` comes first on purpose. Odin zero-initializes everything, so a freshly declared grid is already full of walls.
 
-The grid size needs to be **odd** ^[I saw this way of making a grid with everything being a room instead of cell + wall approach from [professor-l's page](https://professor-l.github.io/mazes/)]:
+The grid size needs to be **odd** ^[I saw this way of making a grid, where rooms and walls are all cells of one grid instead of storing walls separately from rooms, from [professor-l's page](https://professor-l.github.io/mazes/)]:
 
 ```odin
-ROOM_SIZE :: 20
+CELL_SIZE :: 20
 COLS :: 65
 ROWS :: 37
 ```
-
-Here's why. Think of the maze *rooms* as sitting on odd coordinates `(1,1)`, `(3,1)`, `(5,1)`, and so on. The rooms on the even coordinates between them are the *walls* that separate neighbouring rooms. Knocking down a wall means turning the room between two rooms into a path. An odd size guarantees the outermost row and column are always walls, so the maze has a solid border and no algorithm ever has to worry about walking off the edge.
 
 ### Helpers
 
@@ -73,21 +71,21 @@ random_odd_room :: proc() -> [2]i32 {
 	}
 }
 
-// The border (index 0 and the last index) is always wall, so a
+// The border (index 0 and the last index) is always outside, so a
 // valid room is strictly inside it.
 is_room_in_bounds :: proc(c: [2]i32) -> bool {
 	return c.x > 0 && c.x < COLS - 1 && c.y > 0 && c.y < ROWS - 1
 }
 ```
 
-Note the bounds check is `> 0` and `< COLS - 1`. Index 0 and index `COLS - 1` are the border walls, so they are off limits.
+Note the bounds check is `> 0` and `< COLS - 1`. Index 0 and index `COLS - 1` are the outside cells, so they are off limits.
 
 ### The generator hook
 
 Each article will implement one procedure with this shape:
 
 ```odin
-generate :: proc(maze: ^[COLS][ROWS]Room) {
+generate :: proc(maze: ^[COLS][ROWS]Cell) {
 	// the algorithm goes here
 }
 ```
@@ -96,7 +94,7 @@ It takes a pointer to the grid and carves into it. A fixed-size array is a value
 
 ### Window and drawing
 
-Finally, SDL3 gives us a window and a renderer, and we draw one filled square per room:
+Finally, SDL3 gives us a window and a renderer, and we draw one filled square per cell:
 
 ```odin
 package main
@@ -105,9 +103,9 @@ import "core:fmt"
 import "core:math/rand"
 import sdl "vendor:sdl3"
 
-Room :: enum byte { WALL, PATH }
+Cell :: enum byte { WALL, PATH }
 
-ROOM_SIZE :: 20
+CELL_SIZE :: 20
 COLS :: 65
 ROWS :: 37
 
@@ -125,19 +123,19 @@ is_room_in_bounds :: proc(c: [2]i32) -> bool {
 	return c.x > 0 && c.x < COLS - 1 && c.y > 0 && c.y < ROWS - 1
 }
 
-generate :: proc(maze: ^[COLS][ROWS]Room) {
+generate :: proc(maze: ^[COLS][ROWS]Cell) {
 	// the algorithm goes here
 }
 
-draw_maze :: proc(renderer: ^sdl.Renderer, maze: ^[COLS][ROWS]Room) {
+draw_maze :: proc(renderer: ^sdl.Renderer, maze: ^[COLS][ROWS]Cell) {
 	for x in 0 ..< COLS {
 		for y in 0 ..< ROWS {
 			clr := maze[x][y] == .WALL ? CLR_WALL : CLR_PATH
 			rect := sdl.FRect{
-				x = f32(x * ROOM_SIZE),
-				y = f32(y * ROOM_SIZE),
-				w = ROOM_SIZE,
-				h = ROOM_SIZE,
+				x = f32(x * CELL_SIZE),
+				y = f32(y * CELL_SIZE),
+				w = CELL_SIZE,
+				h = CELL_SIZE,
 			}
 
 			sdl.SetRenderDrawColor(renderer, clr.r, clr.g, clr.b, clr.a)
@@ -153,7 +151,7 @@ main :: proc() {
 	}
 	defer sdl.Quit()
 
-	window := sdl.CreateWindow("Maze", COLS * ROOM_SIZE, ROWS * ROOM_SIZE, {})
+	window := sdl.CreateWindow("Maze", COLS * CELL_SIZE, ROWS * CELL_SIZE, {})
 	if window == nil {
 		fmt.eprintln("sdl.CreateWindow:", sdl.GetError())
 		return
@@ -169,7 +167,7 @@ main :: proc() {
 
 	sdl.SetRenderVSync(renderer, 1)
 
-	maze: [COLS][ROWS]Room
+	maze: [COLS][ROWS]Cell
 	generate(&maze)
 
 	running := true

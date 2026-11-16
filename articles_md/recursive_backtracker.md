@@ -27,13 +27,13 @@ carve(room):
             knock out the wall between room and neighbour
             carve(neighbour)
 
-start: carve(a random odd room)
+start: carve(a random room)
 ```
 
 ### Solution
 
 ```odin
-recursive_backtracker :: proc(maze: ^[COLS][ROWS]Room, room: [2]i32) {
+recursive_backtracker :: proc(maze: ^[COLS][ROWS]Cell, room: [2]i32) {
 	maze[room.x][room.y] = .PATH
 
 	dirs := [4][2]i32{{-1, 0}, {1, 0}, {0, -1}, {0, 1}}
@@ -51,7 +51,7 @@ recursive_backtracker :: proc(maze: ^[COLS][ROWS]Room, room: [2]i32) {
 	}
 }
 
-generate :: proc(maze: ^[COLS][ROWS]Room) {
+generate :: proc(maze: ^[COLS][ROWS]Cell) {
 	recursive_backtracker(maze, random_odd_room())
 }
 ```
