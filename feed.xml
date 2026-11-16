@@ -5,8 +5,15 @@
 <link href="https://theyordanos.github.io/"/>
 <link rel="self" href="https://theyordanos.github.io/feed.xml"/>
 <id>https://theyordanos.github.io/</id>
-<updated>2026-11-15T00:00:00Z</updated>
+<updated>2026-11-16T00:00:00Z</updated>
 <author><name>Yordanos Z.</name></author>
+<entry>
+<title>Maze Generation Algorithms Introduction</title>
+<link href="https://theyordanos.github.io/articles/maze_generation.html"/>
+<id>https://theyordanos.github.io/articles/maze_generation.html</id>
+<updated>2026-11-16T00:00:00Z</updated>
+<summary>A series exploring different algorithms to generate &#x27;perfect&#x27; mazes</summary>
+</entry>
 <entry>
 <title>Minimalism</title>
 <link href="https://theyordanos.github.io/articles/minimalism.html"/>
