@@ -93,7 +93,7 @@ generate :: proc(maze: ^[COLS][ROWS]Cell) {
 }
 ```
 
-It takes a pointer to the grid and carves into it. A fixed-size array is a value in Odin, so passing it without `^` ^[^ is called a Caret. It is Odin's symbol for pointers. Similar to how * (asterisk ) is in most systems languages. [Pointers in Odin](https://odin-lang.org/docs/overview/#pointers)] would hand the procedure a copy and your changes would vanish.
+It takes a pointer to the grid and carves into it. A fixed-size array is a value in Odin, so passing it without `^` ^[`^` is called a Caret. It is Odin's symbol for pointers. Similar to how `*` (asterisk ) is in most systems languages. [Pointers in Odin](https://odin-lang.org/docs/overview/#pointers)] would hand the procedure a copy and your changes would vanish.
 
 ### Window and drawing
 
