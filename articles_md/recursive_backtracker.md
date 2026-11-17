@@ -42,7 +42,7 @@ recursive_backtracker :: proc(maze: ^[COLS][ROWS]Cell, room: [2]i32) {
 	for dir in dirs {
 		next := room + 2 * dir
 
-		if !is_room_in_bounds(next) || maze[next.x][next.y] != .WALL do continue
+		if !is_cell_in_bounds(next) || maze[next.x][next.y] != .WALL do continue
 
 		wall := room + dir
 		maze[wall.x][wall.y] = .PATH

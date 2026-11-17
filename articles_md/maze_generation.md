@@ -53,7 +53,7 @@ Cell :: enum byte { WALL, PATH }
 
 `WALL` comes first on purpose. Odin zero-initializes everything, so a freshly declared grid is already full of walls.
 
-The grid size needs to be **odd** ^[I saw this way of making a grid, where rooms and walls are all cells of one grid instead of storing walls separately from rooms, from [professor-l's page](https://professor-l.github.io/mazes/)]:
+The grid size needs to be **odd**. I saw this way of making a grid ^[**Rooms** sit where both x and y are odd, they're always paths. **Walls** sit where exactly one coordinate is odd, it can be either wall or path. **Pillars** sit where both coordinates are even, they are always walls. **Outside cells** are the border, they are always walls.], where rooms and walls are all cells of one grid instead of storing walls separately from rooms, from [professor-l's page](https://professor-l.github.io/mazes/)
 
 ```odin
 CELL_SIZE :: 20
@@ -73,7 +73,7 @@ random_odd_room :: proc() -> [2]i32 {
 
 // The border (index 0 and the last index) is always outside, so a
 // valid room is strictly inside it.
-is_room_in_bounds :: proc(c: [2]i32) -> bool {
+is_cell_in_bounds :: proc(c: [2]i32) -> bool {
 	return c.x > 0 && c.x < COLS - 1 && c.y > 0 && c.y < ROWS - 1
 }
 ```
@@ -119,7 +119,7 @@ random_odd_room :: proc() -> [2]i32 {
 	}
 }
 
-is_room_in_bounds :: proc(c: [2]i32) -> bool {
+is_cell_in_bounds :: proc(c: [2]i32) -> bool {
 	return c.x > 0 && c.x < COLS - 1 && c.y > 0 && c.y < ROWS - 1
 }
 

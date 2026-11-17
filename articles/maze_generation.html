@@ -133,12 +133,17 @@ as a solid block of walls, and a generator carves paths out of it.</p>
 class="sourceCode odin"><code class="sourceCode odin"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Cell <span class="op">::</span> <span class="kw">enum</span> <span class="dt">byte</span> <span class="op">{</span> WALL<span class="op">,</span> PATH <span class="op">}</span></span></code></pre></div>
 <p><code>WALL</code> comes first on purpose. Odin zero-initializes
 everything, so a freshly declared grid is already full of walls.</p>
-<p>The grid size needs to be <strong>odd</strong>
-<label for="sn-3" class="sidenote-number"></label><input type="checkbox" id="sn-3" class="margin-toggle"><span class="sidenote">I
-saw this way of making a grid, where rooms and walls are all cells of
-one grid instead of storing walls separately from rooms, from <a
-href="https://professor-l.github.io/mazes/">professor-l’s
-page</a></span>:</p>
+<p>The grid size needs to be <strong>odd</strong>. I saw this way of
+making a grid
+<label for="sn-3" class="sidenote-number"></label><input type="checkbox" id="sn-3" class="margin-toggle"><span class="sidenote"><strong>Rooms</strong>
+sit where both x and y are odd, they’re always paths.
+<strong>Walls</strong> sit where exactly one coordinate is odd, it can
+be either wall or path. <strong>Pillars</strong> sit where both
+coordinates are even, they are always walls. <strong>Outside
+cells</strong> are the border, they are always walls.</span>, where
+rooms and walls are all cells of one grid instead of storing walls
+separately from rooms, from <a
+href="https://professor-l.github.io/mazes/">professor-l’s page</a></p>
 <div class="sourceCode" id="cb2"><pre
 class="sourceCode odin"><code class="sourceCode odin"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>CELL_SIZE <span class="op">::</span> <span class="dv">20</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>COLS <span class="op">::</span> <span class="dv">65</span></span>
@@ -156,7 +161,7 @@ class="sourceCode odin"><code class="sourceCode odin"><span id="cb3-1"><a href="
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">// The border (index 0 and the last index) is always outside, so a</span></span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">// valid room is strictly inside it.</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">is_room_in_bounds </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>c<span class="op">:</span> <span class="op">[</span><span class="dv">2</span><span class="op">]</span><span class="dt">i32</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="dt">bool</span> <span class="op">{</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">is_cell_in_bounds </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>c<span class="op">:</span> <span class="op">[</span><span class="dv">2</span><span class="op">]</span><span class="dt">i32</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="dt">bool</span> <span class="op">{</span></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> c<span class="op">.</span>x <span class="op">&gt;</span> <span class="dv">0</span> <span class="op">&amp;&amp;</span> c<span class="op">.</span>x <span class="op">&lt;</span> COLS <span class="op">-</span> <span class="dv">1</span> <span class="op">&amp;&amp;</span> c<span class="op">.</span>y <span class="op">&gt;</span> <span class="dv">0</span> <span class="op">&amp;&amp;</span> c<span class="op">.</span>y <span class="op">&lt;</span> ROWS <span class="op">-</span> <span class="dv">1</span></span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>Note the bounds check is <code>&gt; 0</code> and
@@ -208,7 +213,7 @@ class="sourceCode odin"><code class="sourceCode odin"><span id="cb5-1"><a href="
 <span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
 <span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
 <span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="fu">is_room_in_bounds </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>c<span class="op">:</span> <span class="op">[</span><span class="dv">2</span><span class="op">]</span><span class="dt">i32</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="dt">bool</span> <span class="op">{</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="fu">is_cell_in_bounds </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>c<span class="op">:</span> <span class="op">[</span><span class="dv">2</span><span class="op">]</span><span class="dt">i32</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="dt">bool</span> <span class="op">{</span></span>
 <span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> c<span class="op">.</span>x <span class="op">&gt;</span> <span class="dv">0</span> <span class="op">&amp;&amp;</span> c<span class="op">.</span>x <span class="op">&lt;</span> COLS <span class="op">-</span> <span class="dv">1</span> <span class="op">&amp;&amp;</span> c<span class="op">.</span>y <span class="op">&gt;</span> <span class="dv">0</span> <span class="op">&amp;&amp;</span> c<span class="op">.</span>y <span class="op">&lt;</span> ROWS <span class="op">-</span> <span class="dv">1</span></span>
 <span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
 <span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a></span>
