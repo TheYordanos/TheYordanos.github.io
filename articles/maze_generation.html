@@ -50,7 +50,7 @@ generate ‘perfect’ mazes</p>
 				<p class="meta"><time datetime="2026-11-16">2026-11-16</time></p>
 			</header>
 
-			<nav class="series" aria-label="Series"><p class="series-title">Series: Maze Generation</p><ol><li aria-current="page">Maze Generation Algorithms Introduction</li><li><a href="recursive_backtracker.html">Recursive Backtracker</a></li></ol></nav>
+			<nav class="series" aria-label="Series"><p class="series-title">Series: Maze Generation</p><ol><li aria-current="page">Maze Generation Algorithms Introduction</li><li><a href="recursive_backtracker.html">Recursive Backtracker</a></li><li><a href="kruskals.html">Kruskal&#x27;s Algorithm</a></li></ol></nav>
 
 			
 			<p>A <em>maze</em> is a complex network of paths, walls, and branches.
@@ -134,20 +134,21 @@ class="sourceCode odin"><code class="sourceCode odin"><span id="cb1-1"><a href="
 <p><code>WALL</code> comes first on purpose. Odin zero-initializes
 everything, so a freshly declared grid is already full of walls.</p>
 <p>The grid size needs to be <strong>odd</strong>. I saw this way of
-making a grid
-<label for="sn-3" class="sidenote-number"></label><input type="checkbox" id="sn-3" class="margin-toggle"><span class="sidenote"><strong>Rooms</strong>
-sit where both x and y are odd, they’re always paths.
-<strong>Walls</strong> sit where exactly one coordinate is odd, it can
-be either wall or path. <strong>Pillars</strong> sit where both
-coordinates are even, they are always walls. <strong>Outside
-cells</strong> are the border, they are always walls.</span>, where
-rooms and walls are all cells of one grid instead of storing walls
-separately from rooms, from <a
-href="https://professor-l.github.io/mazes/">professor-l’s page</a></p>
+making a grid, where rooms and walls are all cells of one grid instead
+of storing walls separately from rooms, from <a
+href="https://professor-l.github.io/mazes/">professor-l’s page</a>.</p>
 <div class="sourceCode" id="cb2"><pre
 class="sourceCode odin"><code class="sourceCode odin"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>CELL_SIZE <span class="op">::</span> <span class="dv">20</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>COLS <span class="op">::</span> <span class="dv">65</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>ROWS <span class="op">::</span> <span class="dv">37</span></span></code></pre></div>
+<h4 id="kinds-of-cells">Kinds of Cells <a href="#kinds-of-cells"
+class="anchor" aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h4>
+<p><strong>Rooms</strong> sit where both x and y are odd, they’re always
+paths. <strong>Walls</strong> sit where exactly one coordinate is odd,
+it can be either wall or path. <strong>Pillars</strong> sit where both
+coordinates are even, they are always walls. <strong>Outside
+cells</strong> are the border, they are always walls.</p>
 <h3 id="helpers">Helpers <a href="#helpers" class="anchor"
 aria-label="Link to this section"><span
 class="anchor-mark">#</span></a></h3>
@@ -178,7 +179,7 @@ class="sourceCode odin"><code class="sourceCode odin"><span id="cb4-1"><a href="
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>It takes a pointer to the grid and carves into it. A fixed-size array
 is a value in Odin, so passing it without <code>^</code>
-<label for="sn-4" class="sidenote-number"></label><input type="checkbox" id="sn-4" class="margin-toggle"><span class="sidenote"><code>^</code>
+<label for="sn-3" class="sidenote-number"></label><input type="checkbox" id="sn-3" class="margin-toggle"><span class="sidenote"><code>^</code>
 is called a Caret. It is Odin’s symbol for pointers. Similar to how
 <code>*</code> (asterisk ) is in most systems languages. <a
 href="https://odin-lang.org/docs/overview/#pointers">Pointers in

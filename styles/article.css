@@ -190,17 +190,6 @@ main h3:first-child {
 	margin-top: 0;
 }
 
-/* LINKS */
-main a {
-	text-decoration: underline;
-	text-decoration-thickness: 1px;
-	text-underline-offset: 3px;
-}
-
-main a:hover {
-	text-decoration-thickness: 2px;
-}
-
 /* LISTS */
 main ul,
 main ol {

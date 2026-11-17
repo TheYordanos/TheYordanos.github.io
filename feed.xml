@@ -5,8 +5,15 @@
 <link href="https://theyordanos.github.io/"/>
 <link rel="self" href="https://theyordanos.github.io/feed.xml"/>
 <id>https://theyordanos.github.io/</id>
-<updated>2026-11-16T00:00:00Z</updated>
+<updated>2026-11-17T00:00:00Z</updated>
 <author><name>Yordanos Z.</name></author>
+<entry>
+<title>Kruskal&#x27;s Algorithm</title>
+<link href="https://theyordanos.github.io/articles/kruskals.html"/>
+<id>https://theyordanos.github.io/articles/kruskals.html</id>
+<updated>2026-11-17T00:00:00Z</updated>
+<summary>Building a perfect maze by knocking down walls in random order, using union-find to avoid loops</summary>
+</entry>
 <entry>
 <title>Recursive Backtracker</title>
 <link href="https://theyordanos.github.io/articles/recursive_backtracker.html"/>

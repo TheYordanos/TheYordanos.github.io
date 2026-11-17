@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="Building a perfect maze by knocking
+down walls in random order, using union-find to avoid loops">
+
+		<title>Kruskal’s Algorithm</title>
+
+		<meta property="og:type" content="article">
+		<meta property="og:site_name" content="Yordanos">
+		<meta property="og:title" content="Kruskal&#x27;s Algorithm">
+		<meta property="og:description" content="Building a perfect maze by knocking down walls in random order, using union-find to avoid loops">
+		<meta property="og:url" content="https://theyordanos.github.io/articles/kruskals.html">
+		<meta property="og:image" content="https://theyordanos.github.io/res/articles/maze_generation/kruskals.gif">
+		<meta name="twitter:card" content="summary_large_image">
+		<link rel="canonical" href="https://theyordanos.github.io/articles/kruskals.html">
+
+		<link rel="alternate" type="application/atom+xml" title="Yordanos" href="https://theyordanos.github.io/feed.xml">
+
+		<link rel="icon" type="image/png" href="../res/theyordanos-icon.png">
+		<script>
+		try {
+			if (localStorage.getItem("ty_theme") === "dark") document.documentElement.classList.add("dark");
+		} catch (e) {}
+		</script>
+		<link rel="stylesheet" href="../styles/style.css">
+		<link rel="stylesheet" href="../styles/article.css">
+
+		<script src="../scripts/theme.js" defer></script>
+		<script src="../scripts/nav.js" defer></script>
+		<script src="../scripts/copy.js" defer></script>
+	</head>
+	<body>
+		<nav class="site-nav">
+			<div class="nav-left"><a href="../index.html#articles">Articles</a></div>
+			<button class="nav-toggle" id="nav-toggle" aria-label="Menu">☰</button>
+			<div class="nav-links" id="nav-links">
+				<a href="../feed.xml">RSS</a>
+				<button id="theme-toggle">[dark]</button>
+			</div>
+		</nav>
+
+		<main>
+			<header>
+				<h1>Kruskal’s Algorithm</h1>
+				<p class="description">Building a perfect maze by knocking down walls in
+random order, using union-find to avoid loops</p>
+				<p class="meta"><time datetime="2026-11-17">2026-11-17</time></p>
+			</header>
+
+			<nav class="series" aria-label="Series"><p class="series-title">Series: Maze Generation</p><ol><li><a href="maze_generation.html">Maze Generation Algorithms Introduction</a></li><li><a href="recursive_backtracker.html">Recursive Backtracker</a></li><li aria-current="page">Kruskal&#x27;s Algorithm</li></ol></nav>
+
+			
+			<h2 id="kruskals-algorithm">Kruskal’s Algorithm <a
+href="#kruskals-algorithm" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<p>The Recursive Backtracker carved the maze with a single walker.
+Kruskal’s Algorithm doesn’t walk anywhere. It looks at the whole maze at
+once.</p>
+<p>Imagine every room starts out as its own little island, completely
+sealed off by walls. Now take every wall in the maze, shuffle them into
+a random order, and go through them one by one. For each wall, look at
+the two rooms on either side. If they are already connected to each
+other, by some path through other rooms, leave the wall alone, because
+knocking it down would create a loop. If they are not connected yet,
+knock the wall down. Two islands have just become one.</p>
+<p>When the list runs out, every room is part of one big connected area
+with no loops. That is a perfect maze.</p>
+<p>Kruskal’s was originally an algorithm for finding a minimum spanning
+tree
+<label for="sn-1" class="sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"><span class="sidenote">The
+cheapest way to connect a set of points together with no loops. We met
+the idea in the <a href="maze_generation.html">introduction</a>.</span>
+of a weighted graph. A maze is just the case where every wall has the
+same weight, so the order is random instead of sorted by cost.</p>
+<figure>
+<img src="../res/articles/maze_generation/kruskals.gif"
+alt="Kruskal’s Algorithm" />
+<figcaption aria-hidden="true">Kruskal’s Algorithm</figcaption>
+</figure>
+<h3 id="the-new-idea-union-find">The new idea: union-find <a
+href="#the-new-idea-union-find" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
+<p>The whole algorithm depends on one question: <em>are these two rooms
+already connected?</em> We ask it for every wall, so it needs to be
+fast. Flood-filling from one room to see if it reaches the other would
+work, but it would be far too slow.</p>
+<p>The answer is a data structure called <strong>union-find</strong>
+(also known as a disjoint set). It keeps track of which rooms belong to
+the same group, and it has two operations:</p>
+<ul>
+<li><code>find(room)</code> tells you which group a room belongs
+to.</li>
+<li><code>join(a, b)</code> merges two groups into one.</li>
+</ul>
+<p>Here is how it works. Every room stores a <strong>parent</strong>,
+which is another room in the same group. At the start, every room is its
+own parent, so every room is its own group. A room that is its own
+parent is called the <strong>root</strong>, and the root is the group’s
+identity.</p>
+<p>To <code>find</code> a room’s group, follow the parents until you
+reach a root. Two rooms are in the same group exactly when their roots
+are the same room. To <code>join</code> two groups, point one root at
+the other, and now they share a root.</p>
+<p>Following parents all the way up gets slower as the chains get
+longer. The fix is <strong>path compression</strong>: once
+<code>find</code> has reached the root, go back and point every room on
+the way directly at it. The next <code>find</code> from any of them
+takes a single hop.</p>
+<h3 id="pseudocode">Pseudocode <a href="#pseudocode" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
+<p>Try implementing this yourself before reading the solution.
+<label for="sn-2" class="sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle"><span class="sidenote">Two
+questions for you: Why can this never create a loop? And why is it
+guaranteed to end with every room connected?</span></p>
+<pre><code>for each room: parent[room] = room
+walls = every wall between two rooms
+shuffle(walls)
+
+for each wall in walls:
+    a, b = the two rooms on either side of wall
+    if find(a) != find(b):
+        knock out the wall
+        join(a, b)</code></pre>
+<p>Remember the four kinds of cells from the introduction. Only the
+<strong>walls</strong> go in the list. Rooms are always paths, and
+pillars and outside cells are never knocked down. The tricky part is
+finding the two rooms on either side of a wall, which depends on which
+of its coordinates is even.</p>
+<h3 id="solution">Solution <a href="#solution" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">find </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>room<span class="op">:</span> <span class="op">[</span><span class="dv">2</span><span class="op">]</span><span class="dt">i32</span><span class="op">,</span> parents<span class="op">:</span> <span class="op">^[</span>COLS<span class="op">][</span>ROWS<span class="op">][</span><span class="dv">2</span><span class="op">]</span><span class="dt">i32</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="op">[</span><span class="dv">2</span><span class="op">]</span><span class="dt">i32</span> <span class="op">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="va">parent </span><span class="op">:=</span> parents<span class="op">[</span>room<span class="op">.</span>x<span class="op">][</span>room<span class="op">.</span>y<span class="op">]</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> room <span class="op">==</span> parent <span class="cf">do</span> <span class="cf">return</span> room</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="va">root </span><span class="op">:=</span> <span class="fu">find</span><span class="op">(</span>parent<span class="op">,</span> parents<span class="op">)</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    parents<span class="op">[</span>room<span class="op">.</span>x<span class="op">][</span>room<span class="op">.</span>y<span class="op">]</span> <span class="op">=</span> root <span class="co">// path compression</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> root</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">join </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>root_a<span class="op">,</span> root_b<span class="op">:</span> <span class="op">[</span><span class="dv">2</span><span class="op">]</span><span class="dt">i32</span><span class="op">,</span> parents<span class="op">:</span> <span class="op">^[</span>COLS<span class="op">][</span>ROWS<span class="op">][</span><span class="dv">2</span><span class="op">]</span><span class="dt">i32</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    parents<span class="op">[</span>root_a<span class="op">.</span>x<span class="op">][</span>root_a<span class="op">.</span>y<span class="op">]</span> <span class="op">=</span> root_b</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="fu">kruskals </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>maze<span class="op">:</span> <span class="op">^[</span>COLS<span class="op">][</span>ROWS<span class="op">]</span>Cell<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    parents<span class="op">:</span> <span class="op">[</span>COLS<span class="op">][</span>ROWS<span class="op">][</span><span class="dv">2</span><span class="op">]</span><span class="dt">i32</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    walls<span class="op">:</span> <span class="op">[</span><span class="kw">dynamic</span><span class="op">][</span><span class="dv">2</span><span class="op">]</span><span class="dt">i32</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">defer</span> <span class="fu">delete</span><span class="op">(</span>walls<span class="op">)</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> x <span class="cf">in</span> <span class="dv">1</span><span class="op">..&lt;</span><span class="dt">i32</span><span class="op">(</span>COLS <span class="op">-</span> <span class="dv">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> y <span class="cf">in</span> <span class="dv">1</span><span class="op">..&lt;</span><span class="dt">i32</span><span class="op">(</span>ROWS <span class="op">-</span> <span class="dv">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> x <span class="op">&amp;</span> <span class="dv">1</span> <span class="op">==</span> <span class="dv">1</span> <span class="op">&amp;&amp;</span> y <span class="op">&amp;</span> <span class="dv">1</span> <span class="op">==</span> <span class="dv">1</span> <span class="op">{</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>                <span class="co">// a room: open it, and make it its own group</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>                maze<span class="op">[</span>x<span class="op">][</span>y<span class="op">]</span> <span class="op">=</span> <span class="op">.</span>PATH</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>                parents<span class="op">[</span>x<span class="op">][</span>y<span class="op">]</span> <span class="op">=</span> <span class="op">{</span>x<span class="op">,</span> y<span class="op">}</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>            <span class="op">}</span> <span class="cf">else</span> <span class="cf">if</span><span class="fu"> </span><span class="op">(</span>x <span class="op">+</span> y<span class="op">)</span> <span class="op">&amp;</span> <span class="dv">1</span> <span class="op">==</span> <span class="dv">1</span> <span class="op">{</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>                <span class="co">// exactly one odd coordinate: a wall</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>                <span class="fu">append</span><span class="op">(&amp;</span>walls<span class="op">,</span> <span class="op">[</span><span class="dv">2</span><span class="op">]</span><span class="dt">i32</span><span class="op">{</span>x<span class="op">,</span> y<span class="op">})</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>            <span class="op">}</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>            <span class="co">// both even: a pillar, never touched</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    rand<span class="op">.</span><span class="fu">shuffle</span><span class="op">(</span>walls<span class="op">[:])</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> wall <span class="cf">in</span> walls <span class="op">{</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>        <span class="co">// an even x puts the two rooms left and right of the wall,</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>        <span class="co">// an even y puts them above and below</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>        <span class="va">offset </span><span class="op">:=</span> <span class="op">[</span><span class="dv">2</span><span class="op">]</span><span class="dt">i32</span><span class="op">{</span>wall<span class="op">.</span>y <span class="op">&amp;</span> <span class="dv">1</span><span class="op">,</span> wall<span class="op">.</span>x <span class="op">&amp;</span> <span class="dv">1</span><span class="op">}</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>        <span class="va">a, b </span><span class="op">:=</span> wall <span class="op">-</span> offset<span class="op">,</span> wall <span class="op">+</span> offset</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>        <span class="va">root_a, root_b </span><span class="op">:=</span> <span class="fu">find</span><span class="op">(</span>a<span class="op">,</span> <span class="op">&amp;</span>parents<span class="op">),</span> <span class="fu">find</span><span class="op">(</span>b<span class="op">,</span> <span class="op">&amp;</span>parents<span class="op">)</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> root_a <span class="op">==</span> root_b <span class="cf">do</span> <span class="cf">continue</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>        maze<span class="op">[</span>wall<span class="op">.</span>x<span class="op">][</span>wall<span class="op">.</span>y<span class="op">]</span> <span class="op">=</span> <span class="op">.</span>PATH</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>        <span class="fu">join</span><span class="op">(</span>root_a<span class="op">,</span> root_b<span class="op">,</span> <span class="op">&amp;</span>parents<span class="op">)</span></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a><span class="fu">generate </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>maze<span class="op">:</span> <span class="op">^[</span>COLS<span class="op">][</span>ROWS<span class="op">]</span>Cell<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>    <span class="fu">kruskals</span><span class="op">(</span>maze<span class="op">)</span></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Run it, press space a few times.</p>
+<pre><code>odin run .</code></pre>
+		</main>
+
+		<hr />
+		<footer><p>Creator of Worlds &amp; a Coffee Addict ;p</p></footer>
+	</body>
+</html>
