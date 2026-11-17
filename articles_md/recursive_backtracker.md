@@ -52,7 +52,7 @@ recursive_backtracker :: proc(maze: ^[COLS][ROWS]Cell, room: [2]i32) {
 }
 
 generate :: proc(maze: ^[COLS][ROWS]Cell) {
-	recursive_backtracker(maze, random_odd_room())
+	recursive_backtracker(maze, random_room())
 }
 ```
 

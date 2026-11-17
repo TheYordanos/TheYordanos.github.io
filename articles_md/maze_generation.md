@@ -67,7 +67,7 @@ ROWS :: 37
 ### Helpers
 
 ```odin
-random_odd_room :: proc() -> [2]i32 {
+random_room :: proc() -> [2]i32 {
 	return {
 		rand.int31_max(COLS / 2) * 2 + 1,
 		rand.int31_max(ROWS / 2) * 2 + 1,
@@ -115,7 +115,7 @@ ROWS :: 37
 CLR_WALL :: [4]u8{32, 32, 32, 255}
 CLR_PATH :: [4]u8{245, 245, 245, 255}
 
-random_odd_room :: proc() -> [2]i32 {
+random_room :: proc() -> [2]i32 {
 	return {
 		rand.int31_max(COLS / 2) * 2 + 1,
 		rand.int31_max(ROWS / 2) * 2 + 1,
