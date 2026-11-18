@@ -93,6 +93,52 @@ main .series [aria-current] {
 	font-weight: 700;
 }
 
+/* SERIES PREVIOUS / NEXT */
+main .series-pager {
+	display: flex;
+	justify-content: space-between;
+	gap: 16px;
+	margin: 56px 0 0;
+}
+
+main .series-pager a,
+main .series-pager a:visited {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	flex: 0 1 calc(50% - 8px);
+	box-sizing: border-box;
+	padding: 16px 20px;
+	border: 1px solid var(--border);
+	border-radius: 8px;
+	color: var(--text);
+	text-decoration: none;
+	transition: border-color 0.15s;
+}
+
+main .series-pager a:hover {
+	border-color: var(--link);
+	text-decoration: none;
+}
+
+main .series-pager .prev { text-align: left; }
+
+main .series-pager .next {
+	text-align: right;
+	margin-left: auto;
+}
+
+main .series-pager .pager-label {
+	font-weight: 700;
+	font-size: 15px;
+}
+
+main .series-pager .pager-title {
+	color: var(--meta);
+	font-size: 14px;
+	line-height: 1.4;
+}
+
 /* TABLE OF CONTENTS (front matter: toc: true) */
 main #TOC {
 	margin: 0 0 40px;
@@ -561,6 +607,21 @@ main dd {
 @media (max-width: 768px) {
 	main h2 {
 		font-size: 23px;
+	}
+}
+
+@media (max-width: 520px) {
+	main .series-pager {
+		flex-direction: column;
+	}
+
+	main .series-pager a,
+	main .series-pager a:visited {
+		flex-basis: auto;
+	}
+
+	main .series-pager .next {
+		margin-left: 0;
 	}
 }
 

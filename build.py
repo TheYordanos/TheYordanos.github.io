@@ -131,6 +131,25 @@ def series_html(name, parts, current):
             f'<ol>{"".join(lis)}</ol></nav>')
 
 
+def series_pager(parts, current):
+    """Previous/next boxes for an article in a series. parts: [(slug, title)] in order."""
+    slugs = [s for s, _ in parts]
+    i = slugs.index(current)
+    boxes = []
+    if i > 0:
+        slug, title = parts[i - 1]
+        boxes.append(f'<a class="prev" rel="prev" href="{slug}.html">'
+                     f'<span class="pager-label">Previous</span>'
+                     f'<span class="pager-title">{html.escape(title)}</span></a>')
+    if i < len(parts) - 1:
+        slug, title = parts[i + 1]
+        boxes.append(f'<a class="next" rel="next" href="{slug}.html">'
+                     f'<span class="pager-label">Next</span>'
+                     f'<span class="pager-title">{html.escape(title)}</span></a>')
+    return ('<nav class="series-pager" aria-label="Series navigation">'
+            + "".join(boxes) + '</nav>')
+
+
 def build(job):
     src, out, force, template_mtime, extra_args = job
     if not force and is_up_to_date(src, out, template_mtime):
@@ -314,7 +333,8 @@ def main():
         if skey in ordered:
             # this page lists its siblings, so it must rebuild when they change
             parts = ordered[skey]
-            extra = extra + ["-V", "series_nav=" + series_html(names[skey], parts, slug)]
+            extra = extra + ["-V", "series_nav=" + series_html(names[skey], parts, slug),
+                             "-V", "series_pager=" + series_pager(parts, slug)]
             dep = max(dep, newest[skey])
         jobs.append((src, OUT_DIR / f"{slug}.html", force, dep, extra))
 

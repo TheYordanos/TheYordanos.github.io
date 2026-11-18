@@ -58,6 +58,8 @@
 			$endif$
 
 			$body$
+
+			$if(series_pager)$$series_pager$$endif$
 		</main>
 
 		<hr />
