@@ -46,6 +46,7 @@
 				<h1>$title$</h1>
 				$if(description)$<p class="description">$description$</p>$endif$
 				$if(date)$<p class="meta"><time datetime="$date$">$date$</time></p>$endif$
+				$if(source_link)$$source_link$$endif$
 			</header>
 
 			$if(series_nav)$$series_nav$$endif$

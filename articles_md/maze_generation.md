@@ -4,6 +4,7 @@ description: A series exploring different algorithms to generate 'perfect' mazes
 date: 2026-11-16
 series: Maze Generation
 part: 1
+source: https://codeberg.org/yordanos/mazes
 ---
 
 A *maze* is a complex network of paths, walls, and branches. There are different kind of mazes. Mazes that features dead ends, closed areas, loops and ones that are 'perfect'. By 'perfect' maze, we don't mean mazes that are superior to other types of mazes. Its just indicates a specific structural type that contains no loops and no inaccessible areas, and exactly one unique path between any two points inside the maze.

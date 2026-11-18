@@ -65,6 +65,50 @@ main > header .meta {
 	margin: 0;
 }
 
+/* SOURCE CODE LINK (front matter: source: URL) */
+main > header .source {
+	display: inline-flex;
+	align-items: stretch;
+	max-width: 100%;
+	margin: 14px 0 0;
+	border: 1px solid var(--border);
+	border-radius: 6px;
+	overflow: hidden;
+	font-size: 14px;
+	line-height: 1.4;
+}
+
+main > header .source-label {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding: 5px 10px;
+	background: rgba(127, 127, 127, 0.10);
+	border-right: 1px solid var(--border);
+	color: var(--meta);
+	font-weight: 700;
+}
+
+main > header .source-label::before {
+	content: "</>";
+	font-family: Consolas, Monaco, monospace;
+	font-size: 12px;
+	font-weight: 400;
+}
+
+main > header .source a,
+main > header .source a:visited {
+	padding: 5px 12px;
+	color: var(--link);
+	overflow-wrap: anywhere;
+}
+
+main > header .source a:hover {
+	background: var(--link);
+	color: var(--bg);
+	text-decoration: none;
+}
+
 /* SERIES (front matter: series: Name) */
 main .series {
 	margin: 0 0 40px;

@@ -4,6 +4,7 @@ description: Building a perfect maze by knocking down walls in random order, usi
 date: 2026-11-17
 series: Maze Generation
 part: 3
+source: https://codeberg.org/yordanos/mazes
 ---
 
 ## Kruskal's Algorithm

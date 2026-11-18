@@ -4,6 +4,7 @@ description: Carving a perfect maze with a depth-first walk
 date: 2026-11-16
 series: Maze Generation
 part: 2
+source: https://codeberg.org/yordanos/mazes
 ---
 
 ## Recursive Backtracker

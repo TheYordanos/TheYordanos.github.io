@@ -11,6 +11,7 @@ Front matter per article:
     toc: true               (optional, adds a table of contents)
     series: Chess in Odin   (optional, lists the parts at the top of each one)
     part: 2                 (optional, order inside a series; default is by date)
+    source: link            (optional, link to source code)
     image: ../res/cover.png (optional, link preview image; default is the
                              first image in the article, then OG_IMAGE)
     ---
@@ -148,6 +149,15 @@ def series_pager(parts, current):
                      f'<span class="pager-title">{html.escape(title)}</span></a>')
     return ('<nav class="series-pager" aria-label="Series navigation">'
             + "".join(boxes) + '</nav>')
+
+
+def source_html(url):
+    """Header line linking to an article's source code. The visible text is
+    the URL without the scheme and trailing slash."""
+    shown = re.sub(r"^https?://", "", url).rstrip("/")
+    return (f'<p class="source"><span class="source-label">Source</span>'
+            f'<a href="{html.escape(url, quote=True)}" rel="noopener">'
+            f'{html.escape(shown)}</a></p>')
 
 
 def build(job):
@@ -305,6 +315,11 @@ def main():
         keep.add(slug)
         image = meta.get("image") or first_image(src.read_text(encoding="utf-8-sig"))
         extra = page_vars(slug, title, descriptions[slug], image)
+        source = meta.get("source", "").strip()
+        if source:
+            if not re.match(r"https?://", source):
+                print(f"warning: {slug} source '{source}' is not an http(s) URL")
+            extra += ["-V", "source_link=" + source_html(source)]
         if meta.get("toc", "").lower() in ("true", "yes", "1"):
             # the template needs the flag, "toc: true" alone gives an empty box
             extra.append("--toc")

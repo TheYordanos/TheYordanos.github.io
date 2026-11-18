@@ -4,6 +4,7 @@ description: Growing a perfect maze outward from a single room, one random wall 
 date: 2026-11-18
 series: Maze Generation
 part: 4
+source: https://codeberg.org/yordanos/mazes
 ---
 
 ## Prim's Algorithm
