@@ -50,32 +50,20 @@ random order, using union-find to avoid loops</p>
 				<p class="meta"><time datetime="2026-11-17">2026-11-17</time></p>
 			</header>
 
-			<nav class="series" aria-label="Series"><p class="series-title">Series: Maze Generation</p><ol><li><a href="maze_generation.html">Maze Generation Algorithms Introduction</a></li><li><a href="recursive_backtracker.html">Recursive Backtracker</a></li><li aria-current="page">Kruskal&#x27;s Algorithm</li></ol></nav>
+			<nav class="series" aria-label="Series"><p class="series-title">Series: Maze Generation</p><ol><li><a href="maze_generation.html">Maze Generation Algorithms Introduction</a></li><li><a href="recursive_backtracker.html">Recursive Backtracker</a></li><li aria-current="page">Kruskal&#x27;s Algorithm</li><li><a href="prims.html">Prim&#x27;s Algorithm</a></li></ol></nav>
 
 			
 			<h2 id="kruskals-algorithm">Kruskal’s Algorithm <a
 href="#kruskals-algorithm" class="anchor"
 aria-label="Link to this section"><span
 class="anchor-mark">#</span></a></h2>
-<p>The Recursive Backtracker carved the maze with a single walker.
-Kruskal’s Algorithm doesn’t walk anywhere. It looks at the whole maze at
-once.</p>
-<p>Imagine every room starts out as its own little island, completely
-sealed off by walls. Now take every wall in the maze, shuffle them into
-a random order, and go through them one by one. For each wall, look at
-the two rooms on either side. If they are already connected to each
-other, by some path through other rooms, leave the wall alone, because
-knocking it down would create a loop. If they are not connected yet,
-knock the wall down. Two islands have just become one.</p>
-<p>When the list runs out, every room is part of one big connected area
-with no loops. That is a perfect maze.</p>
-<p>Kruskal’s was originally an algorithm for finding a minimum spanning
-tree
-<label for="sn-1" class="sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"><span class="sidenote">The
-cheapest way to connect a set of points together with no loops. We met
-the idea in the <a href="maze_generation.html">introduction</a>.</span>
-of a weighted graph. A maze is just the case where every wall has the
-same weight, so the order is random instead of sorted by cost.</p>
+<p>Every room starts as its own sealed-off island. Shuffle all the
+walls, then go through them one by one. If the rooms on either side are
+already connected, leave the wall alone, because knocking it down would
+make a loop. Otherwise knock it down and two islands become one. When
+the walls run out, everything is one connected maze.</p>
+<p>The result is a busy, even texture with lots of short dead ends,
+quite unlike the backtracker’s long corridors.</p>
 <figure>
 <img src="../res/articles/maze_generation/kruskals.gif"
 alt="Kruskal’s Algorithm" />
@@ -85,39 +73,22 @@ alt="Kruskal’s Algorithm" />
 href="#the-new-idea-union-find" class="anchor"
 aria-label="Link to this section"><span
 class="anchor-mark">#</span></a></h3>
-<p>The whole algorithm depends on one question: <em>are these two rooms
-already connected?</em> We ask it for every wall, so it needs to be
-fast. Flood-filling from one room to see if it reaches the other would
-work, but it would be far too slow.</p>
-<p>The answer is a data structure called <strong>union-find</strong>
-(also known as a disjoint set). It keeps track of which rooms belong to
-the same group, and it has two operations:</p>
-<ul>
-<li><code>find(room)</code> tells you which group a room belongs
-to.</li>
-<li><code>join(a, b)</code> merges two groups into one.</li>
-</ul>
-<p>Here is how it works. Every room stores a <strong>parent</strong>,
-which is another room in the same group. At the start, every room is its
-own parent, so every room is its own group. A room that is its own
-parent is called the <strong>root</strong>, and the root is the group’s
-identity.</p>
-<p>To <code>find</code> a room’s group, follow the parents until you
-reach a root. Two rooms are in the same group exactly when their roots
-are the same room. To <code>join</code> two groups, point one root at
-the other, and now they share a root.</p>
-<p>Following parents all the way up gets slower as the chains get
-longer. The fix is <strong>path compression</strong>: once
-<code>find</code> has reached the root, go back and point every room on
-the way directly at it. The next <code>find</code> from any of them
-takes a single hop.</p>
+<p>We need to ask “are these two rooms already connected?” for every
+wall, so it has to be fast. <strong>Union-find</strong> does that. Every
+room stores a <strong>parent</strong>, and at the start each room is its
+own parent, which makes it a <strong>root</strong>.
+<code>find(room)</code> follows parents up to the root, and two rooms
+are connected exactly when their roots match. <code>join(a, b)</code>
+points one root at the other.</p>
+<p>To keep <code>find</code> fast we use <strong>path
+compression</strong>: once it has reached the root, every room along the
+way is pointed directly at it.
+<label for="sn-1" class="sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"><span class="sidenote">Always
+attaching the smaller group under the larger one, called union by size,
+speeds lookups up even more.</span></p>
 <h3 id="pseudocode">Pseudocode <a href="#pseudocode" class="anchor"
 aria-label="Link to this section"><span
 class="anchor-mark">#</span></a></h3>
-<p>Try implementing this yourself before reading the solution.
-<label for="sn-2" class="sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle"><span class="sidenote">Two
-questions for you: Why can this never create a loop? And why is it
-guaranteed to end with every room connected?</span></p>
 <pre><code>for each room: parent[room] = room
 walls = every wall between two rooms
 shuffle(walls)
@@ -127,11 +98,6 @@ for each wall in walls:
     if find(a) != find(b):
         knock out the wall
         join(a, b)</code></pre>
-<p>Remember the four kinds of cells from the introduction. Only the
-<strong>walls</strong> go in the list. Rooms are always paths, and
-pillars and outside cells are never knocked down. The tricky part is
-finding the two rooms on either side of a wall, which depends on which
-of its coordinates is even.</p>
 <h3 id="solution">Solution <a href="#solution" class="anchor"
 aria-label="Link to this section"><span
 class="anchor-mark">#</span></a></h3>

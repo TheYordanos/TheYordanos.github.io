@@ -50,25 +50,22 @@ walk</p>
 				<p class="meta"><time datetime="2026-11-16">2026-11-16</time></p>
 			</header>
 
-			<nav class="series" aria-label="Series"><p class="series-title">Series: Maze Generation</p><ol><li><a href="maze_generation.html">Maze Generation Algorithms Introduction</a></li><li aria-current="page">Recursive Backtracker</li><li><a href="kruskals.html">Kruskal&#x27;s Algorithm</a></li></ol></nav>
+			<nav class="series" aria-label="Series"><p class="series-title">Series: Maze Generation</p><ol><li><a href="maze_generation.html">Maze Generation Algorithms Introduction</a></li><li aria-current="page">Recursive Backtracker</li><li><a href="kruskals.html">Kruskal&#x27;s Algorithm</a></li><li><a href="prims.html">Prim&#x27;s Algorithm</a></li></ol></nav>
 
 			
 			<h2 id="recursive-backtracker">Recursive Backtracker <a
 href="#recursive-backtracker" class="anchor"
 aria-label="Link to this section"><span
 class="anchor-mark">#</span></a></h2>
-<p>The Recursive Backtracker is the most common maze algorithm to start
-with. It works like someone exploring a cave with a ball of string: walk
-forward into any unvisited room, knocking down the wall behind you, and
-keep going until you’re stuck. When there’s nowhere new to go, retrace
-your steps until you find a room that still has an unexplored neighbour,
-then head off in that direction. When you’ve backed all the way out to
-the start, every room has been visited and the maze is done.</p>
+<p>Walk into a random unvisited room, knocking down the wall behind you,
+and keep going until you’re stuck. Then retrace your steps until you
+find a room with an unexplored neighbour, and head off from there. When
+you’ve backed all the way out to the start, every room has been
+visited.</p>
 <p>In graph terms this is a randomized <strong>depth-first
-search</strong>. Because we only ever step into a room we haven’t
-visited, we never connect two rooms that are already connected, so no
-loops form. And because the search doesn’t stop until every room is
-reached, no area is left inaccessible.
+search</strong>. We only step into rooms we haven’t visited, so no loops
+form, and we don’t stop until every room is reached, so nothing is left
+inaccessible.
 <label for="sn-1" class="sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"><span class="sidenote">That
 is exactly the “perfect maze” guarantee from the <a
 href="maze_generation.html">introduction</a>.</span></p>
@@ -80,10 +77,6 @@ alt="Recursive Backtracker" />
 <h3 id="pseudocode">Pseudocode <a href="#pseudocode" class="anchor"
 aria-label="Link to this section"><span
 class="anchor-mark">#</span></a></h3>
-<p>Try implementing this yourself before reading the solution.
-<label for="sn-2" class="sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle"><span class="sidenote">Question
-for you: Why is the neighbour <code>2 * direction</code> away and not
-<code>1</code>?</span></p>
 <pre><code>carve(room):
     mark room as PATH
     for each direction, in random order:

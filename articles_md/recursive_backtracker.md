@@ -8,15 +8,13 @@ part: 2
 
 ## Recursive Backtracker
 
-The Recursive Backtracker is the most common maze algorithm to start with. It works like someone exploring a cave with a ball of string: walk forward into any unvisited room, knocking down the wall behind you, and keep going until you're stuck. When there's nowhere new to go, retrace your steps until you find a room that still has an unexplored neighbour, then head off in that direction. When you've backed all the way out to the start, every room has been visited and the maze is done.
+Walk into a random unvisited room, knocking down the wall behind you, and keep going until you're stuck. Then retrace your steps until you find a room with an unexplored neighbour, and head off from there. When you've backed all the way out to the start, every room has been visited.
 
-In graph terms this is a randomized **depth-first search**. Because we only ever step into a room we haven't visited, we never connect two rooms that are already connected, so no loops form. And because the search doesn't stop until every room is reached, no area is left inaccessible. ^[That is exactly the "perfect maze" guarantee from the [introduction](maze_generation.html).]
+In graph terms this is a randomized **depth-first search**. We only step into rooms we haven't visited, so no loops form, and we don't stop until every room is reached, so nothing is left inaccessible. ^[That is exactly the "perfect maze" guarantee from the [introduction](maze_generation.html).]
 
 ![Recursive Backtracker](../res/articles/maze_generation/recursive_backtracker.gif)
 
 ### Pseudocode
-
-Try implementing this yourself before reading the solution. ^[Question for you: Why is the neighbour `2 * direction` away and not `1`?]
 
 ```
 carve(room):

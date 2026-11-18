@@ -53,7 +53,7 @@ Cell :: enum byte { WALL, PATH }
 
 `WALL` comes first on purpose. Odin zero-initializes everything, so a freshly declared grid is already full of walls.
 
-The grid size needs to be **odd**. I saw this way of making a grid, where rooms and walls are all cells of one grid instead of storing walls separately from rooms, from [professor-l's page](https://professor-l.github.io/mazes/).
+The grid size needs to be **odd** ^[I saw this way of making a grid, where rooms and walls are all cells of one grid instead of separate cell + wall data, from [professor-l's page](https://professor-l.github.io/mazes/)]:
 
 ```odin
 CELL_SIZE :: 20
@@ -61,7 +61,7 @@ COLS :: 65
 ROWS :: 37
 ```
 
-#### Kinds of Cells
+#### Cell Types
 **Rooms** sit where both x and y are odd, they're always paths. **Walls** sit where exactly one coordinate is odd, it can be either wall or path. **Pillars** sit where both coordinates are even, they are always walls. **Outside cells** are the border, they are always walls.
 
 ### Helpers
