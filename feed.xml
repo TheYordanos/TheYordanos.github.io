@@ -8,6 +8,13 @@
 <updated>2026-11-18T00:00:00Z</updated>
 <author><name>Yordanos Z.</name></author>
 <entry>
+<title>Aldous-Broder Algorithm</title>
+<link href="https://theyordanos.github.io/articles/aldous_broder.html"/>
+<id>https://theyordanos.github.io/articles/aldous_broder.html</id>
+<updated>2026-11-18T00:00:00Z</updated>
+<summary>Carving a perfect maze with a random walk</summary>
+</entry>
+<entry>
 <title>Prim&#x27;s Algorithm</title>
 <link href="https://theyordanos.github.io/articles/prims.html"/>
 <id>https://theyordanos.github.io/articles/prims.html</id>
