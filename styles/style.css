@@ -377,7 +377,7 @@ footer {
 
 	.nav-toggle { display: block; }
 
-	.nav-links {
+	.nav-links:not(.article) {
 		position: absolute;
 		top: 50px;
 		left: 0;
@@ -386,6 +386,7 @@ footer {
 		border-bottom: 1px solid var(--border);
 
 		display: none;
+		align-items: center;
 		flex-direction: column;
 		gap: 12px;
 
