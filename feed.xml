@@ -5,8 +5,15 @@
 <link href="https://theyordanos.github.io/"/>
 <link rel="self" href="https://theyordanos.github.io/feed.xml"/>
 <id>https://theyordanos.github.io/</id>
-<updated>2026-11-18T00:00:00Z</updated>
+<updated>2026-11-19T00:00:00Z</updated>
 <author><name>Yordanos Z.</name></author>
+<entry>
+<title>Wilson&#x27;s Algorithm</title>
+<link href="https://theyordanos.github.io/articles/wilsons.html"/>
+<id>https://theyordanos.github.io/articles/wilsons.html</id>
+<updated>2026-11-19T00:00:00Z</updated>
+<summary>Carving a perfect maze with loop-erased random walks</summary>
+</entry>
 <entry>
 <title>Aldous-Broder Algorithm</title>
 <link href="https://theyordanos.github.io/articles/aldous_broder.html"/>
