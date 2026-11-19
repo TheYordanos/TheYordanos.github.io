@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="Growing several trees at once and
+merging them with Kruskal’s sets">
+
+		<title>Growing Forest Algorithm</title>
+
+		<meta property="og:type" content="article">
+		<meta property="og:site_name" content="Yordanos">
+		<meta property="og:title" content="Growing Forest Algorithm">
+		<meta property="og:description" content="Growing several trees at once and merging them with Kruskal&#x27;s sets">
+		<meta property="og:url" content="https://theyordanos.github.io/articles/growing_forest.html">
+		<meta property="og:image" content="https://theyordanos.github.io/res/articles/maze_generation/growing_forest.gif">
+		<meta name="twitter:card" content="summary_large_image">
+		<link rel="canonical" href="https://theyordanos.github.io/articles/growing_forest.html">
+
+		<link rel="alternate" type="application/atom+xml" title="Yordanos" href="https://theyordanos.github.io/feed.xml">
+
+		<link rel="icon" type="image/png" href="../res/theyordanos-icon.png">
+		<script>
+		try {
+			if (localStorage.getItem("ty_theme") === "dark") document.documentElement.classList.add("dark");
+		} catch (e) {}
+		</script>
+		<link rel="stylesheet" href="../styles/style.css">
+		<link rel="stylesheet" href="../styles/article.css">
+
+		<script src="../scripts/theme.js" defer></script>
+		<script src="../scripts/copy.js" defer></script>
+	</head>
+	<body>
+		<nav class="site-nav">
+			<div class="nav-left"><a href="../index.html#articles">Articles</a></div>
+			<div class="nav-links article" id="nav-links">
+				<a href="../feed.xml">RSS</a>
+				<button id="theme-toggle">[dark]</button>
+			</div>
+		</nav>
+
+		<main>
+			<header>
+				<h1>Growing Forest Algorithm</h1>
+				<p class="description">Growing several trees at once and merging them
+with Kruskal’s sets</p>
+				<p class="meta"><time datetime="2026-11-19">2026-11-19</time></p>
+				<p class="source"><span class="source-label">Source</span><a href="https://codeberg.org/yordanos/mazes" rel="noopener">codeberg.org/yordanos/mazes</a></p>
+			</header>
+
+			<nav class="series" aria-label="Series"><p class="series-title">Series: Maze Generation</p><ol><li><a href="maze_generation.html">Maze Generation Algorithms Introduction</a></li><li><a href="recursive_backtracker.html">Recursive Backtracker</a></li><li><a href="kruskals.html">Kruskal&#x27;s Algorithm</a></li><li><a href="prims.html">Prim&#x27;s Algorithm</a></li><li><a href="aldous_broder.html">Aldous-Broder Algorithm</a></li><li><a href="wilsons.html">Wilson&#x27;s Algorithm</a></li><li><a href="hunt_and_kill.html">Hunt and Kill Algorithm</a></li><li><a href="growing_tree.html">Growing Tree Algorithm</a></li><li aria-current="page">Growing Forest Algorithm</li></ol></nav>
+
+			
+			<h2 id="growing-forest-algorithm">Growing Forest Algorithm <a
+href="#growing-forest-algorithm" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<p>Growing Forest is Growing Tree with several trees growing at once,
+and Kruskal’s sets to stop them forming loops. Start a few trees in
+random rooms. Each active room either grows into an uncarved neighbour,
+which joins its tree, or runs into a carved room. If that room belongs
+to a <em>different</em> tree, knock the wall down and the two trees
+become one. If it belongs to the same tree, leave the wall alone. New
+trees can start at random along the way. When the growing is done, any
+trees that never met are connected by a final pass of Kruskal’s.</p>
+<p>How many trees you start with and how often new ones appear changes
+the texture of the maze.
+<label for="sn-1" class="sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"><span class="sidenote">Think
+Labyrinth notes that, with the right parameters, Growing Forest can
+reproduce the Recursive Backtracker, Kruskal’s, Prim’s and Growing
+Tree.</span></p>
+<figure>
+<img src="../res/articles/maze_generation/growing_forest.gif"
+alt="Growing Forest Algorithm" />
+<figcaption aria-hidden="true">Growing Forest Algorithm</figcaption>
+</figure>
+<h3 id="pseudocode">Pseudocode <a href="#pseudocode" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
+<pre><code>every room is its own set; all rooms uncarved
+start N trees: carve a random room, add to active
+
+while active is not empty:
+    maybe start a new tree (with some chance)
+    room = pick one from active
+    if room has no uncarved neighbour:
+        remove room from active
+        continue
+    next = room + 2 * (a random direction in bounds)
+    if next is uncarved:
+        knock out the wall, carve next, join sets, add next to active
+    else if find(room) != find(next):
+        knock out the wall, join sets
+
+merge what&#39;s left: Kruskal&#39;s pass over every wall</code></pre>
+<h3 id="solution">Solution <a href="#solution" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
+<p>This uses <code>find</code> and <code>join</code> from Kruskal’s,
+<code>rooms_beside_wall</code> from Prim’s, and <code>random_dir</code>
+from Hunt and Kill.</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">// a random direction whose neighbouring room is in bounds</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">random_dir_any </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>room<span class="op">:</span> <span class="op">[</span><span class="dv">2</span><span class="op">]</span><span class="dt">i32</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="op">[</span><span class="dv">2</span><span class="op">]</span><span class="dt">i32</span> <span class="op">{</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="va">dirs </span><span class="op">:=</span> <span class="op">[</span><span class="dv">4</span><span class="op">][</span><span class="dv">2</span><span class="op">]</span><span class="dt">i32</span><span class="op">{{-</span><span class="dv">1</span><span class="op">,</span> <span class="dv">0</span><span class="op">},</span> <span class="op">{</span><span class="dv">1</span><span class="op">,</span> <span class="dv">0</span><span class="op">},</span> <span class="op">{</span><span class="dv">0</span><span class="op">,</span> <span class="op">-</span><span class="dv">1</span><span class="op">},</span> <span class="op">{</span><span class="dv">0</span><span class="op">,</span> <span class="dv">1</span><span class="op">}}</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    rand<span class="op">.</span><span class="fu">shuffle</span><span class="op">(</span>dirs<span class="op">[:])</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> d <span class="cf">in</span> dirs <span class="op">{</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="fu">is_cell_in_bounds</span><span class="op">(</span>room <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> d<span class="op">)</span> <span class="cf">do</span> <span class="cf">return</span> d</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="op">{}</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="fu">growing_forest </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>maze<span class="op">:</span> <span class="op">^[</span>COLS<span class="op">][</span>ROWS<span class="op">]</span>Cell<span class="op">,</span> trees<span class="op">:</span> <span class="dt">int</span><span class="op">,</span> spawn_chance<span class="op">:</span> <span class="dt">f32</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    parents<span class="op">:</span> <span class="op">[</span>COLS<span class="op">][</span>ROWS<span class="op">][</span><span class="dv">2</span><span class="op">]</span><span class="dt">i32</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    walls<span class="op">:</span> <span class="op">[</span><span class="kw">dynamic</span><span class="op">][</span><span class="dv">2</span><span class="op">]</span><span class="dt">i32</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">defer</span> <span class="fu">delete</span><span class="op">(</span>walls<span class="op">)</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    <span class="co">// every room is its own set, and we collect the walls for the final pass</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> x <span class="cf">in</span> <span class="dv">1</span><span class="op">..&lt;</span><span class="dt">i32</span><span class="op">(</span>COLS <span class="op">-</span> <span class="dv">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> y <span class="cf">in</span> <span class="dv">1</span><span class="op">..&lt;</span><span class="dt">i32</span><span class="op">(</span>ROWS <span class="op">-</span> <span class="dv">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> x <span class="op">&amp;</span> <span class="dv">1</span> <span class="op">==</span> <span class="dv">1</span> <span class="op">&amp;&amp;</span> y <span class="op">&amp;</span> <span class="dv">1</span> <span class="op">==</span> <span class="dv">1</span> <span class="op">{</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>                parents<span class="op">[</span>x<span class="op">][</span>y<span class="op">]</span> <span class="op">=</span> <span class="op">{</span>x<span class="op">,</span> y<span class="op">}</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>            <span class="op">}</span> <span class="cf">else</span> <span class="cf">if</span><span class="fu"> </span><span class="op">(</span>x <span class="op">+</span> y<span class="op">)</span> <span class="op">&amp;</span> <span class="dv">1</span> <span class="op">==</span> <span class="dv">1</span> <span class="op">{</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>                <span class="fu">append</span><span class="op">(&amp;</span>walls<span class="op">,</span> <span class="op">[</span><span class="dv">2</span><span class="op">]</span><span class="dt">i32</span><span class="op">{</span>x<span class="op">,</span> y<span class="op">})</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>            <span class="op">}</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    rand<span class="op">.</span><span class="fu">shuffle</span><span class="op">(</span>walls<span class="op">[:])</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    active<span class="op">:</span> <span class="op">[</span><span class="kw">dynamic</span><span class="op">][</span><span class="dv">2</span><span class="op">]</span><span class="dt">i32</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    <span class="kw">defer</span> <span class="fu">delete</span><span class="op">(</span>active<span class="op">)</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    <span class="co">// start the first trees</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> _ <span class="cf">in</span> <span class="dv">0</span><span class="op">..&lt;</span>trees <span class="op">{</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>        <span class="va">room </span><span class="op">:=</span> <span class="fu">random_room</span><span class="op">()</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> maze<span class="op">[</span>room<span class="op">.</span>x<span class="op">][</span>room<span class="op">.</span>y<span class="op">]</span> <span class="op">!=</span> <span class="op">.</span>WALL <span class="cf">do</span> room <span class="op">=</span> <span class="fu">random_room</span><span class="op">()</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>        maze<span class="op">[</span>room<span class="op">.</span>x<span class="op">][</span>room<span class="op">.</span>y<span class="op">]</span> <span class="op">=</span> <span class="op">.</span>PATH</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>        <span class="fu">append</span><span class="op">(&amp;</span>active<span class="op">,</span> room<span class="op">)</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="fu">len</span><span class="op">(</span>active<span class="op">)</span> <span class="op">&gt;</span> <span class="dv">0</span> <span class="op">{</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>        <span class="co">// sometimes start a new tree</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> rand<span class="op">.</span><span class="fu">float32</span><span class="op">()</span> <span class="op">&lt;</span> spawn_chance <span class="op">{</span></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>            <span class="va">room </span><span class="op">:=</span> <span class="fu">random_room</span><span class="op">()</span></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> maze<span class="op">[</span>room<span class="op">.</span>x<span class="op">][</span>room<span class="op">.</span>y<span class="op">]</span> <span class="op">==</span> <span class="op">.</span>WALL <span class="op">{</span></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>                maze<span class="op">[</span>room<span class="op">.</span>x<span class="op">][</span>room<span class="op">.</span>y<span class="op">]</span> <span class="op">=</span> <span class="op">.</span>PATH</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>                <span class="fu">append</span><span class="op">(&amp;</span>active<span class="op">,</span> room<span class="op">)</span></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>            <span class="op">}</span></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>        <span class="va">i </span><span class="op">:=</span> rand<span class="op">.</span><span class="fu">int_max</span><span class="op">(</span><span class="fu">len</span><span class="op">(</span>active<span class="op">))</span></span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>        <span class="va">room </span><span class="op">:=</span> active<span class="op">[</span>i<span class="op">]</span></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>        <span class="co">// no uncarved neighbour: this room is finished</span></span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> _<span class="op">,</span> ok <span class="op">:=</span> <span class="fu">random_dir</span><span class="op">(</span>maze<span class="op">,</span> room<span class="op">,</span> <span class="op">.</span>WALL<span class="op">);</span> <span class="op">!</span>ok <span class="op">{</span></span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>            <span class="fu">unordered_remove</span><span class="op">(&amp;</span>active<span class="op">,</span> i<span class="op">)</span></span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>        <span class="va">dir </span><span class="op">:=</span> <span class="fu">random_dir_any</span><span class="op">(</span>room<span class="op">)</span></span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>        <span class="va">wall, next </span><span class="op">:=</span> room <span class="op">+</span> dir<span class="op">,</span> room <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> dir</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>        <span class="va">root_room, root_next </span><span class="op">:=</span> <span class="fu">find</span><span class="op">(</span>room<span class="op">,</span> <span class="op">&amp;</span>parents<span class="op">),</span> <span class="fu">find</span><span class="op">(</span>next<span class="op">,</span> <span class="op">&amp;</span>parents<span class="op">)</span></span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> maze<span class="op">[</span>next<span class="op">.</span>x<span class="op">][</span>next<span class="op">.</span>y<span class="op">]</span> <span class="op">==</span> <span class="op">.</span>WALL <span class="op">{</span></span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>            <span class="co">// grow into a new room</span></span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>            maze<span class="op">[</span>wall<span class="op">.</span>x<span class="op">][</span>wall<span class="op">.</span>y<span class="op">]</span> <span class="op">=</span> <span class="op">.</span>PATH</span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>            maze<span class="op">[</span>next<span class="op">.</span>x<span class="op">][</span>next<span class="op">.</span>y<span class="op">]</span> <span class="op">=</span> <span class="op">.</span>PATH</span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>            <span class="fu">join</span><span class="op">(</span>root_next<span class="op">,</span> root_room<span class="op">,</span> <span class="op">&amp;</span>parents<span class="op">)</span></span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>            <span class="fu">append</span><span class="op">(&amp;</span>active<span class="op">,</span> next<span class="op">)</span></span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span> <span class="cf">else</span> <span class="cf">if</span> root_room <span class="op">!=</span> root_next <span class="op">{</span></span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>            <span class="co">// two different trees meet: connect them</span></span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>            maze<span class="op">[</span>wall<span class="op">.</span>x<span class="op">][</span>wall<span class="op">.</span>y<span class="op">]</span> <span class="op">=</span> <span class="op">.</span>PATH</span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>            <span class="fu">join</span><span class="op">(</span>root_next<span class="op">,</span> root_room<span class="op">,</span> <span class="op">&amp;</span>parents<span class="op">)</span></span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>    <span class="co">// merge what&#39;s left: Kruskal&#39;s pass</span></span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> wall <span class="cf">in</span> walls <span class="op">{</span></span>
+<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a>        <span class="va">a, b </span><span class="op">:=</span> <span class="fu">rooms_beside_wall</span><span class="op">(</span>wall<span class="op">)</span></span>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a>        <span class="va">root_a, root_b </span><span class="op">:=</span> <span class="fu">find</span><span class="op">(</span>a<span class="op">,</span> <span class="op">&amp;</span>parents<span class="op">),</span> <span class="fu">find</span><span class="op">(</span>b<span class="op">,</span> <span class="op">&amp;</span>parents<span class="op">)</span></span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> root_a <span class="op">==</span> root_b <span class="cf">do</span> <span class="cf">continue</span></span>
+<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>        maze<span class="op">[</span>wall<span class="op">.</span>x<span class="op">][</span>wall<span class="op">.</span>y<span class="op">]</span> <span class="op">=</span> <span class="op">.</span>PATH</span>
+<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a>        <span class="fu">join</span><span class="op">(</span>root_a<span class="op">,</span> root_b<span class="op">,</span> <span class="op">&amp;</span>parents<span class="op">)</span></span>
+<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a><span class="fu">generate </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>maze<span class="op">:</span> <span class="op">^[</span>COLS<span class="op">][</span>ROWS<span class="op">]</span>Cell<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a>    <span class="fu">growing_forest</span><span class="op">(</span>maze<span class="op">,</span> <span class="dv">5</span><span class="op">,</span> <span class="fl">0.01</span><span class="op">)</span></span>
+<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Run it, press space a few times, and you’ll get a new maze each
+time.</p>
+<pre><code>odin run .</code></pre>
+
+			<nav class="series-pager" aria-label="Series navigation"><a class="prev" rel="prev" href="growing_tree.html"><span class="pager-label">Previous</span><span class="pager-title">Growing Tree Algorithm</span></a></nav>
+		</main>
+
+		<hr />
+		<footer><p>Creator of Worlds &amp; a Coffee Addict ;p</p></footer>
+	</body>
+</html>
