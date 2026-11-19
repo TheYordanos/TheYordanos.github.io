@@ -177,24 +177,54 @@ def build(job):
     return src, "built", ""
 
 
-def render_items(items, group_of=None, badges=None):
-    """items: (date, slug, title) tuples, already sorted. Returns <li> lines.
-    group_of(item) gives the heading an item belongs under, or None."""
+def build_entries(items, ordered, names, series_of):
+    """Collapse each series into one entry. items: sorted (date, slug, title).
+    Returns ("article", date, (date, slug, title)) or
+    ("series", date, (name, [(date, slug, title), ...])), newest first."""
+    info = {slug: (date, slug, title) for date, slug, title in items}
+    entries, seen = [], set()
+    for date, slug, title in items:
+        skey = series_of.get(slug)
+        if not skey:
+            entries.append(("article", date, (date, slug, title)))
+        elif skey not in seen:
+            # items are newest first, so this is the latest part of the series
+            seen.add(skey)
+            parts = [info[s] for s, _ in ordered[skey]]
+            entries.append(("series", date, (names[skey], parts)))
+    return entries
+
+
+def render_entries(entries, group_of=None):
+    """Returns <li> lines. group_of(date) gives the year heading, or None."""
     lines, last = [], None
-    for item in items:
-        date, slug, title = item
-        label = group_of(item) if group_of else None
+    for kind, date, data in entries:
+        label = group_of(date) if group_of else None
         if label and label != last:
             lines.append(f'{ITEM_INDENT}<li class="year">{html.escape(label)}</li>')
             last = label
         shown = date if date[:4] != "0000" else ""
-        text = html.escape(title)
-        if badges and slug in badges:
-            text += f" [{badges[slug]}]"  # e.g. "Chess in Odin [Part 1/4]"
-        lines.append(
-            f'{ITEM_INDENT}<li><time>{shown}</time>'
-            f'<a href="articles/{slug}.html">{text}</a></li>'
-        )
+        if kind == "article":
+            _, slug, title = data
+            lines.append(
+                f'{ITEM_INDENT}<li><time>{shown}</time>'
+                f'<a href="articles/{slug}.html">{html.escape(title)}</a></li>'
+            )
+            continue
+        name, parts = data
+        lines.append(f'{ITEM_INDENT}<li class="series-group"><time>{shown}</time>')
+        lines.append(f'{ITEM_INDENT}\t<div class="series-block">')
+        lines.append(f'{ITEM_INDENT}\t\t<span class="series-name">{html.escape(name)}</span>'
+                     f'<span class="series-count">{len(parts)} parts</span>')
+        lines.append(f'{ITEM_INDENT}\t\t<ul class="parts">')
+        for n, (_, slug, title) in enumerate(parts, 1):
+            lines.append(
+                f'{ITEM_INDENT}\t\t\t<li><span class="part-no">Part {n}</span>'
+                f'<a href="articles/{slug}.html">{html.escape(title)}</a></li>'
+            )
+        lines.append(f'{ITEM_INDENT}\t\t</ul>')
+        lines.append(f'{ITEM_INDENT}\t</div>')
+        lines.append(f'{ITEM_INDENT}</li>')
     return lines
 
 
@@ -384,11 +414,13 @@ def main():
     items.sort(key=day_order)
     items.sort(key=lambda r: r[0], reverse=True)
 
-    splice(INDEX, render_items(items[:INDEX_LIMIT], badges=badges))
+    entries = build_entries(items, ordered, names, series_of)
+
+    splice(INDEX, render_entries(entries[:INDEX_LIMIT]))
 
     if ARCHIVE.exists():
-        year_of = lambda it: it[0][:4] if it[0][:4] != "0000" else None
-        splice(ARCHIVE, render_items(items, year_of, badges))
+        year_of = lambda d: d[:4] if d[:4] != "0000" else None
+        splice(ARCHIVE, render_entries(entries, year_of))
         archive_note = "archive.html updated"
     else:
         archive_note = "archive.html not found, skipped"
@@ -399,7 +431,7 @@ def main():
               "feed links will be wrong until you set it")
 
     print(f"done: {len(items)} article(s), {built} rebuilt, "
-          f"index.html shows {min(len(items), INDEX_LIMIT)}, {archive_note}, "
+          f"index.html shows {min(len(entries), INDEX_LIMIT)} entries, {archive_note}, "
           f"feed.xml has {feed_count}")
 
 
