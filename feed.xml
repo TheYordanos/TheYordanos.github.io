@@ -8,6 +8,13 @@
 <updated>2026-11-19T00:00:00Z</updated>
 <author><name>Yordanos Z.</name></author>
 <entry>
+<title>Growing Tree Algorithm</title>
+<link href="https://theyordanos.github.io/articles/growing_tree.html"/>
+<id>https://theyordanos.github.io/articles/growing_tree.html</id>
+<updated>2026-11-19T00:00:00Z</updated>
+<summary>One algorithm with a dial, where the way you pick the next room decides what kind of maze you get</summary>
+</entry>
+<entry>
 <title>Hunt and Kill Algorithm</title>
 <link href="https://theyordanos.github.io/articles/hunt_and_kill.html"/>
 <id>https://theyordanos.github.io/articles/hunt_and_kill.html</id>
