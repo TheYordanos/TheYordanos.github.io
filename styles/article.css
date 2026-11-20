@@ -186,7 +186,7 @@ main .series-pager .pager-title {
 
 /* TABLE OF CONTENTS (front matter: toc: true) */
 main #TOC {
-	margin: 0 0 40px;
+	margin: 40px 0;
 	padding: 16px 20px;
 	border: 1px solid var(--border);
 	border-radius: 6px;
