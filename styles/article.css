@@ -617,16 +617,6 @@ main dd {
 }
 
 /* RESPONSIVE */
-/* Sidenotes live inside the article's own box: the box gets 230px of right
-   padding and the notes float into it. The box is a grid column that never
-   reaches the sidebar. Everything here is a container query on the real width
-   of the page content (body), not the window. The text keeps at least ~480px:
-   212 sidebar + 230 notes + 480 text = 920. Below that the notes are
-   tap-to-open and the text gets the whole column. */
-body:has(.sidenote) {
-	max-width: 1104px; /* 680 text + 230 notes + 32 gap + 180 sidebar + padding */
-}
-
 @container (min-width: 920px) {
 	main:has(.sidenote) {
 		padding-right: 230px;
