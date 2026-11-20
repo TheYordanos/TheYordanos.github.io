@@ -44,7 +44,7 @@ main [id] {
 
 /* ARTICLE HEADER: title, description, date */
 main > header {
-	margin-bottom: 40px;
+	margin-bottom: 40px !important;
 	padding-bottom: 24px;
 	border-bottom: 1px solid var(--border);
 }
@@ -112,7 +112,6 @@ main > header .source a:hover {
 
 /* SERIES (front matter: series: Name) */
 main .series {
-	margin: 40px 0;
 	padding: 16px 20px;
 	border: 1px solid var(--border);
 	border-radius: 6px;
@@ -186,7 +185,6 @@ main .series-pager .pager-title {
 
 /* TABLE OF CONTENTS (front matter: toc: true) */
 main #TOC {
-	margin: 40px 0;
 	padding: 16px 20px;
 	border: 1px solid var(--border);
 	border-radius: 6px;
