@@ -14,7 +14,7 @@
 		<meta property="og:url" content="https://theyordanos.github.io/archive.html">
 		<meta property="og:image" content="https://theyordanos.github.io/res/archive_og.png">
 		<meta name="twitter:card" content="summary_large_image">
-		<link rel="canonical" href="https://theyordanos.github.io/">
+		<link rel="canonical" href="https://theyordanos.github.io/archive.html">
 
 		<link rel="alternate" type="application/atom+xml" title="Yordanos" href="https://theyordanos.github.io/feed.xml">
 
@@ -32,16 +32,8 @@
 
 	<body>
 
-		<nav class="site-nav">
-			<div class="nav-left">
-				<a href="index.html">Yordanos</a>
-			</div>
-			<div class="nav-links archive" id="nav-links">
-				<a href="feed.xml">RSS</a>
-				<button id="theme-toggle">[dark]</button>
-			</div>
-		</nav>
-
+		<div class="layout">
+		<main>
 		<h1>All articles</h1>
 		<section class="articles archive">
 			<ul>
@@ -71,6 +63,21 @@
 				<!-- ARTICLES:END -->
 			</ul>
 		</section>
+		</main>
+
+		<aside class="sidebar compact">
+			<a class="brand" href="index.html"><span class="brand-name">Yordanos Z.</span></a>
+			<nav class="side-group" aria-label="Site">
+				<a href="index.html">Home</a>
+				<a href="index.html#articles">Articles</a>
+				<a href="archive.html" aria-current="page">Archive</a>
+			</nav>
+			<div class="side-tools">
+				<a href="feed.xml">RSS</a>
+				<button id="theme-toggle">[dark]</button>
+			</div>
+		</aside>
+		</div>
 
 		<hr>
 

@@ -3,14 +3,14 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="description" content="Yordanos, hobbyist game developer and designer. Fun games, articles, and art.">
+		<meta name="description" content="Yordanos, hobbyist game developer and designer. Games built from scratch, plus articles on programming, algorithms and design.">
 
 		<title>Yordanos</title>
 
 		<meta property="og:type" content="website">
 		<meta property="og:site_name" content="Yordanos">
 		<meta property="og:title" content="Yordanos">
-		<meta property="og:description" content="Yordanos, hobbyist game developer and designer. Fun games, articles, and art.">
+		<meta property="og:description" content="Yordanos, hobbyist game developer and designer. Games built from scratch, plus articles on programming, algorithms and design.">
 		<meta property="og:url" content="https://theyordanos.github.io/">
 		<meta property="og:image" content="https://theyordanos.github.io/res/og.png">
 		<meta name="twitter:card" content="summary_large_image">
@@ -27,56 +27,12 @@
 		<link rel="stylesheet" href="styles/style.css">
 
 		<script src="scripts/theme.js" defer></script>
-		<script src="scripts/nav.js" defer></script>
 	</head>
 
 	<body>
 
-		<!-- ======================== NAV ======================== -->
-		<nav class="site-nav">
-			<div class="nav-left">
-				<a href="#">Yordanos</a>
-			</div>
-
-			<button class="nav-toggle" id="nav-toggle" aria-label="Menu">☰</button>
-
-			<div class="nav-links" id="nav-links">
-				<a href="#articles">Articles</a>
-				<a href="#blogroll">Blogroll</a>
-				<a href="#now">Now</a>
-				<a href="#projects">Projects</a>
-				<a href="#books">Bookshelf</a>
-				<button id="theme-toggle">[dark]</button>
-			</div>
-		</nav>
-
-
-		<!-- ======================== HERO ======================== -->
-		<header class="hero">
-			<div class="img">
-				<img src="res/caricature.webp" alt="">
-			</div>
-
-			<div>
-				<h1>Yordanos Z.</h1>
-				<p class="hero-sub">Game Developer and Designer.</p>
-				<p>Small-time hobbyist working as developer & artist, crafting games with intention and a lot of coffee. I try to make games that are <b>fun</b> to play.</p>
-
-				<blockquote>
-					<p>Jack of all trades, Master of none.</p>
-					<cite>- William Shakespeare</cite>
-				</blockquote>
-
-				<nav>
-					<a href="https://t.me/theyordanos" target="_blank">Telegram</a>
-					<a href="https://github.com/theyordanos" target="_blank">Github</a>
-					<a href="https://codeberg.org/yordanos" target="_blank">Codeberg</a>
-					<a href="https://yordanos.itch.io" target="_blank">Itch.io</a>
-					<a href="mailto:yordanoszt15@gmail.com">Email</a>
-					<a href="tel:+251949860385">Mobile</a>
-				</nav>
-			</div>
-		</header>
+		<div class="layout">
+		<main>
 
 		<!-- ======================== ARTICLES ======================== -->
 		<section class="articles" id="articles">
@@ -453,6 +409,41 @@
 				</div>
 			</div>
 		</section>
+
+		</main>
+
+		<!-- ======================== SIDEBAR ======================== -->
+		<aside class="sidebar">
+			<a class="avatar" href="#" aria-hidden="true" tabindex="-1"><img src="res/caricature.webp" alt=""></a>
+			<a class="brand" href="#"><span class="brand-name">Yordanos Z.</span></a>
+			<p class="tagline">Game Developer and Designer.</p>
+			<p class="bio">I make small games, mostly in Odin, and write about how they work. Built on coffee, aimed at one thing: being <b>fun</b> to play.</p>
+
+			<nav class="side-group" aria-label="Sections">
+				<p class="side-label">Sections</p>
+				<a href="#articles">Articles</a>
+				<a href="#blogroll">Blogroll</a>
+				<a href="#now">Now</a>
+				<a href="#projects">Projects</a>
+				<a href="#books">Bookshelf</a>
+			</nav>
+
+			<nav class="side-group social" aria-label="Elsewhere">
+				<p class="side-label">Elsewhere</p>
+				<a href="https://t.me/theyordanos" target="_blank">Telegram</a>
+				<a href="https://github.com/theyordanos" target="_blank">Github</a>
+				<a href="https://codeberg.org/yordanos" target="_blank">Codeberg</a>
+				<a href="https://yordanos.itch.io" target="_blank">Itch.io</a>
+				<a href="mailto:yordanoszt15@gmail.com">Email</a>
+				<a href="tel:+251949860385">Mobile</a>
+			</nav>
+
+			<div class="side-tools">
+				<a href="feed.xml">RSS</a>
+				<button id="theme-toggle">[dark]</button>
+			</div>
+		</aside>
+		</div>
 
 		<hr>
 

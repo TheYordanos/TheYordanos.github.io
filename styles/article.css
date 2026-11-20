@@ -33,7 +33,7 @@ html.dark {
 
 main {
 	max-width: 680px;
-	margin: 0 auto;
+	margin: 0;
 	line-height: 1.85;
 	overflow-wrap: break-word;
 }
@@ -50,6 +50,7 @@ main > header {
 }
 
 main > header h1 {
+	margin-top: 0;
 	margin-bottom: 10px;
 	line-height: 1.25;
 }
@@ -616,22 +617,46 @@ main dd {
 }
 
 /* RESPONSIVE */
-@media (min-width: 920px) {
+/* Sidenotes live inside the article's own box: the box gets 230px of right
+   padding and the notes float into it. The box is a grid column that never
+   reaches the sidebar. Everything here is a container query on the real width
+   of the page content (body), not the window. The text keeps at least ~480px:
+   212 sidebar + 230 notes + 480 text = 920. Below that the notes are
+   tap-to-open and the text gets the whole column. */
+body:has(.sidenote) {
+	max-width: 1104px; /* 680 text + 230 notes + 32 gap + 180 sidebar + padding */
+}
+
+@container (min-width: 920px) {
 	main:has(.sidenote) {
-		max-width: 620px;
-		margin: 0;
-		display: flow-root; /* contains floated notes at the very end */
+		padding-right: 230px;
+		display: flow-root;
+		overflow-x: clip;
 	}
 
 	.sidenote {
 		float: right;
 		clear: right;
-		width: 220px;
-		margin: 0 -250px 1rem 0;
+		box-sizing: border-box;
+		width: 200px;
+		margin: 0 -230px 1rem 0;
+		overflow-wrap: anywhere;
+	}
+
+	.sidenote img,
+	.sidenote video {
+		max-width: 100%;
+		margin: 8px 0;
+	}
+
+	.sidenote code,
+	.sidenote pre {
+		white-space: pre-wrap;
+		overflow-wrap: anywhere;
 	}
 }
 
-@media (max-width: 919px) {
+@container (max-width: 919px) {
 	.sidenote {
 		display: none;
 	}
