@@ -5,8 +5,15 @@
 <link href="https://theyordanos.github.io/"/>
 <link rel="self" href="https://theyordanos.github.io/feed.xml"/>
 <id>https://theyordanos.github.io/</id>
-<updated>2026-11-19T00:00:00Z</updated>
+<updated>2026-11-20T00:00:00Z</updated>
 <author><name>Yordanos Z.</name></author>
+<entry>
+<title>Eller&#x27;s Algorithm</title>
+<link href="https://theyordanos.github.io/articles/ellers.html"/>
+<id>https://theyordanos.github.io/articles/ellers.html</id>
+<updated>2026-11-20T00:00:00Z</updated>
+<summary>Building a perfect maze one row at a time, remembering only the current row</summary>
+</entry>
 <entry>
 <title>Growing Forest Algorithm</title>
 <link href="https://theyordanos.github.io/articles/growing_forest.html"/>

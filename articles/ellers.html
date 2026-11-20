@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="Building a perfect maze one row at a
+time, remembering only the current row">
+
+		<title>Eller’s Algorithm</title>
+
+		<meta property="og:type" content="article">
+		<meta property="og:site_name" content="Yordanos">
+		<meta property="og:title" content="Eller&#x27;s Algorithm">
+		<meta property="og:description" content="Building a perfect maze one row at a time, remembering only the current row">
+		<meta property="og:url" content="https://theyordanos.github.io/articles/ellers.html">
+		<meta property="og:image" content="https://theyordanos.github.io/res/articles/maze_generation/ellers.gif">
+		<meta name="twitter:card" content="summary_large_image">
+		<link rel="canonical" href="https://theyordanos.github.io/articles/ellers.html">
+
+		<link rel="alternate" type="application/atom+xml" title="Yordanos" href="https://theyordanos.github.io/feed.xml">
+
+		<link rel="icon" type="image/png" href="../res/theyordanos-icon.png">
+		<script>
+		try {
+			if (localStorage.getItem("ty_theme") === "dark") document.documentElement.classList.add("dark");
+		} catch (e) {}
+		</script>
+		<link rel="stylesheet" href="../styles/style.css">
+		<link rel="stylesheet" href="../styles/article.css">
+
+		<script src="../scripts/theme.js" defer></script>
+		<script src="../scripts/copy.js" defer></script>
+	</head>
+	<body>
+		<nav class="site-nav">
+			<div class="nav-left"><a href="../index.html#articles">Articles</a></div>
+			<div class="nav-links article" id="nav-links">
+				<a href="../feed.xml">RSS</a>
+				<button id="theme-toggle">[dark]</button>
+			</div>
+		</nav>
+
+		<main>
+			<header>
+				<h1>Eller’s Algorithm</h1>
+				<p class="description">Building a perfect maze one row at a time,
+remembering only the current row</p>
+				<p class="meta"><time datetime="2026-11-20">2026-11-20</time></p>
+				<p class="source"><span class="source-label">Source</span><a href="https://codeberg.org/yordanos/mazes" rel="noopener">codeberg.org/yordanos/mazes</a></p>
+			</header>
+
+			<nav class="series" aria-label="Series"><p class="series-title">Series: Maze Generation</p><ol><li><a href="maze_generation.html">Maze Generation Algorithms Introduction</a></li><li><a href="recursive_backtracker.html">Recursive Backtracker</a></li><li><a href="kruskals.html">Kruskal&#x27;s Algorithm</a></li><li><a href="prims.html">Prim&#x27;s Algorithm</a></li><li><a href="aldous_broder.html">Aldous-Broder Algorithm</a></li><li><a href="wilsons.html">Wilson&#x27;s Algorithm</a></li><li><a href="hunt_and_kill.html">Hunt and Kill Algorithm</a></li><li><a href="growing_tree.html">Growing Tree Algorithm</a></li><li><a href="growing_forest.html">Growing Forest Algorithm</a></li><li aria-current="page">Eller&#x27;s Algorithm</li></ol></nav>
+
+			
+			<h2 id="ellers-algorithm">Eller’s Algorithm <a href="#ellers-algorithm"
+class="anchor" aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<p>Eller’s Algorithm builds the maze one row at a time, and it only ever
+remembers the current row. Every room in the row carries a <strong>set
+id</strong>, and rooms with the same id are already connected. For each
+row, go along it and, for each pair of neighbouring rooms in different
+sets, randomly decide whether to knock down the wall between them and
+merge the two sets. Then, for each set, knock down the wall below at
+least one of its rooms. Without that, the set would be cut off from the
+rest of the maze. Those rooms carry their set id into the next row, and
+every other room in the next row starts a new set.</p>
+<p>The last row is different. There is no row below, so every
+neighbouring pair still in different sets gets merged, and everything
+ends up connected.
+<label for="sn-1" class="sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"><span class="sidenote">Since
+it only remembers one row, Eller’s can generate a maze of any height,
+even one that never ends.</span></p>
+<p>The two chances, for merging sideways and for connecting down,
+control the texture, so try different values.</p>
+<figure>
+<img src="../res/articles/maze_generation/ellers.gif"
+alt="Eller’s Algorithm" />
+<figcaption aria-hidden="true">Eller’s Algorithm</figcaption>
+</figure>
+<h3 id="pseudocode">Pseudocode <a href="#pseudocode" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
+<pre><code>row 0: every room gets a new set id
+
+for each row of rooms:
+    for each pair of neighbouring rooms in this row:
+        if their sets differ and (this is the last row or a coin flip says so):
+            knock out the wall between them; merge the two sets
+
+    if this is the last row: done
+
+    for each set in this row:
+        pick at least one room in it; knock out the wall below each pick
+        those rooms in the next row carry the set id
+
+    every other room in the next row gets a new set id</code></pre>
+<h3 id="solution">Solution <a href="#solution" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ellers </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>maze<span class="op">:</span> <span class="op">^[</span>COLS<span class="op">][</span>ROWS<span class="op">]</span>Cell<span class="op">,</span> merge_chance<span class="op">,</span> down_chance<span class="op">:</span> <span class="dt">f32</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    W <span class="op">::</span><span class="fu"> </span><span class="op">(</span>COLS <span class="op">-</span> <span class="dv">1</span><span class="op">)</span> <span class="op">/</span> <span class="dv">2</span>                 <span class="co">// rooms per row</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    MAX_IDS <span class="op">::</span> W <span class="op">*</span><span class="fu"> </span><span class="op">((</span>ROWS <span class="op">-</span> <span class="dv">1</span><span class="op">)</span> <span class="op">/</span> <span class="dv">2</span> <span class="op">+</span> <span class="dv">1</span><span class="op">)</span> <span class="co">// more ids than we can ever hand out</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    sets<span class="op">:</span> <span class="op">[</span>W<span class="op">]</span><span class="dt">int</span> <span class="co">// set id of each room in the current row</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="va">next_id </span><span class="op">:=</span> W</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="cf">in</span> <span class="dv">0</span><span class="op">..&lt;</span>W <span class="cf">do</span> sets<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> i</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    connected<span class="op">:</span> <span class="op">[</span>MAX_IDS<span class="op">]</span><span class="dt">bool</span> <span class="co">// set ids that already connect down</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> y<span class="op">:</span> <span class="dt">i32</span> <span class="op">=</span> <span class="dv">1</span><span class="op">;</span> y <span class="op">&lt;</span> ROWS <span class="op">-</span> <span class="dv">1</span><span class="op">;</span> y <span class="op">+=</span> <span class="dv">2</span> <span class="op">{</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        <span class="va">last </span><span class="op">:=</span> y <span class="op">==</span> ROWS <span class="op">-</span> <span class="dv">2</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>        <span class="co">// open every room in this row</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i <span class="cf">in</span> <span class="dv">0</span><span class="op">..&lt;</span>W <span class="op">{</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>            maze<span class="op">[</span><span class="dv">2</span><span class="op">*</span>i <span class="op">+</span> <span class="dv">1</span><span class="op">][</span>y<span class="op">]</span> <span class="op">=</span> <span class="op">.</span>PATH</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>        <span class="co">// horizontal pass</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i <span class="cf">in</span> <span class="dv">0</span><span class="op">..&lt;(</span>W <span class="op">-</span> <span class="dv">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> sets<span class="op">[</span>i<span class="op">]</span> <span class="op">==</span> sets<span class="op">[</span>i <span class="op">+</span> <span class="dv">1</span><span class="op">]</span> <span class="cf">do</span> <span class="cf">continue</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="op">!</span>last <span class="op">&amp;&amp;</span> rand<span class="op">.</span><span class="fu">float32</span><span class="op">()</span> <span class="op">&gt;=</span> merge_chance <span class="cf">do</span> <span class="cf">continue</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>            <span class="co">// knock out the wall between room i and room i + 1</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>            maze<span class="op">[</span><span class="dv">2</span><span class="op">*</span>i <span class="op">+</span> <span class="dv">2</span><span class="op">][</span>y<span class="op">]</span> <span class="op">=</span> <span class="op">.</span>PATH</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>            <span class="co">// merge: relabel the whole set, not just one room</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>            <span class="va">old, keep </span><span class="op">:=</span> sets<span class="op">[</span>i <span class="op">+</span> <span class="dv">1</span><span class="op">],</span> sets<span class="op">[</span>i<span class="op">]</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> j <span class="cf">in</span> <span class="dv">0</span><span class="op">..&lt;</span>W <span class="cf">do</span> <span class="cf">if</span> sets<span class="op">[</span>j<span class="op">]</span> <span class="op">==</span> old <span class="cf">do</span> sets<span class="op">[</span>j<span class="op">]</span> <span class="op">=</span> keep</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> last <span class="cf">do</span> <span class="cf">break</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>        <span class="co">// vertical pass: visit the rooms in a random order</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>        order<span class="op">:</span> <span class="op">[</span>W<span class="op">]</span><span class="dt">int</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i <span class="cf">in</span> <span class="dv">0</span><span class="op">..&lt;</span>W <span class="cf">do</span> order<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> i</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>        rand<span class="op">.</span><span class="fu">shuffle</span><span class="op">(</span>order<span class="op">[:])</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>        connected <span class="op">=</span> <span class="op">{}</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>        down<span class="op">:</span> <span class="op">[</span>W<span class="op">]</span><span class="dt">bool</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i <span class="cf">in</span> order <span class="op">{</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>            <span class="co">// the first room of a set we meet always connects down, the rest by chance</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> connected<span class="op">[</span>sets<span class="op">[</span>i<span class="op">]]</span> <span class="op">&amp;&amp;</span> rand<span class="op">.</span><span class="fu">float32</span><span class="op">()</span> <span class="op">&gt;=</span> down_chance <span class="cf">do</span> <span class="cf">continue</span></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>            connected<span class="op">[</span>sets<span class="op">[</span>i<span class="op">]]</span> <span class="op">=</span> <span class="kw">true</span></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>            down<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> <span class="kw">true</span></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>            maze<span class="op">[</span><span class="dv">2</span><span class="op">*</span>i <span class="op">+</span> <span class="dv">1</span><span class="op">][</span>y <span class="op">+</span> <span class="dv">1</span><span class="op">]</span> <span class="op">=</span> <span class="op">.</span>PATH</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>        <span class="co">// rooms that connected down keep their set; every other room starts a new one</span></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i <span class="cf">in</span> <span class="dv">0</span><span class="op">..&lt;</span>W <span class="op">{</span></span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="op">!</span>down<span class="op">[</span>i<span class="op">]</span> <span class="op">{</span></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>                sets<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> next_id</span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>                next_id <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>            <span class="op">}</span></span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a><span class="fu">generate </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>maze<span class="op">:</span> <span class="op">^[</span>COLS<span class="op">][</span>ROWS<span class="op">]</span>Cell<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ellers</span><span class="op">(</span>maze<span class="op">,</span> <span class="fl">0.5</span><span class="op">,</span> <span class="fl">0.2</span><span class="op">)</span></span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Run it, press space a few times, and you’ll get a new maze each
+time.</p>
+<pre><code>odin run .</code></pre>
+
+			<nav class="series-pager" aria-label="Series navigation"><a class="prev" rel="prev" href="growing_forest.html"><span class="pager-label">Previous</span><span class="pager-title">Growing Forest Algorithm</span></a></nav>
+		</main>
+
+		<hr />
+		<footer><p>Creator of Worlds &amp; a Coffee Addict ;p</p></footer>
+	</body>
+</html>
