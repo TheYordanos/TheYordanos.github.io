@@ -5,8 +5,15 @@
 <link href="https://theyordanos.github.io/"/>
 <link rel="self" href="https://theyordanos.github.io/feed.xml"/>
 <id>https://theyordanos.github.io/</id>
-<updated>2026-11-20T00:00:00Z</updated>
+<updated>2026-11-21T00:00:00Z</updated>
 <author><name>Yordanos Z.</name></author>
+<entry>
+<title>Recursive Division Algorithm</title>
+<link href="https://theyordanos.github.io/articles/recursive_division.html"/>
+<id>https://theyordanos.github.io/articles/recursive_division.html</id>
+<updated>2026-11-21T00:00:00Z</updated>
+<summary>Starting with an open room and building walls, each with a single gap</summary>
+</entry>
 <entry>
 <title>Eller&#x27;s Algorithm</title>
 <link href="https://theyordanos.github.io/articles/ellers.html"/>
