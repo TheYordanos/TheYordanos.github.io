@@ -413,7 +413,7 @@ footer {
 }
 
 .product:hover,
-.product:focus-within { border-color: var(--meta); }
+.product:focus-within { border-color: var(--link); }
 
 .product-shot {
 	display: block;
@@ -600,7 +600,7 @@ footer {
 		flex-wrap: wrap;
 		align-items: baseline;
 		gap: 6px 22px;
-		margin-bottom: 28px;
+		margin-block: 18px 0px;
 		padding: 0 0 14px;
 		border-left: none;
 		border-bottom: 1px solid var(--border);
@@ -628,8 +628,7 @@ footer {
 		order: -1;
 		max-height: none;
 		overflow: visible;
-		margin-top: 0;
-		margin-bottom: 32px;
+		margin-block: 18px 4px;
 		padding: 0 0 20px;
 		border-left: none;
 		border-bottom: 1px solid var(--border);
