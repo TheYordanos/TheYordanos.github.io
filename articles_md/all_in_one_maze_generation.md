@@ -3,7 +3,7 @@ title: All-in-One Maze Generation
 description: Every maze generation algorithm from the series in one place, with its animation and pseudocode
 date: 2026-11-21
 series: Maze Generation
-part: 15
+part: 0
 source: https://codeberg.org/yordanos/mazes
 ---
 

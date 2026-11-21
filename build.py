@@ -118,15 +118,16 @@ def page_vars(slug, title, description, image=""):
     return args
 
 
-def series_html(name, parts, current):
+def series_html(name, parts, current, part_no):
     """Box listing every article of a series. parts: [(slug, title)] in order."""
     lis = []
     for slug, title in parts:
         t = html.escape(title)
+        v = f' value="{part_no[slug]}"'
         if slug == current:
-            lis.append(f'<li aria-current="page">{t}</li>')
+            lis.append(f'<li{v} aria-current="page">{t}</li>')
         else:
-            lis.append(f'<li><a href="{slug}.html">{t}</a></li>')
+            lis.append(f'<li{v}><a href="{slug}.html">{t}</a></li>')
     return (f'<nav class="series" aria-label="Series">'
             f'<p class="series-title">Series: {html.escape(name)}</p>'
             f'<ol>{"".join(lis)}</ol></nav>')
@@ -195,7 +196,7 @@ def build_entries(items, ordered, names, series_of):
     return entries
 
 
-def render_entries(entries, group_of=None):
+def render_entries(entries, part_no, group_of=None):
     """Returns <li> lines. group_of(date) gives the year heading, or None."""
     lines, last = [], None
     for kind, date, data in entries:
@@ -217,9 +218,9 @@ def render_entries(entries, group_of=None):
         lines.append(f'{ITEM_INDENT}\t\t<span class="series-name">{html.escape(name)}</span>'
                      f'<span class="series-count">{len(parts)} parts</span>')
         lines.append(f'{ITEM_INDENT}\t\t<ul class="parts">')
-        for n, (_, slug, title) in enumerate(parts, 1):
+        for _, slug, title in parts:
             lines.append(
-                f'{ITEM_INDENT}\t\t\t<li><span class="part-no">Part {n}</span>'
+                f'{ITEM_INDENT}\t\t\t<li><span class="part-no">Part {part_no[slug]}</span>'
                 f'<a href="articles/{slug}.html">{html.escape(title)}</a></li>'
             )
         lines.append(f'{ITEM_INDENT}\t\t</ul>')
@@ -360,7 +361,7 @@ def main():
         pending.append((src, slug, skey, extra))
 
     # order each series by "part:" if every part has one, otherwise by date
-    ordered, badges = {}, {}
+    ordered, part_no = {}, {}
     series_of, part_pos = {}, {}
     for skey, rows in members.items():
         if len(rows) < 2:
@@ -369,7 +370,7 @@ def main():
         rows = sorted(rows, key=lambda r: (int(r[0]) if by_part else 0, r[1], r[2]))
         ordered[skey] = [(r[2], r[3]) for r in rows]
         for n, (part_slug, _) in enumerate(ordered[skey], 1):
-            badges[part_slug] = f"Part {n}/{len(rows)}"
+            part_no[part_slug] = int(rows[n - 1][0]) if by_part else n
             series_of[part_slug] = skey
             part_pos[part_slug] = n
 
@@ -378,7 +379,7 @@ def main():
         if skey in ordered:
             # this page lists its siblings, so it must rebuild when they change
             parts = ordered[skey]
-            extra = extra + ["-V", "series_nav=" + series_html(names[skey], parts, slug),
+            extra = extra + ["-V", "series_nav=" + series_html(names[skey], parts, slug, part_no),
                              "-V", "series_pager=" + series_pager(parts, slug)]
             dep = max(dep, newest[skey])
         jobs.append((src, OUT_DIR / f"{slug}.html", force, dep, extra))
@@ -416,11 +417,11 @@ def main():
 
     entries = build_entries(items, ordered, names, series_of)
 
-    splice(INDEX, render_entries(entries[:INDEX_LIMIT]))
+    splice(INDEX, render_entries(entries[:INDEX_LIMIT], part_no))
 
     if ARCHIVE.exists():
         year_of = lambda d: d[:4] if d[:4] != "0000" else None
-        splice(ARCHIVE, render_entries(entries, year_of))
+        splice(ARCHIVE, render_entries(entries, part_no, year_of))
         archive_note = "archive.html updated"
     else:
         archive_note = "archive.html not found, skipped"
