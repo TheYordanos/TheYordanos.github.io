@@ -113,6 +113,7 @@ main > header .source a:hover {
 /* SERIES (front matter: series: Name) */
 main .series {
 	padding: 16px 20px;
+	margin-bottom: 40px;
 	border: 1px solid var(--border);
 	border-radius: 6px;
 	font-size: 15px;
@@ -186,6 +187,7 @@ main .series-pager .pager-title {
 /* TABLE OF CONTENTS (front matter: toc: true) */
 main #TOC {
 	padding: 16px 20px;
+	margin-bottom: 40px;
 	border: 1px solid var(--border);
 	border-radius: 6px;
 	font-size: 15px;
