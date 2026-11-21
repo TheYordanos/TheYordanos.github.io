@@ -8,6 +8,13 @@
 <updated>2026-11-21T00:00:00Z</updated>
 <author><name>Yordanos Z.</name></author>
 <entry>
+<title>Sidewinder Algorithm</title>
+<link href="https://theyordanos.github.io/articles/sidewinder.html"/>
+<id>https://theyordanos.github.io/articles/sidewinder.html</id>
+<updated>2026-11-21T00:00:00Z</updated>
+<summary>Carving a perfect maze with runs of rooms, each opening once toward the bottom corridor</summary>
+</entry>
+<entry>
 <title>Binary Tree Algorithm</title>
 <link href="https://theyordanos.github.io/articles/binary_tree_maze.html"/>
 <id>https://theyordanos.github.io/articles/binary_tree_maze.html</id>

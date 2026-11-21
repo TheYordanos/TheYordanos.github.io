@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="Carving a perfect maze with runs of
+rooms, each opening once toward the bottom corridor">
+
+		<title>Sidewinder Algorithm</title>
+
+		<meta property="og:type" content="article">
+		<meta property="og:site_name" content="Yordanos">
+		<meta property="og:title" content="Sidewinder Algorithm">
+		<meta property="og:description" content="Carving a perfect maze with runs of rooms, each opening once toward the bottom corridor">
+		<meta property="og:url" content="https://theyordanos.github.io/articles/sidewinder.html">
+		<meta property="og:image" content="https://theyordanos.github.io/res/articles/maze_generation/sidewinder.gif">
+		<meta name="twitter:card" content="summary_large_image">
+		<link rel="canonical" href="https://theyordanos.github.io/articles/sidewinder.html">
+
+		<link rel="alternate" type="application/atom+xml" title="Yordanos" href="https://theyordanos.github.io/feed.xml">
+
+		<link rel="icon" type="image/png" href="../res/theyordanos-icon.png">
+		<script>
+		try {
+			if (localStorage.getItem("ty_theme") === "dark") document.documentElement.classList.add("dark");
+		} catch (e) {}
+		</script>
+		<link rel="stylesheet" href="../styles/style.css">
+		<link rel="stylesheet" href="../styles/article.css">
+
+		<script src="../scripts/theme.js" defer></script>
+		<script src="../scripts/copy.js" defer></script>
+	</head>
+	<body>
+		<div class="layout">
+		<main>
+			<header>
+				<h1>Sidewinder Algorithm</h1>
+				<p class="description">Carving a perfect maze with runs of rooms, each
+opening once toward the bottom corridor</p>
+				<p class="meta"><time datetime="2026-11-21">2026-11-21</time></p>
+				<p class="source"><span class="source-label">Source</span><a href="https://codeberg.org/yordanos/mazes" rel="noopener">codeberg.org/yordanos/mazes</a></p>
+			</header>
+
+			<nav class="series" aria-label="Series"><p class="series-title">Series: Maze Generation</p><ol><li><a href="maze_generation.html">Maze Generation Algorithms Introduction</a></li><li><a href="recursive_backtracker.html">Recursive Backtracker</a></li><li><a href="kruskals.html">Kruskal&#x27;s Algorithm</a></li><li><a href="prims.html">Prim&#x27;s Algorithm</a></li><li><a href="aldous_broder.html">Aldous-Broder Algorithm</a></li><li><a href="wilsons.html">Wilson&#x27;s Algorithm</a></li><li><a href="hunt_and_kill.html">Hunt and Kill Algorithm</a></li><li><a href="growing_tree.html">Growing Tree Algorithm</a></li><li><a href="growing_forest.html">Growing Forest Algorithm</a></li><li><a href="ellers.html">Eller&#x27;s Algorithm</a></li><li><a href="recursive_division.html">Recursive Division Algorithm</a></li><li><a href="binary_tree_maze.html">Binary Tree Algorithm</a></li><li aria-current="page">Sidewinder Algorithm</li></ol></nav>
+
+			
+			<h2 id="sidewinder-algorithm">Sidewinder Algorithm <a
+href="#sidewinder-algorithm" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<p>Sidewinder is Binary Tree with runs. Go through the maze row by row,
+and in each row build a <strong>run</strong>: a stretch of rooms joined
+sideways. For each room, either extend the run by knocking down the wall
+to the east, or close it. To close a run, pick one random room in it and
+open the wall below that room, then start a new run. A room at the right
+edge always closes its run.</p>
+<p>The last row has nothing below it, so it never closes. It just carves
+east all the way and becomes one long corridor.
+<label for="sn-1" class="sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"><span class="sidenote">The
+usual description runs the other way, with the top row as the corridor
+and doors opening north. It’s the same maze, mirrored. We use south to
+match Binary Tree.</span></p>
+<p>Every run opens downward in exactly one place, and the bottom row is
+one connected corridor. So each row hangs off the row below it by single
+connections, which makes a tree and keeps the maze perfect. The chance
+of closing a run controls how long the horizontal stretches are.</p>
+<figure>
+<img src="../res/articles/maze_generation/sidewinder.gif"
+alt="Sidewinder Algorithm" />
+<figcaption aria-hidden="true">Sidewinder Algorithm</figcaption>
+</figure>
+<h3 id="pseudocode">Pseudocode <a href="#pseudocode" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
+<pre><code>for each row of rooms:
+    run = []
+    for each room in the row, left to right:
+        add room to run
+        at_end = room is in the last column
+        if this is the last row:
+            knock out the wall to the east, unless at_end
+        else if at_end or a coin flip (close_chance) says so:
+            pick a random room in run; knock out the wall below it
+            run = []
+        else:
+            knock out the wall to the east</code></pre>
+<h3 id="solution">Solution <a href="#solution" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sidewinder </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>maze<span class="op">:</span> <span class="op">^[</span>COLS<span class="op">][</span>ROWS<span class="op">]</span>Cell<span class="op">,</span> close_chance<span class="op">:</span> <span class="dt">f32</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> y<span class="op">:</span> <span class="dt">i32</span> <span class="op">=</span> <span class="dv">1</span><span class="op">;</span> y <span class="op">&lt;</span> ROWS <span class="op">-</span> <span class="dv">1</span><span class="op">;</span> y <span class="op">+=</span> <span class="dv">2</span> <span class="op">{</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        <span class="va">run</span><span class="op">:</span> <span class="dt">i32</span> <span class="op">=</span> <span class="dv">1</span> <span class="co">// the first room of the current run</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> x<span class="op">:</span> <span class="dt">i32</span> <span class="op">=</span> <span class="dv">1</span><span class="op">;</span> x <span class="op">&lt;</span> COLS <span class="op">-</span> <span class="dv">1</span><span class="op">;</span> x <span class="op">+=</span> <span class="dv">2</span> <span class="op">{</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>            maze<span class="op">[</span>x<span class="op">][</span>y<span class="op">]</span> <span class="op">=</span> <span class="op">.</span>PATH</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>            <span class="va">at_end </span><span class="op">:=</span> x <span class="op">==</span> COLS <span class="op">-</span> <span class="dv">2</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> y <span class="op">==</span> ROWS <span class="op">-</span> <span class="dv">2</span> <span class="op">{</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>                <span class="co">// last row: one long corridor</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> <span class="op">!</span>at_end <span class="cf">do</span> maze<span class="op">[</span>x <span class="op">+</span> <span class="dv">1</span><span class="op">][</span>y<span class="op">]</span> <span class="op">=</span> <span class="op">.</span>PATH</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>            <span class="op">}</span> <span class="cf">else</span> <span class="cf">if</span> at_end <span class="op">||</span> rand<span class="op">.</span><span class="fu">float32</span><span class="op">()</span> <span class="op">&lt;</span> close_chance <span class="op">{</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>                <span class="co">// close the run: open a door below a random room in it</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>                <span class="va">count </span><span class="op">:=</span><span class="fu"> </span><span class="op">(</span>x <span class="op">-</span> run<span class="op">)</span> <span class="op">/</span> <span class="dv">2</span> <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>                <span class="va">door </span><span class="op">:=</span> run <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> rand<span class="op">.</span><span class="fu">int31_max</span><span class="op">(</span>count<span class="op">)</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>                maze<span class="op">[</span>door<span class="op">][</span>y <span class="op">+</span> <span class="dv">1</span><span class="op">]</span> <span class="op">=</span> <span class="op">.</span>PATH</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>                run <span class="op">=</span> x <span class="op">+</span> <span class="dv">2</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>            <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>                maze<span class="op">[</span>x <span class="op">+</span> <span class="dv">1</span><span class="op">][</span>y<span class="op">]</span> <span class="op">=</span> <span class="op">.</span>PATH</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>            <span class="op">}</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="fu">generate </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>maze<span class="op">:</span> <span class="op">^[</span>COLS<span class="op">][</span>ROWS<span class="op">]</span>Cell<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sidewinder</span><span class="op">(</span>maze<span class="op">,</span> <span class="fl">0.5</span><span class="op">)</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Run it, press space a few times.</p>
+<pre><code>odin run .</code></pre>
+
+			<nav class="series-pager" aria-label="Series navigation"><a class="prev" rel="prev" href="binary_tree_maze.html"><span class="pager-label">Previous</span><span class="pager-title">Binary Tree Algorithm</span></a></nav>
+		</main>
+
+		<aside class="sidebar compact">
+			<a class="brand" href="../index.html"><span class="brand-name">Yordanos Z.</span></a>
+			<nav class="side-group" aria-label="Site">
+				<a href="../index.html">Home</a>
+				<a href="../index.html#articles">Articles</a>
+				<a href="../archive.html">Archive</a>
+			</nav>
+			<div class="side-tools">
+				<a href="../feed.xml">RSS</a>
+				<button id="theme-toggle">[dark]</button>
+			</div>
+		</aside>
+		</div>
+
+		<hr />
+		<footer><p>Creator of Worlds &amp; a Coffee Addict ;p</p></footer>
+	</body>
+</html>
