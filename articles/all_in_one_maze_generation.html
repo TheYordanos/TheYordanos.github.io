@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="Every maze generation algorithm from
+the series in one place, with its animation and pseudocode">
+
+		<title>All-in-One Maze Generation</title>
+
+		<meta property="og:type" content="article">
+		<meta property="og:site_name" content="Yordanos">
+		<meta property="og:title" content="All-in-One Maze Generation">
+		<meta property="og:description" content="Every maze generation algorithm from the series in one place, with its animation and pseudocode">
+		<meta property="og:url" content="https://theyordanos.github.io/articles/all_in_one_maze_generation.html">
+		<meta property="og:image" content="https://theyordanos.github.io/res/articles/maze_generation/recursive_backtracker.gif">
+		<meta name="twitter:card" content="summary_large_image">
+		<link rel="canonical" href="https://theyordanos.github.io/articles/all_in_one_maze_generation.html">
+
+		<link rel="alternate" type="application/atom+xml" title="Yordanos" href="https://theyordanos.github.io/feed.xml">
+
+		<link rel="icon" type="image/png" href="../res/theyordanos-icon.png">
+		<script>
+		try {
+			if (localStorage.getItem("ty_theme") === "dark") document.documentElement.classList.add("dark");
+		} catch (e) {}
+		</script>
+		<link rel="stylesheet" href="../styles/style.css">
+		<link rel="stylesheet" href="../styles/article.css">
+
+		<script src="../scripts/theme.js" defer></script>
+		<script src="../scripts/copy.js" defer></script>
+	</head>
+	<body>
+		<div class="layout">
+		<main>
+			<header>
+				<h1>All-in-One Maze Generation</h1>
+				<p class="description">Every maze generation algorithm from the series
+in one place, with its animation and pseudocode</p>
+				<p class="meta"><time datetime="2026-11-21">2026-11-21</time></p>
+				<p class="source"><span class="source-label">Source</span><a href="https://codeberg.org/yordanos/mazes" rel="noopener">codeberg.org/yordanos/mazes</a></p>
+			</header>
+
+			<nav class="series" aria-label="Series"><p class="series-title">Series: Maze Generation</p><ol><li><a href="maze_generation.html">Maze Generation Algorithms Introduction</a></li><li><a href="recursive_backtracker.html">Recursive Backtracker</a></li><li><a href="kruskals.html">Kruskal&#x27;s Algorithm</a></li><li><a href="prims.html">Prim&#x27;s Algorithm</a></li><li><a href="aldous_broder.html">Aldous-Broder Algorithm</a></li><li><a href="wilsons.html">Wilson&#x27;s Algorithm</a></li><li><a href="hunt_and_kill.html">Hunt and Kill Algorithm</a></li><li><a href="growing_tree.html">Growing Tree Algorithm</a></li><li><a href="growing_forest.html">Growing Forest Algorithm</a></li><li><a href="ellers.html">Eller&#x27;s Algorithm</a></li><li><a href="recursive_division.html">Recursive Division Algorithm</a></li><li><a href="binary_tree_maze.html">Binary Tree Algorithm</a></li><li><a href="sidewinder.html">Sidewinder Algorithm</a></li><li aria-current="page">All-in-One Maze Generation</li></ol></nav>
+
+			
+			<h2 id="recursive-backtracker">Recursive Backtracker <a
+href="#recursive-backtracker" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<figure>
+<img src="../res/articles/maze_generation/recursive_backtracker.gif"
+alt="Recursive Backtracker" />
+<figcaption aria-hidden="true">Recursive Backtracker</figcaption>
+</figure>
+<pre><code>carve(room):
+    mark room as PATH
+    for each direction, in random order:
+        neighbour = room + 2 * direction
+        if neighbour is in bounds and still a WALL:
+            knock out the wall between room and neighbour
+            carve(neighbour)
+
+start: carve(a random room)</code></pre>
+<h2 id="kruskals-algorithm">Kruskal’s Algorithm <a
+href="#kruskals-algorithm" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<figure>
+<img src="../res/articles/maze_generation/kruskals.gif"
+alt="Kruskal’s Algorithm" />
+<figcaption aria-hidden="true">Kruskal’s Algorithm</figcaption>
+</figure>
+<pre><code>for each room: parent[room] = room
+walls = every wall between two rooms
+shuffle(walls)
+
+for each wall in walls:
+    a, b = the two rooms on either side of wall
+    if find(a) != find(b):
+        knock out the wall
+        join(a, b)</code></pre>
+<h2 id="prims-algorithm">Prim’s Algorithm <a href="#prims-algorithm"
+class="anchor" aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<figure>
+<img src="../res/articles/maze_generation/prims.gif"
+alt="Prim’s Algorithm" />
+<figcaption aria-hidden="true">Prim’s Algorithm</figcaption>
+</figure>
+<pre><code>carve(start room); add_walls(start room)
+
+while frontier is not empty:
+    wall = remove a random wall from frontier
+    a, b = the two rooms on either side of wall
+    if exactly one of them is not in the maze yet:
+        knock out the wall
+        open that room
+        add_walls(that room)
+
+add_walls(room):
+    for each direction:
+        wall = room + direction
+        far  = room + 2 * direction
+        if far is in bounds and not in the maze:
+            add wall to frontier</code></pre>
+<h2 id="aldous-broder-algorithm">Aldous-Broder Algorithm <a
+href="#aldous-broder-algorithm" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<figure>
+<img src="../res/articles/maze_generation/aldous_broder.gif"
+alt="Aldous-Broder Algorithm" />
+<figcaption aria-hidden="true">Aldous-Broder Algorithm</figcaption>
+</figure>
+<pre><code>room = a random room; mark it visited
+remaining = total rooms - 1
+
+while remaining &gt; 0:
+    next = room + 2 * (a random direction)
+    if next is out of bounds: try again
+    if next is not visited:
+        knock out the wall between room and next
+        mark next visited
+        remaining -= 1
+    room = next</code></pre>
+<h2 id="wilsons-algorithm">Wilson’s Algorithm <a
+href="#wilsons-algorithm" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<figure>
+<img src="../res/articles/maze_generation/wilsons.gif"
+alt="Wilson’s Algorithm" />
+<figcaption aria-hidden="true">Wilson’s Algorithm</figcaption>
+</figure>
+<pre><code>carve a random room; remaining = total rooms - 1
+
+while remaining &gt; 0:
+    start = a random room not in the maze
+    room = start
+    while room is not in the maze:
+        dir = a random direction
+        next = room + 2 * dir
+        if next is out of bounds: try again
+        remember: walk[room] = dir
+        room = next
+
+    room = start
+    while room is not in the maze:
+        carve room and the wall in direction walk[room]
+        room = room + 2 * walk[room]
+        remaining -= 1</code></pre>
+<h2 id="hunt-and-kill-algorithm">Hunt and Kill Algorithm <a
+href="#hunt-and-kill-algorithm" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<figure>
+<img src="../res/articles/maze_generation/hunt_and_kill.gif"
+alt="Hunt and Kill Algorithm" />
+<figcaption aria-hidden="true">Hunt and Kill Algorithm</figcaption>
+</figure>
+<pre><code>room = a random room; mark it visited
+
+loop:
+    while room has an unvisited neighbour:
+        next = a random unvisited neighbour
+        knock out the wall between room and next
+        mark next visited
+        room = next
+
+    found = false
+    for each room r in the grid, row by row:
+        if r is not visited and has a visited neighbour:
+            n = a random visited neighbour of r
+            knock out the wall between r and n
+            mark r visited
+            room = r
+            found = true
+            stop scanning
+
+    if not found: done</code></pre>
+<h2 id="growing-tree-algorithm">Growing Tree Algorithm <a
+href="#growing-tree-algorithm" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<figure>
+<img src="../res/articles/maze_generation/growing_tree.gif"
+alt="Growing Tree Algorithm" />
+<figcaption aria-hidden="true">Growing Tree Algorithm</figcaption>
+</figure>
+<pre><code>active = [a random room]; mark it visited
+
+while active is not empty:
+    room = pick one from active
+    if room has an unvisited neighbour:
+        next = a random unvisited neighbour
+        knock out the wall between room and next
+        mark next visited
+        add next to active
+    else:
+        remove room from active</code></pre>
+<h2 id="growing-forest-algorithm">Growing Forest Algorithm <a
+href="#growing-forest-algorithm" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<figure>
+<img src="../res/articles/maze_generation/growing_forest.gif"
+alt="Growing Forest Algorithm" />
+<figcaption aria-hidden="true">Growing Forest Algorithm</figcaption>
+</figure>
+<pre><code>every room is its own set; all rooms uncarved
+start N trees: carve a random room, add to active
+
+while active is not empty:
+    maybe start a new tree (with some chance)
+    room = pick one from active
+    if room has no uncarved neighbour:
+        remove room from active
+        continue
+    next = room + 2 * (a random direction in bounds)
+    if next is uncarved:
+        knock out the wall, carve next, join sets, add next to active
+    else if find(room) != find(next):
+        knock out the wall, join sets
+
+merge what&#39;s left: Kruskal&#39;s pass over every wall</code></pre>
+<h2 id="ellers-algorithm">Eller’s Algorithm <a href="#ellers-algorithm"
+class="anchor" aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<figure>
+<img src="../res/articles/maze_generation/ellers.gif"
+alt="Eller’s Algorithm" />
+<figcaption aria-hidden="true">Eller’s Algorithm</figcaption>
+</figure>
+<pre><code>row 0: every room gets a new set id
+
+for each row of rooms:
+    for each pair of neighbouring rooms in this row:
+        if their sets differ and (this is the last row or a coin flip says so):
+            knock out the wall between them; merge the two sets
+
+    if this is the last row: done
+
+    for each set in this row:
+        pick at least one room in it; knock out the wall below each pick
+        those rooms in the next row carry the set id
+
+    every other room in the next row gets a new set id</code></pre>
+<h2 id="recursive-division-algorithm">Recursive Division Algorithm <a
+href="#recursive-division-algorithm" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<figure>
+<img src="../res/articles/maze_generation/recursive_division.gif"
+alt="Recursive Division Algorithm" />
+<figcaption aria-hidden="true">Recursive Division Algorithm</figcaption>
+</figure>
+<pre><code>divide(chamber):
+    if the chamber is a single room: return
+    choose a direction: split across the longer side (random if it&#39;s square)
+    wall = a random position strictly inside the chamber, running the full length
+    gap = a random position along that wall
+    build the wall everywhere except the gap
+    divide(first half)
+    divide(second half)
+
+start: open everything inside the border; divide(the whole grid)</code></pre>
+<h2 id="binary-tree-algorithm">Binary Tree Algorithm <a
+href="#binary-tree-algorithm" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<figure>
+<img src="../res/articles/maze_generation/binary_tree.gif"
+alt="Binary Tree Algorithm" />
+<figcaption aria-hidden="true">Binary Tree Algorithm</figcaption>
+</figure>
+<pre><code>for each room:
+    options = the directions south and east where the room beyond is in bounds
+    if options is not empty:
+        knock out the wall in a random one of them</code></pre>
+<h2 id="sidewinder-algorithm">Sidewinder Algorithm <a
+href="#sidewinder-algorithm" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<figure>
+<img src="../res/articles/maze_generation/sidewinder.gif"
+alt="Sidewinder Algorithm" />
+<figcaption aria-hidden="true">Sidewinder Algorithm</figcaption>
+</figure>
+<pre><code>for each row of rooms:
+    run = []
+    for each room in the row, left to right:
+        add room to run
+        at_end = room is in the last column
+        if this is the last row:
+            knock out the wall to the east, unless at_end
+        else if at_end or a coin flip (close_chance) says so:
+            pick a random room in run; knock out the wall below it
+            run = []
+        else:
+            knock out the wall to the east</code></pre>
+
+			<nav class="series-pager" aria-label="Series navigation"><a class="prev" rel="prev" href="sidewinder.html"><span class="pager-label">Previous</span><span class="pager-title">Sidewinder Algorithm</span></a></nav>
+		</main>
+
+		<aside class="sidebar compact">
+			<a class="brand" href="../index.html"><span class="brand-name">Yordanos Z.</span></a>
+			<nav class="side-group" aria-label="Site">
+				<a href="../index.html">Home</a>
+				<a href="../index.html#articles">Articles</a>
+				<a href="../archive.html">Archive</a>
+			</nav>
+			<div class="side-tools">
+				<a href="../feed.xml">RSS</a>
+				<button id="theme-toggle">[dark]</button>
+			</div>
+		</aside>
+		</div>
+
+		<hr />
+		<footer><p>Creator of Worlds &amp; a Coffee Addict ;p</p></footer>
+	</body>
+</html>
