@@ -34,22 +34,14 @@
 	</head>
 	<body class="docs-page">
 		<div class="layout docs">
-		<!-- left sidebar: project pages and the table of contents -->
 		<aside class="docs-nav">
 			<input type="checkbox" id="docs-toggle" class="docs-toggle" aria-label="Show contents">
 
 			<div class="docs-head">
-				<a class="brand" href="../index.html"><span class="brand-name">Yordanos Z.</span></a>
 				<label class="docs-menu-btn" for="docs-toggle" aria-hidden="true">Contents &#9776;</label>
 			</div>
 
 			<div class="docs-body">
-				<div class="docs-tools">
-					<a href="../index.html#docs">All Docs</a>
-					<a href="../archive.html">Archive</a>
-					<button id="theme-toggle">[dark]</button>
-				</div>
-
 				$if(docs_nav)$$docs_nav$$endif$
 
 				$if(toc)$
@@ -73,6 +65,18 @@
 
 			$if(docs_pager)$$docs_pager$$endif$
 		</main>
+
+		<aside class="sidebar compact">
+			<a class="brand" href="../index.html"><span class="brand-name">Yordanos Z.</span></a>
+			<nav class="side-group" aria-label="Site">
+				<a href="../index.html#products">Products</a>
+				<a href="../archive.html">Archive</a>
+			</nav>
+			<div class="side-tools">
+				<a href="../feed.xml">RSS</a>
+				<button id="theme-toggle">[dark]</button>
+			</div>
+		</aside>
 		</div>
 
 		<hr />

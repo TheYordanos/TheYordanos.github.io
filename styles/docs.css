@@ -1,20 +1,28 @@
 /* DOCS PAGES ========================= */
 
+/* WIDTHS ========================= */
+body.docs-page { max-width: 1204px; }
+
+body.docs-page:has(.sidenote) { max-width: 1434px; }
+
 .layout.docs {
-	grid-template-columns: 240px minmax(0, 1fr);
-	column-gap: 40px;
+	grid-template-columns: 220px minmax(0, 1fr) var(--side-w);
+	column-gap: var(--side-gap);
 }
 
 body.docs-page main { max-width: 740px; }
 
-/* LEFT SIDEBAR */
+/* LEFT SIDEBAR ========================= */
 .docs-nav {
 	position: sticky;
-	top: 48px;
+	top: 24px;
 	box-sizing: border-box;
+	z-index: 5;
 	max-height: calc(100vh - 48px);
 	overflow-y: auto;
-	padding-right: 20px;
+	margin-top: -12px;
+	padding: 12px 24px 12px 0;
+	background: var(--bg);
 	border-right: 1px solid var(--border);
 	font-size: 14px;
 	line-height: 1.55;
@@ -28,21 +36,13 @@ body.docs-page main { max-width: 740px; }
 .docs-nav a:visited { color: var(--text); }
 .docs-nav a:hover { color: var(--link); }
 
-/* the menu toggle is only used in the narrow layout */
 .docs-toggle {
 	position: absolute;
 	opacity: 0;
 	pointer-events: none;
 }
 
-.docs-menu-btn { display: none; }
-
-.docs-tools {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 2px 16px;
-	margin-bottom: 22px;
-}
+.docs-head { display: none; }
 
 .docs-nav .side-label,
 .docs-nav .toc-title {
@@ -54,7 +54,6 @@ body.docs-page main { max-width: 740px; }
 	text-transform: uppercase;
 }
 
-/* pages of the project */
 .docs-pages { margin-bottom: 24px; }
 
 .docs-pages ul {
@@ -72,7 +71,6 @@ body.docs-page main { max-width: 740px; }
 
 .docs-pages a[aria-current] { font-weight: 700; }
 
-/* table of contents: "On this page" */
 .docs-nav #TOC ul {
 	margin: 0;
 	padding: 0;
@@ -101,41 +99,80 @@ body.docs-page main { max-width: 740px; }
 
 .docs-nav #TOC .anchor-mark { display: none; }
 
-/* DOC HEADER */
+/* DOC HEADER ========================= */
 .doc-meta span + span::before {
 	content: "\00b7";
 	margin: 0 0.5em;
 }
 
-/* Sidenotes: the left sidebar leaves no margin for them, so on docs they are
-   always tap-to-open. */
-.docs-page main:has(.sidenote) {
-	padding-right: 0;
-	overflow-x: visible;
+/* SIDENOTES ========================= */
+@container (min-width: 1260px) {
+	.docs-page main:has(.sidenote) {
+		box-sizing: border-box;
+		max-width: 970px;
+	}
 }
 
-.docs-page .sidenote {
-	display: none;
-	float: none;
-	clear: none;
-	width: auto;
-	margin: 0;
+@container (max-width: 1259px) {
+	.docs-page main:has(.sidenote) {
+		padding-right: 0;
+		overflow-x: visible;
+	}
+
+	.docs-page .sidenote {
+		display: none;
+		float: none;
+		clear: none;
+		width: auto;
+		margin: 0;
+	}
+
+	.docs-page .sidenote-number { cursor: pointer; }
+
+	.docs-page .margin-toggle:checked + .sidenote {
+		display: block;
+		margin: 4px 0 18px;
+		padding-left: 12px;
+		border-left: 2px solid var(--border);
+	}
 }
 
-.docs-page .sidenote-number { cursor: pointer; }
-
-.docs-page .margin-toggle:checked + .sidenote {
-	display: block;
-	margin: 4px 0 18px;
-	padding-left: 12px;
-	border-left: 2px solid var(--border);
-}
-
-/* NARROW: the sidebar becomes a drawer above the doc */
-@container (max-width: 799px) {
+/* NARROW: one column ========================= */
+@container (max-width: 979px) {
 	.layout.docs { grid-template-columns: minmax(0, 1fr); }
 
 	.layout.docs > main { margin-top: 28px; }
+
+	.layout.docs > .sidebar.compact {
+		order: -1;
+		position: static;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		gap: 6px 22px;
+		max-height: none;
+		overflow: visible;
+		margin: 0;
+		padding: 14px 0 6px;
+		text-align: left;
+		border-left: none;
+		border-bottom: none;
+	}
+
+	.layout.docs > .sidebar.compact .brand { margin: 0; }
+
+	.layout.docs > .sidebar.compact .side-group {
+		flex-direction: row;
+		flex-wrap: wrap;
+		align-items: normal;
+		gap: 0 16px;
+		margin: 0;
+	}
+
+	.layout.docs > .sidebar.compact .side-tools {
+		margin-left: auto;
+		justify-content: flex-start;
+	}
 
 	.docs-nav {
 		position: sticky;
@@ -143,24 +180,17 @@ body.docs-page main { max-width: 740px; }
 		z-index: 20;
 		max-height: none;
 		overflow: visible;
-		margin: -8px 0 0;
-		padding: 12px 0;
+		margin: 0;
+		padding: 8px 0 10px;
 		background: var(--bg);
 		border-right: none;
 		border-bottom: 1px solid var(--border);
 	}
 
-	.docs-head {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 12px;
-	}
-
-	.docs-nav .brand { margin: 0; }
+	.docs-head { display: block; }
 
 	.docs-menu-btn {
-		display: block;
+		display: inline-block;
 		padding: 6px 12px;
 		border: 1px solid var(--border);
 		border-radius: 6px;
@@ -187,10 +217,15 @@ body.docs-page main { max-width: 740px; }
 
 	.docs-toggle:checked ~ .docs-body {
 		display: block;
-		max-height: calc(100vh - 110px);
-		margin-top: 16px;
-		padding-top: 16px;
+		max-height: calc(100vh - 90px);
+		margin-top: 12px;
+		padding-top: 14px;
 		overflow-y: auto;
 		border-top: 1px solid var(--border);
 	}
+}
+
+@media (max-width: 768px) {
+	body.docs-page,
+	body.docs-page:has(.sidenote) { max-width: 90%; }
 }

@@ -381,31 +381,6 @@ main hr {
 	margin: 40px 0;
 }
 
-/* FOOTNOTES */
-main a.footnote-ref,
-main a.footnote-back {
-	text-decoration: none;
-}
-
-main .footnotes {
-	margin-top: 48px;
-	font-size: 14px;
-	color: var(--meta);
-}
-
-main .footnotes hr {
-	margin: 0 0 20px;
-}
-
-main .footnotes ol {
-	margin: 0;
-	padding-left: 22px;
-}
-
-main .footnotes p {
-	margin: 0 0 8px;
-}
-
 /* SIDENOTES */
 main {
 	counter-reset: sidenote;
