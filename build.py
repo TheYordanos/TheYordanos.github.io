@@ -55,7 +55,8 @@ SITE_AUTHOR = "Yordanos Z."
 INDEX_LIMIT = 50
 FEED_LIMIT = 50
 
-OG_IMAGE = "res/article_og.png"
+ARTICLE_OG_IMAGE = "res/article_og.png"
+DOCS_OG_IMAGE = "res/docs_og.png"
 NOT_PREVIEW = (".mp4", ".webm", ".mov", ".mp3", ".ogg", ".wav", ".m4a", ".svg")
 
 PANDOC_EXTRA = [
@@ -211,13 +212,13 @@ def first_image(text):
 
 # --- Pandoc arguments and small HTML pieces -------------------------------
 
-def preview_args(folder, slug, title, description, image=""):
+def preview_args(folder, slug, title, description, image="", fallback=ARTICLE_OG_IMAGE):
     page_url = f"{SITE_URL}/{folder}/{slug}.html"
     values = {
         "og_title": title,
         "og_description": description,
         "og_url": page_url,
-        "og_image": urljoin(page_url, image) if image else f"{SITE_URL}/{OG_IMAGE}",
+        "og_image": urljoin(page_url, image) if image else f"{SITE_URL}/{fallback}",
         "og_site": SITE_TITLE,
     }
     args = []
@@ -234,9 +235,9 @@ def source_html(url):
             f'{html.escape(shown)}</a></p>')
 
 
-def page_args(folder, slug, title, description, meta, markdown):
+def page_args(folder, slug, title, description, meta, markdown, fallback=ARTICLE_OG_IMAGE):
     image = meta.get("image") or first_image(markdown)
-    args = preview_args(folder, slug, title, description, image)
+    args = preview_args(folder, slug, title, description, image, fallback)
     source = meta.get("source", "").strip()
     if source:
         if not re.match(r"https?://", source):
@@ -472,7 +473,7 @@ def build_docs(projects, force):
         stale_after = max(shared_mtime, project.newest)
         for d in project.pages:
             args = page_args("docs", d.slug, d.title, d.description, d.meta,
-                             d.src.read_text(encoding="utf-8-sig"))
+                             d.src.read_text(encoding="utf-8-sig"), DOCS_OG_IMAGE)
             if d.meta.get("toc", "true").lower() not in ("false", "no", "0"):
                 args += ["--toc", "--toc-depth=3"]
             args += ["-V", "docs_nav=" + docs_nav_html(project, d)]
