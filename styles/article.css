@@ -110,6 +110,10 @@ main > header .source a:hover {
 	text-decoration: none;
 }
 
+main :is(h1, h2, h3, h4)[id] {
+	scroll-margin-top: 16px;
+}
+
 /* SERIES (front matter: series: Name) */
 main .series {
 	padding: 16px 20px;
@@ -642,6 +646,8 @@ main dd {
 	main h2 {
 		font-size: 23px;
 	}
+
+	main :is(h1, h2, h3, h4)[id] { scroll-margin-top: 72px; }
 }
 
 @media (max-width: 520px) {
