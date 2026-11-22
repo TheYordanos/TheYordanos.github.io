@@ -548,6 +548,58 @@ footer {
 	.product.featured .product-desc { font-size: 16px; }
 }
 
+/* DOCS SECTION (index and archive) ========================= */
+.doc-projects {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+	gap: 20px 28px;
+	margin: 25px 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+.doc-project { break-inside: avoid; }
+
+.doc-project-name,
+.doc-project-name:visited {
+	color: var(--text);
+	font-weight: 700;
+	overflow-wrap: anywhere;
+}
+
+.doc-project-name:hover { color: var(--link); }
+
+.doc-count {
+	margin-left: 0.6rem;
+	color: var(--meta);
+	font-size: 13px;
+}
+
+.doc-pages {
+	margin: 0.15rem 0 0;
+	padding: 0 0 0 0.9rem;
+	border-left: 2px solid var(--border);
+	list-style: none;
+}
+
+.doc-pages li {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 1rem;
+}
+
+.doc-pages a { overflow-wrap: anywhere; }
+
+.doc-pages time {
+	flex: none;
+	color: var(--meta);
+	font-size: 13px;
+	font-variant-numeric: tabular-nums;
+}
+
+.doc-empty { color: var(--meta); }
+
 /* BOOKS SECTION ========================= */
 .books-grid {
 	display: grid;
@@ -592,17 +644,19 @@ footer {
 
 	.sidebar.compact {
 		text-align: left;
-		position: static;
+		position: sticky;
+		top: 0;
+		z-index: 20;
 		order: -1;
 		max-height: none;
 		overflow: visible;
-		margin-top: 0;
 		display: flex;
 		flex-wrap: wrap;
 		align-items: baseline;
 		gap: 6px 22px;
-		margin-block: 18px 0px;
-		padding: 0 0 14px;
+		margin-block: -8px 0px;
+		padding: 12px 0;
+		background: var(--bg);
 		border-left: none;
 		border-bottom: 1px solid var(--border);
 	}

@@ -1,0 +1,196 @@
+/* DOCS PAGES ========================= */
+
+.layout.docs {
+	grid-template-columns: 240px minmax(0, 1fr);
+	column-gap: 40px;
+}
+
+body.docs-page main { max-width: 740px; }
+
+/* LEFT SIDEBAR */
+.docs-nav {
+	position: sticky;
+	top: 48px;
+	box-sizing: border-box;
+	max-height: calc(100vh - 48px);
+	overflow-y: auto;
+	padding-right: 20px;
+	border-right: 1px solid var(--border);
+	font-size: 14px;
+	line-height: 1.55;
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+}
+
+.docs-nav::-webkit-scrollbar { display: none; }
+
+.docs-nav a,
+.docs-nav a:visited { color: var(--text); }
+.docs-nav a:hover { color: var(--link); }
+
+/* the menu toggle is only used in the narrow layout */
+.docs-toggle {
+	position: absolute;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.docs-menu-btn { display: none; }
+
+.docs-tools {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 2px 16px;
+	margin-bottom: 22px;
+}
+
+.docs-nav .side-label,
+.docs-nav .toc-title {
+	margin: 0 0 4px;
+	color: var(--meta);
+	font-size: 12px;
+	font-weight: 400;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+}
+
+/* pages of the project */
+.docs-pages { margin-bottom: 24px; }
+
+.docs-pages ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.docs-pages li { margin: 0; }
+
+.docs-pages a {
+	display: block;
+	padding: 2px 0;
+}
+
+.docs-pages a[aria-current] { font-weight: 700; }
+
+/* table of contents: "On this page" */
+.docs-nav #TOC ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.docs-nav #TOC li { margin: 0; }
+
+.docs-nav #TOC a,
+.docs-nav #TOC a:visited {
+	display: block;
+	padding: 2px 0 2px 10px;
+	border-left: 2px solid var(--border);
+	color: var(--meta);
+}
+
+.docs-nav #TOC li li a { padding-left: 22px; }
+.docs-nav #TOC li li li a { padding-left: 34px; }
+
+.docs-nav #TOC a:hover { color: var(--link); }
+
+.docs-nav #TOC a.active {
+	border-left-color: var(--link);
+	color: var(--text);
+}
+
+.docs-nav #TOC .anchor-mark { display: none; }
+
+/* DOC HEADER */
+.doc-meta span + span::before {
+	content: "\00b7";
+	margin: 0 0.5em;
+}
+
+/* Sidenotes: the left sidebar leaves no margin for them, so on docs they are
+   always tap-to-open. */
+.docs-page main:has(.sidenote) {
+	padding-right: 0;
+	overflow-x: visible;
+}
+
+.docs-page .sidenote {
+	display: none;
+	float: none;
+	clear: none;
+	width: auto;
+	margin: 0;
+}
+
+.docs-page .sidenote-number { cursor: pointer; }
+
+.docs-page .margin-toggle:checked + .sidenote {
+	display: block;
+	margin: 4px 0 18px;
+	padding-left: 12px;
+	border-left: 2px solid var(--border);
+}
+
+/* NARROW: the sidebar becomes a drawer above the doc */
+@container (max-width: 799px) {
+	.layout.docs { grid-template-columns: minmax(0, 1fr); }
+
+	.layout.docs > main { margin-top: 28px; }
+
+	.docs-nav {
+		position: sticky;
+		top: 0;
+		z-index: 20;
+		max-height: none;
+		overflow: visible;
+		margin: -8px 0 0;
+		padding: 12px 0;
+		background: var(--bg);
+		border-right: none;
+		border-bottom: 1px solid var(--border);
+	}
+
+	.docs-head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+	}
+
+	.docs-nav .brand { margin: 0; }
+
+	.docs-menu-btn {
+		display: block;
+		padding: 6px 12px;
+		border: 1px solid var(--border);
+		border-radius: 6px;
+		color: var(--text);
+		font-size: 14px;
+		line-height: 1.2;
+		cursor: pointer;
+		user-select: none;
+	}
+
+	.docs-menu-btn:hover { border-color: var(--link); }
+
+	.docs-toggle:focus-visible ~ .docs-head .docs-menu-btn {
+		outline: 2px solid var(--link);
+		outline-offset: 2px;
+	}
+
+	.docs-toggle:checked ~ .docs-head .docs-menu-btn {
+		border-color: var(--link);
+		color: var(--link);
+	}
+
+	.docs-body { display: none; }
+
+	.docs-toggle:checked ~ .docs-body {
+		display: block;
+		max-height: calc(100vh - 110px);
+		margin-top: 16px;
+		padding-top: 16px;
+		overflow-y: auto;
+		border-top: 1px solid var(--border);
+	}
+}

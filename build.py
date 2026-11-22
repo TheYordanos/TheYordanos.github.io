@@ -16,8 +16,21 @@ Front matter per article:
                              first image in the article, then OG_IMAGE)
     ---
 
+Front matter per doc:
+    ---
+    title: Getting started
+    description: Short summary for the meta tag.
+    project: Mazes          (optional, groups docs; the pages of a project list each other)
+    order: 1                (optional, position inside the project; default is by title)
+    version: v0.1           (optional, shown under the title)
+    updated: 2026-11-22     (optional, shown under the title)
+    source: link            (optional, link to source code)
+    toc: false              (optional, the table of contents is on by default)
+    draft: true             (optional, skips the doc)
+    ---
+
 Usage:
-    python build.py           # incremental: only rebuilds changed articles
+    python build.py           # incremental: only rebuilds changed articles and docs
     python build.py --force   # rebuild everything
 """
 import html
@@ -49,8 +62,15 @@ FEED_LIMIT = 20  # newest articles in the feed
 OG_IMAGE = "res/article_og.png"  # used when an article has no image
 NOT_PREVIEW = (".mp4", ".webm", ".mov", ".mp3", ".ogg", ".wav", ".m4a", ".svg")
 
+# Docs (documentation for projects).
+DOCS_CONTENT = ROOT / "docs_md"
+DOCS_OUT = ROOT / "docs"
+DOCS_TEMPLATE = DOCS_OUT / "template.txt"
+
 START_MARK = "<!-- ARTICLES:START -->"
 END_MARK = "<!-- ARTICLES:END -->"
+DOCS_START = "<!-- DOCS:START -->"
+DOCS_END = "<!-- DOCS:END -->"
 ITEM_INDENT = "\t\t\t\t"
 
 PANDOC_EXTRA = [
@@ -98,16 +118,16 @@ def first_image(text):
     return ""
 
 
-def page_vars(slug, title, description, image=""):
+def page_vars(slug, title, description, image="", folder="articles"):
     """Template variables for link previews, as pandoc -V arguments.
     Values are pre-escaped for use inside HTML attributes, so the template
     can write content="$og_title$" directly."""
     values = {
         "og_title": title,
         "og_description": description,
-        "og_url": f"{SITE_URL}/articles/{slug}.html",
+        "og_url": f"{SITE_URL}/{folder}/{slug}.html",
         # paths are relative to the built page, like in the article itself
-        "og_image": urljoin(f"{SITE_URL}/articles/{slug}.html", image)
+        "og_image": urljoin(f"{SITE_URL}/{folder}/{slug}.html", image)
                     if image else f"{SITE_URL}/{OG_IMAGE}",
         "og_site": SITE_TITLE,
     }
@@ -162,13 +182,13 @@ def source_html(url):
 
 
 def build(job):
-    src, out, force, template_mtime, extra_args = job
+    src, out, force, template_mtime, extra_args, template = job
     if not force and is_up_to_date(src, out, template_mtime):
         return src, "ok", ""
     # no check=True on purpose: we report failures ourselves below
     result = subprocess.run(
         ["pandoc", str(src), "--from", "markdown", "--to", "html5",
-         "--template", str(TEMPLATE),
+         "--template", str(template),
          "--lua-filter", str(FILTERS),
          *extra_args, "-o", str(out), *PANDOC_EXTRA],
         capture_output=True,
@@ -229,16 +249,19 @@ def render_entries(entries, part_no, group_of=None):
     return lines
 
 
-def splice(path, lines):
-    """Replace everything between the ARTICLES markers in `path`."""
+def splice(path, lines, start=START_MARK, end=END_MARK, required=True):
+    """Replace everything between the start and end markers in `path`."""
     data = path.read_bytes().decode("utf-8")
     nl = "\r\n" if "\r\n" in data else "\n"
 
-    s = data.find(START_MARK)
-    e = data.find(END_MARK)
+    s = data.find(start)
+    e = data.find(end)
     if s < 0 or e < 0 or e < s:
+        if not required:
+            print(f"note: {path.name} has no {start} / {end} lines; list not updated")
+            return
         fail(f"{path.name} needs these two lines inside the articles list:\n"
-             f"  {START_MARK}\n  {END_MARK}")
+             f"  {start}\n  {end}")
 
     # keep the END marker's indentation
     line_start = data.rfind("\n", 0, e) + 1
@@ -247,10 +270,139 @@ def splice(path, lines):
         indent = ""
 
     body = nl.join(lines) + nl if lines else ""
-    new = data[: s + len(START_MARK)] + nl + body + indent + data[e:]
+    new = data[: s + len(start)] + nl + body + indent + data[e:]
 
     if new != data:
         path.write_bytes(new.encode("utf-8"))  # UTF-8, no BOM, newlines preserved
+
+
+def docs_nav_html(name, pages, current):
+    """Left-sidebar list of every doc in a project. pages: list of doc dicts."""
+    lis = []
+    for d in pages:
+        t = html.escape(d["title"])
+        if d["slug"] == current:
+            lis.append(f'<li><a href="{d["slug"]}.html" aria-current="page">{t}</a></li>')
+        else:
+            lis.append(f'<li><a href="{d["slug"]}.html">{t}</a></li>')
+    n = html.escape(name)
+    return (f'<nav class="docs-pages" aria-label="{n} documentation">'
+            f'<p class="side-label">{n}</p><ul>{"".join(lis)}</ul></nav>')
+
+
+def collect_docs():
+    """Read docs_md/*.md. Returns (docs, newest): the published docs as dicts, and
+    the newest file time per project key (drafts count: they change the nav)."""
+    docs, newest = [], {}
+    for src in sorted(DOCS_CONTENT.glob("*.md")):
+        meta = read_front_matter(src)
+        slug = src.stem
+        project = meta.get("project", "").strip()
+        pkey = project.lower()
+        newest[pkey] = max(newest.get(pkey, 0), src.stat().st_mtime)
+        if meta.get("draft", "").lower() in ("true", "yes", "1"):
+            print(f"skip   docs/{slug} [draft]")
+            continue
+        title = meta.get("title", "")
+        if not title:
+            print(f"warning: docs/{slug} has no title; using filename")
+            title = slug
+        order = meta.get("order", "").strip()
+        docs.append({
+            "src": src, "slug": slug, "title": title, "meta": meta,
+            "project": project or "General", "pkey": pkey,
+            "order": int(order) if re.fullmatch(r"-?\d+", order) else 10**6,
+            "updated": meta.get("updated", ""),
+            "description": meta.get("description", ""),
+        })
+    return docs, newest
+
+
+def group_docs(docs):
+    """Projects sorted by name, each with its pages sorted by order, then title."""
+    groups = {}
+    for d in docs:
+        g = groups.setdefault(d["pkey"], {"name": d["project"], "pages": []})
+        g["pages"].append(d)
+    for g in groups.values():
+        g["pages"].sort(key=lambda d: (d["order"], d["title"].lower()))
+    return sorted(groups.values(), key=lambda g: g["name"].lower())
+
+
+def render_docs(groups, show_dates=False):
+    """<li> lines for the docs list in index.html / archive.html."""
+    if not groups:
+        return [f'{ITEM_INDENT}<li class="doc-empty">No docs yet.</li>']
+    lines = []
+    for g in groups:
+        pages = g["pages"]
+        count = f'{len(pages)} page{"" if len(pages) == 1 else "s"}'
+        lines.append(f'{ITEM_INDENT}<li class="doc-project">')
+        lines.append(f'{ITEM_INDENT}\t<a class="doc-project-name" href="docs/{pages[0]["slug"]}.html">'
+                     f'{html.escape(g["name"])}</a><span class="doc-count">{count}</span>')
+        lines.append(f'{ITEM_INDENT}\t<ul class="doc-pages">')
+        for d in pages:
+            when = f'<time>{html.escape(d["updated"])}</time>' if show_dates and d["updated"] else ""
+            lines.append(f'{ITEM_INDENT}\t\t<li><a href="docs/{d["slug"]}.html">'
+                         f'{html.escape(d["title"])}</a>{when}</li>')
+        lines.append(f'{ITEM_INDENT}\t</ul>')
+        lines.append(f'{ITEM_INDENT}</li>')
+    return lines
+
+
+def run_jobs(jobs, label=""):
+    """Run pandoc jobs in parallel. Returns (built, errors)."""
+    built = errors = 0
+    with ThreadPoolExecutor() as pool:
+        for src, status, err in pool.map(build, jobs):
+            if status == "built":
+                built += 1
+                print(f"built  {label}{src.stem}.html")
+            elif status == "failed":
+                errors += 1
+                print(f"error: pandoc failed on {src.name}\n{err}")
+    return built, errors
+
+
+def build_docs(force):
+    """docs_md/*.md -> docs/*.html. Returns (groups, built, errors)."""
+    DOCS_OUT.mkdir(exist_ok=True)
+    template_mtime = max(DOCS_TEMPLATE.stat().st_mtime,
+                         FILTERS.stat().st_mtime,
+                         Path(__file__).stat().st_mtime)
+    docs, newest = collect_docs()
+    groups = group_docs(docs)
+    group_of = {g["pages"][0]["pkey"]: g for g in groups}
+
+    jobs = []
+    for d in docs:
+        g = group_of[d["pkey"]]
+        pages, meta = g["pages"], d["meta"]
+        image = meta.get("image") or first_image(d["src"].read_text(encoding="utf-8-sig"))
+        extra = page_vars(d["slug"], d["title"], d["description"], image, "docs")
+        if meta.get("toc", "true").lower() not in ("false", "no", "0"):
+            extra += ["--toc", "--toc-depth=3"]
+        source = meta.get("source", "").strip()
+        if source:
+            if not re.match(r"https?://", source):
+                print(f"warning: docs/{d['slug']} source '{source}' is not an http(s) URL")
+            extra += ["-V", "source_link=" + source_html(source)]
+        # every page of a project lists its siblings, so it rebuilds when they change
+        extra += ["-V", "docs_nav=" + docs_nav_html(g["name"], pages, d["slug"])]
+        if len(pages) > 1:
+            extra += ["-V", "docs_pager=" + series_pager(
+                [(p["slug"], p["title"]) for p in pages], d["slug"])]
+        dep = max(template_mtime, newest[d["pkey"]])
+        jobs.append((d["src"], DOCS_OUT / f'{d["slug"]}.html', force, dep, extra, DOCS_TEMPLATE))
+
+    keep = {d["slug"] for d in docs}
+    for old in DOCS_OUT.glob("*.html"):
+        if old.stem not in keep:
+            old.unlink()
+            print(f"remove docs/{old.name}")
+
+    built, errors = run_jobs(jobs, "docs/")
+    return groups, built, errors
 
 
 def write_feed(items, descriptions):
@@ -382,7 +534,7 @@ def main():
             extra = extra + ["-V", "series_nav=" + series_html(names[skey], parts, slug, part_no),
                              "-V", "series_pager=" + series_pager(parts, slug)]
             dep = max(dep, newest[skey])
-        jobs.append((src, OUT_DIR / f"{slug}.html", force, dep, extra))
+        jobs.append((src, OUT_DIR / f"{slug}.html", force, dep, extra, TEMPLATE))
 
     # remove html for deleted/draft articles (template.txt is untouched)
     for old in OUT_DIR.glob("*.html"):
@@ -390,18 +542,20 @@ def main():
             old.unlink()
             print(f"remove {old.name}")
 
-    errors = 0
-    built = 0
-    with ThreadPoolExecutor() as pool:
-        for src, status, err in pool.map(build, jobs):
-            if status == "built":
-                built += 1
-                print(f"built  {src.stem}.html")
-            elif status == "failed":
-                errors += 1
-                print(f"error: pandoc failed on {src.name}\n{err}")
+    built, errors = run_jobs(jobs)
     if errors:
         sys.exit(1)
+
+    # docs are optional: nothing happens until docs_md/ exists
+    doc_groups, docs_built, docs_total = [], 0, 0
+    docs_on = DOCS_CONTENT.is_dir()
+    if docs_on:
+        if not DOCS_TEMPLATE.exists():
+            fail(f"missing {DOCS_TEMPLATE}")
+        doc_groups, docs_built, doc_errors = build_docs(force)
+        docs_total = sum(len(g["pages"]) for g in doc_groups)
+        if doc_errors:
+            sys.exit(1)
 
     # newest first. Within a day: A-Z by title (or series name), with the
     # parts of a series kept together and listed last part first.
@@ -426,6 +580,12 @@ def main():
     else:
         archive_note = "archive.html not found, skipped"
 
+    if docs_on:
+        splice(INDEX, render_docs(doc_groups), DOCS_START, DOCS_END, required=False)
+        if ARCHIVE.exists():
+            splice(ARCHIVE, render_docs(doc_groups, show_dates=True),
+                   DOCS_START, DOCS_END, required=False)
+
     feed_count = write_feed(items, descriptions)
     if "example.com" in SITE_URL:
         print("warning: SITE_URL in build.py is still the placeholder; "
@@ -433,7 +593,8 @@ def main():
 
     print(f"done: {len(items)} article(s), {built} rebuilt, "
           f"index.html shows {min(len(entries), INDEX_LIMIT)} entries, {archive_note}, "
-          f"feed.xml has {feed_count}")
+          f"feed.xml has {feed_count}, "
+          + (f"docs: {docs_total} page(s), {docs_built} rebuilt" if docs_on else "no docs_md/"))
 
 
 if __name__ == "__main__":

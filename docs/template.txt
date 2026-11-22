@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="$description$">
+
+		<title>$title$</title>
+
+		<meta property="og:type" content="article">
+		$if(og_site)$<meta property="og:site_name" content="$og_site$">$endif$
+		<meta property="og:title" content="$og_title$">
+		$if(og_description)$<meta property="og:description" content="$og_description$">$endif$
+		<meta property="og:url" content="$og_url$">
+		<meta property="og:image" content="$og_image$">
+		<meta name="twitter:card" content="summary_large_image">
+		<link rel="canonical" href="$og_url$">
+
+		<link rel="alternate" type="application/atom+xml" title="Yordanos" href="https://theyordanos.github.io/feed.xml">
+
+		<link rel="icon" type="image/png" href="../res/theyordanos-icon.png">
+		<script>
+		try {
+			if (localStorage.getItem("ty_theme") === "dark") document.documentElement.classList.add("dark");
+		} catch (e) {}
+		</script>
+		<link rel="stylesheet" href="../styles/style.css">
+		<link rel="stylesheet" href="../styles/article.css">
+		<link rel="stylesheet" href="../styles/docs.css">
+
+		<script src="../scripts/theme.js" defer></script>
+		<script src="../scripts/copy.js" defer></script>
+		<script src="../scripts/docs.js" defer></script>
+	</head>
+	<body class="docs-page">
+		<div class="layout docs">
+		<!-- left sidebar: project pages and the table of contents -->
+		<aside class="docs-nav">
+			<input type="checkbox" id="docs-toggle" class="docs-toggle" aria-label="Show contents">
+
+			<div class="docs-head">
+				<a class="brand" href="../index.html"><span class="brand-name">Yordanos Z.</span></a>
+				<label class="docs-menu-btn" for="docs-toggle" aria-hidden="true">Contents &#9776;</label>
+			</div>
+
+			<div class="docs-body">
+				<div class="docs-tools">
+					<a href="../index.html#docs">All Docs</a>
+					<a href="../archive.html">Archive</a>
+					<button id="theme-toggle">[dark]</button>
+				</div>
+
+				$if(docs_nav)$$docs_nav$$endif$
+
+				$if(toc)$
+				<nav id="TOC" role="doc-toc" aria-label="On this page">
+					<p class="toc-title">On this page</p>
+					$table-of-contents$
+				</nav>
+				$endif$
+			</div>
+		</aside>
+
+		<main>
+			<header>
+				<h1>$title$</h1>
+				$if(description)$<p class="description">$description$</p>$endif$
+				$if(version)$<p class="meta doc-meta"><span>$version$</span>$if(updated)$<span>Updated <time datetime="$updated$">$updated$</time></span>$endif$</p>$elseif(updated)$<p class="meta doc-meta"><span>Updated <time datetime="$updated$">$updated$</time></span></p>$endif$
+				$if(source_link)$$source_link$$endif$
+			</header>
+
+			$body$
+
+			$if(docs_pager)$$docs_pager$$endif$
+		</main>
+		</div>
+
+		<hr />
+		<footer><p>Creator of Worlds &amp; a Coffee Addict ;p</p></footer>
+	</body>
+</html>
