@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="Compact reference for Karl2D, a
+beginner friendly 2D game library for Odin (Windows, Linux, Mac, Web).">
+
+		<title>Overview</title>
+
+		<meta property="og:type" content="article">
+		<meta property="og:site_name" content="Yordanos">
+		<meta property="og:title" content="Overview">
+		<meta property="og:description" content="Compact reference for Karl2D, a beginner friendly 2D game library for Odin (Windows, Linux, Mac, Web).">
+		<meta property="og:url" content="https://theyordanos.github.io/docs/kark2d_overview.html">
+		<meta property="og:image" content="https://theyordanos.github.io/res/docs_og.png">
+		<meta name="twitter:card" content="summary_large_image">
+		<link rel="canonical" href="https://theyordanos.github.io/docs/kark2d_overview.html">
+
+		<link rel="alternate" type="application/atom+xml" title="Yordanos" href="https://theyordanos.github.io/feed.xml">
+
+		<link rel="icon" type="image/png" href="../res/theyordanos-icon.png">
+		<script>
+		try {
+			if (localStorage.getItem("ty_theme") === "dark") document.documentElement.classList.add("dark");
+		} catch (e) {}
+		</script>
+		<link rel="stylesheet" href="../styles/style.css">
+		<link rel="stylesheet" href="../styles/article.css">
+		<link rel="stylesheet" href="../styles/docs.css">
+
+		<script src="../scripts/theme.js" defer></script>
+		<script src="../scripts/copy.js" defer></script>
+		<script src="../scripts/docs.js" defer></script>
+	</head>
+	<body class="docs-page">
+		<div class="layout docs">
+		<aside class="docs-nav">
+			<input type="checkbox" id="docs-toggle" class="docs-toggle" aria-label="Show contents">
+
+			<div class="docs-head">
+				<label class="docs-menu-btn" for="docs-toggle" aria-hidden="true">Contents &#9776;</label>
+			</div>
+
+			<div class="docs-body">
+				<nav class="docs-pages" aria-label="Karl2D documentation"><p class="side-label">Karl2D</p><ul><li><a href="kark2d_overview.html" aria-current="page">Overview</a></li></ul></nav>
+
+								<nav id="TOC" role="doc-toc" aria-label="On this page">
+					<p class="toc-title">On this page</p>
+					<ul>
+<li><a href="#getting-started" id="toc-getting-started">Getting started
+<span class="anchor-mark">#</span></a></li>
+<li><a href="#conventions" id="toc-conventions">Conventions <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#frame-and-window" id="toc-frame-and-window">Frame and
+window <span class="anchor-mark">#</span></a></li>
+<li><a href="#input" id="toc-input">Input <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#drawing" id="toc-drawing">Drawing <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#textures-and-images" id="toc-textures-and-images">Textures
+and images <span class="anchor-mark">#</span></a></li>
+<li><a href="#fonts" id="toc-fonts">Fonts <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#audio" id="toc-audio">Audio <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#camera" id="toc-camera">Camera <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#shaders" id="toc-shaders">Shaders <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#math-helpers" id="toc-math-helpers">Math helpers <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#misc" id="toc-misc">Misc <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#web-builds" id="toc-web-builds">Web builds <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#platform-notes" id="toc-platform-notes">Platform notes
+<span class="anchor-mark">#</span></a></li>
+</ul>
+				</nav>
+							</div>
+		</aside>
+
+		<main>
+			<header>
+				<h1>Overview</h1>
+				<p class="description">Compact reference for Karl2D, a beginner friendly
+2D game library for Odin (Windows, Linux, Mac, Web).</p>
+				<p class="meta doc-meta"><span>Updated <time datetime="2026-11-22">2026-11-22</time></span></p>
+				
+			</header>
+
+			<p>Karl2D makes 2D games in <a href="https://odin-lang.org">Odin</a>
+with few dependencies and no emscripten for web builds. Everything is
+called as <code>k2.name</code>. This page follows the API overview file
+<code>karl2d.doc.odin</code>.</p>
+<h2 id="getting-started">Getting started <a href="#getting-started"
+class="anchor" aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<p>Put the Karl2D repository in a <code>karl2d</code> subfolder of your
+game, then:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">package</span> hello_world</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> k2 <span class="st">&quot;karl2d&quot;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">main </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    k2<span class="op">.</span><span class="fu">init</span><span class="op">(</span><span class="dv">1280</span><span class="op">,</span> <span class="dv">720</span><span class="op">,</span> <span class="st">&quot;Greetings from Karl2D!&quot;</span><span class="op">)</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k2<span class="op">.</span><span class="fu">update</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>        k2<span class="op">.</span><span class="fu">clear</span><span class="op">(</span>k2<span class="op">.</span>LIGHT_BLUE<span class="op">)</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>        k2<span class="op">.</span><span class="fu">draw_text</span><span class="op">(</span><span class="st">&quot;Hellope!&quot;</span><span class="op">,</span> <span class="op">{</span><span class="dv">50</span><span class="op">,</span> <span class="dv">50</span><span class="op">},</span> <span class="dv">100</span><span class="op">,</span> k2<span class="op">.</span>DARK_BLUE<span class="op">)</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        k2<span class="op">.</span><span class="fu">present</span><span class="op">()</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    k2<span class="op">.</span><span class="fu">shutdown</span><span class="op">()</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Run with <code>odin run .</code> from the game folder.</p>
+<h2 id="conventions">Conventions <a href="#conventions" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<ul>
+<li><strong>Units:</strong> pixels, radians, seconds. Origin is
+top-left, Y grows down</li>
+<li><strong>Types:</strong> <code>Vec2</code> is <code>[2]f32</code>,
+<code>Color</code> is <code>[4]u8</code>, <code>Rect</code> is
+<code>{x, y, w, h}</code> with <code>(x, y)</code> top-left</li>
+<li><strong>Loaders</strong> return <code>(value, bool)</code>. Checking
+the <code>bool</code> is optional, failures are logged, and a failed
+value is safe to use but draws or plays nothing</li>
+<li><strong>Handles</strong> (<code>Texture</code>, <code>Sound</code>,
+<code>Font</code>…) are cheap to copy. A finished <code>Sound</code>
+handle is safe: its procs do nothing</li>
+<li><strong>Per-frame slices</strong> from <code>get_events</code>,
+<code>get_typed_runes</code> and <code>get_touches</code> are only valid
+this frame. Clone with <code>slice.clone</code></li>
+<li><strong><code>Maybe(...)</code> settings</strong> (camera, shader,
+render texture, scissor): pass a value to enable, <code>nil</code> to
+reset</li>
+</ul>
+<h2 id="frame-and-window">Frame and window <a href="#frame-and-window"
+class="anchor" aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<table>
+<colgroup>
+<col style="width: 68%" />
+<col style="width: 31%" />
+</colgroup>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Job</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>init(w, h, title, options, allocator)</code></td>
+<td>Open window, start renderer and audio. Call before almost everything
+(<code>get_monitors</code> is the exception). Returns
+<code>^State</code></td>
+</tr>
+<tr>
+<td><code>update()</code></td>
+<td>Read input, update frame time, run audio. Returns <code>false</code>
+when the player tries to close</td>
+</tr>
+<tr>
+<td><code>clear(color)</code></td>
+<td>Clear the screen (or the current render texture)</td>
+</tr>
+<tr>
+<td><code>present()</code></td>
+<td>Show the frame. Call it on web too</td>
+</tr>
+<tr>
+<td><code>shutdown()</code></td>
+<td>Close and clean up</td>
+</tr>
+<tr>
+<td><code>get_frame_time()</code> / <code>get_time()</code></td>
+<td>Seconds the last frame took (<code>f32</code>) / since start
+(<code>f64</code>)</td>
+</tr>
+</tbody>
+</table>
+<p><code>update</code> is shorthand for
+<code>reset_frame_allocator</code>, <code>calculate_frame_time</code>,
+<code>update_audio</code> and <code>process_events</code>. Call them
+yourself for more control, and test
+<code>close_window_requested()</code>.</p>
+<p><strong><code>Init_Options</code>:</strong> <code>window_mode</code>
+(<code>.Windowed</code>, <code>.Windowed_Resizable</code>,
+<code>.Borderless_Fullscreen</code>), <code>monitor</code>,
+<code>anti_alias</code>, <code>disable_auto_scale_hint</code>,
+<code>depth_test</code>,
+<code>depth_range_min</code>/<code>depth_range_max</code>.</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">init</span><span class="op">(</span><span class="dv">1280</span><span class="op">,</span> <span class="dv">720</span><span class="op">,</span> <span class="st">&quot;Game&quot;</span><span class="op">,</span> options <span class="op">=</span> <span class="op">{</span> window_mode <span class="op">=</span> <span class="op">.</span>Windowed_Resizable<span class="op">,</span> anti_alias <span class="op">=</span> <span class="kw">true</span> <span class="op">})</span></span></code></pre></div>
+<table>
+<colgroup>
+<col style="width: 78%" />
+<col style="width: 21%" />
+</colgroup>
+<thead>
+<tr>
+<th>Window procedure</th>
+<th>Job</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>get_screen_width/height/size</code>,
+<code>set_screen_size(w, h)</code></td>
+<td>Drawable area</td>
+</tr>
+<tr>
+<td><code>set_window_title</code>, <code>set_window_position</code>,
+<code>get_window_position</code></td>
+<td>Position does nothing on web. Get returns <code>{}</code> on web and
+Wayland</td>
+</tr>
+<tr>
+<td><code>set_window_mode</code>, <code>get_window_mode</code></td>
+<td>Switch modes</td>
+</tr>
+<tr>
+<td><code>get_window_scale()</code></td>
+<td>OS DPI scale (1.5 is 150%). <strong>No automatic scaling:</strong>
+multiply sizes yourself and use it as camera zoom</td>
+</tr>
+<tr>
+<td><code>get_monitors()</code></td>
+<td>Callable before <code>init</code>. Slice and names are allocated:
+free them</td>
+</tr>
+<tr>
+<td><code>get_window_monitor</code>,
+<code>set_window_monitor(id)</code></td>
+<td>Which monitor</td>
+</tr>
+<tr>
+<td><code>set_window_icon(image)</code></td>
+<td>Image is copied. Returns <code>bool</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="input">Input <a href="#input" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<p>Names end in <code>_went_down</code>, <code>_went_up</code> or
+<code>_is_held</code>. All are filled by
+<code>process_events</code>.</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> k2<span class="op">.</span><span class="fu">key_is_held</span><span class="op">(.</span>Right<span class="op">)</span> <span class="op">{</span> player<span class="op">.</span>x <span class="op">+=</span> <span class="dv">300</span> <span class="op">*</span> k2<span class="op">.</span><span class="fu">get_frame_time</span><span class="op">()</span> <span class="op">}</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> k2<span class="op">.</span><span class="fu">key_went_down</span><span class="op">(.</span>Space<span class="op">)</span> <span class="op">{</span> <span class="fu">jump</span><span class="op">()</span> <span class="op">}</span></span></code></pre></div>
+<table>
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr>
+<th>Device</th>
+<th>Procedures</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Keyboard</td>
+<td><code>key_went_down(key, allow_repeat := false)</code>,
+<code>key_went_up</code>, <code>key_is_held</code>,
+<code>get_typed_runes</code> (for text fields),
+<code>get_held_modifiers</code></td>
+</tr>
+<tr>
+<td>Mouse</td>
+<td><code>mouse_button_went_down/up/is_held(.Left/.Right/.Middle)</code>,
+<code>get_mouse_position</code>, <code>get_mouse_delta</code>,
+<code>get_mouse_wheel_delta</code>,
+<code>get_mouse_wheel_delta_horizontal</code>,
+<code>set_mouse_locked</code>, <code>is_mouse_locked</code></td>
+</tr>
+<tr>
+<td>Touch</td>
+<td><code>get_touches</code> returns
+<code>Touch{id, position, delta, went_down, went_up, cancelled}</code>.
+Identify fingers by <code>id</code>. Max 11</td>
+</tr>
+<tr>
+<td>Gamepad</td>
+<td><code>is_gamepad_active(i)</code>,
+<code>gamepad_button_went_down/up/is_held(i, button)</code>,
+<code>get_gamepad_axis(i, axis)</code>,
+<code>set_gamepad_vibration(i, left, right)</code>. 4 pads
+(<code>MAX_GAMEPADS</code>)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Modifiers:</strong>
+<code>get_held_modifiers() == { .Control, .Shift }</code> is true only
+for exactly those (left or right)</li>
+<li><strong>Mouse lock</strong> can be undone by the OS, so check
+<code>is_mouse_locked()</code>. Use <code>get_mouse_delta</code> while
+locked. It does not hide the cursor</li>
+<li><strong>Touch emulation:</strong>
+<code>set_mouse_touch_emulation(.Touch_To_Mouse)</code> is the default.
+Use <code>.None</code> if you handle both yourself, or
+<code>.Mouse_To_Touch</code> to test touch on desktop</li>
+<li><strong>Gamepad:</strong> sticks are -1 to 1, triggers 0 to 1. Face
+buttons are positional: <code>.Right_Face_Down</code> is A on Xbox and X
+on PlayStation. Others: <code>.Left_Face_*</code> (d-pad),
+<code>.Left/Right_Shoulder</code>, <code>.Left/Right_Trigger</code>,
+<code>.Left/Right_Stick_Press</code>,
+<code>.Middle_Face_Left/Middle/Right</code>. Axes:
+<code>.Left_Stick_X/Y</code>, <code>.Right_Stick_X/Y</code>,
+<code>.Left_Trigger</code>, <code>.Right_Trigger</code></li>
+<li><strong>Keys:</strong> <code>Keyboard_Key</code> has
+<code>.A</code>-<code>.Z</code>, <code>.N0</code>-<code>.N9</code>,
+arrows, <code>.Space</code>, <code>.Enter</code>, <code>.Escape</code>,
+<code>.Tab</code>, <code>.F1</code>-<code>.F12</code>,
+<code>.Left_Shift</code> and the other modifiers, numpad
+<code>.NP_*</code>, punctuation</li>
+</ul>
+<p><strong>Events:</strong> <code>get_events()</code> lists everything
+that happened, including things polling can’t see:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> event <span class="cf">in</span> k2<span class="op">.</span><span class="fu">get_events</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="pp">#partial</span> <span class="cf">switch</span> e <span class="cf">in</span> event <span class="op">{</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">case</span> k2<span class="op">.</span>Event_Screen_Resize<span class="op">:</span> <span class="fu">relayout</span><span class="op">(</span>e<span class="op">.</span>width<span class="op">,</span> e<span class="op">.</span>height<span class="op">)</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">case</span> k2<span class="op">.</span>Event_Window_Unfocused<span class="op">:</span> <span class="fu">pause_game</span><span class="op">()</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Types: <code>Event_Key_Went_Down/Up/Repeat</code>,
+<code>Event_Typed_Rune</code>,
+<code>Event_Mouse_Move/Wheel/Wheel_Horizontal/Teleported</code>,
+<code>Event_Mouse_Button_Went_Down/Up</code>,
+<code>Event_Gamepad_Button_Went_Down/Up</code>,
+<code>Event_Touch_Went_Down/Moved/Went_Up/Cancelled</code>,
+<code>Event_Screen_Resize</code>,
+<code>Event_Window_Focused/Unfocused/Scale_Changed</code>,
+<code>Event_Close_Window_Requested</code>. Stick and trigger movement is
+not an event.</p>
+<h2 id="drawing">Drawing <a href="#drawing" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<table>
+<colgroup>
+<col style="width: 61%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>draw_rect(rect, color, origin, rotation)</code></td>
+<td><code>origin</code> is the rotation pivot and shifts the rect.
+<code>{w/2, h/2}</code> rotates around the center</td>
+</tr>
+<tr>
+<td><code>draw_rect_vec(pos, size, color, ...)</code></td>
+<td>Same, from position and size</td>
+</tr>
+<tr>
+<td><code>draw_rect_outline(rect, thickness, color)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>draw_circle(center, radius, color, segments := 16)</code></td>
+<td>Made of slices, raise <code>segments</code> for big circles</td>
+</tr>
+<tr>
+<td><code>draw_circle_outline(center, radius, thickness, color, segments)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>draw_line(start, end, thickness, color)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>draw_triangle([3]Vec2, color)</code></td>
+<td>Winding does not matter</td>
+</tr>
+<tr>
+<td><code>draw_texture(tex, pos, origin, rotation, tint := WHITE)</code></td>
+<td><code>tint</code> multiplies colors</td>
+</tr>
+<tr>
+<td><code>draw_texture_rect(tex, source, pos, ...)</code></td>
+<td>Draw the <code>source</code> region (texture pixels). Negative
+<code>w</code>/<code>h</code> flips</td>
+</tr>
+<tr>
+<td><code>draw_texture_fit(tex, source, dest, ...)</code></td>
+<td>Stretch <code>source</code> into <code>dest</code></td>
+</tr>
+<tr>
+<td><code>draw_text(text, pos, size, color, font, origin, rotation)</code></td>
+<td><code>pos</code> is top-left. Stays sharp with a camera</td>
+</tr>
+<tr>
+<td><code>measure_text(text, size, font)</code></td>
+<td>Returns <code>Vec2</code></td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="va">middle </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">rect_middle</span><span class="op">(</span>k2<span class="op">.</span><span class="fu">get_texture_rect</span><span class="op">(</span>tex<span class="op">))</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">draw_texture</span><span class="op">(</span>tex<span class="op">,</span> pos <span class="op">+</span> middle<span class="op">,</span> middle<span class="op">,</span> rot<span class="op">)</span>        <span class="co">// rotate around the center</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="va">size </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">measure_text</span><span class="op">(</span><span class="st">&quot;Game Over&quot;</span><span class="op">,</span> <span class="dv">64</span><span class="op">)</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">draw_text</span><span class="op">(</span><span class="st">&quot;Game Over&quot;</span><span class="op">,</span><span class="fu"> </span><span class="op">(</span>k2<span class="op">.</span><span class="fu">get_screen_size</span><span class="op">()</span> <span class="op">-</span> size<span class="op">)</span> <span class="op">/</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">64</span><span class="op">,</span> k2<span class="op">.</span>WHITE<span class="op">)</span></span></code></pre></div>
+<p><strong>Colors:</strong>
+<code>WHITE BLACK BLANK RED GREEN BLUE ORANGE PURPLE MAGENTA YELLOW BROWN</code>
+with <code>LIGHT_</code>/<code>DARK_</code> variants,
+<code>LIGHT_GRAY GRAY DARK_GRAY</code>, and Raylib-style
+<code>RL_*</code>. <code>color_alpha(c, a)</code> replaces alpha.</p>
+<p><strong>Batching:</strong> draws are collected and sent on
+<code>present</code>, <code>clear</code>, a full vertex buffer, or when
+you destroy a resource in use (or call <code>draw_current_batch</code>).
+These start a <strong>new draw call</strong>: a different texture,
+<code>set_shader</code>, <code>set_blend_mode</code>,
+<code>set_scissor_rect</code>, <code>set_camera</code>,
+<code>set_render_texture</code>. <code>set_z</code> does not. Use an
+atlas and group draws by texture.</p>
+<h2 id="textures-and-images">Textures and images <a
+href="#textures-and-images" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<p>A <code>Texture</code> (<code>handle</code>, <code>width</code>,
+<code>height</code>) is on the GPU. An <code>Image</code>
+(<code>pixels []Color</code>, <code>width</code>, <code>height</code>)
+is in RAM, always RGBA8 with straight alpha.</p>
+<table>
+<colgroup>
+<col style="width: 68%" />
+<col style="width: 31%" />
+</colgroup>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Job</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>load_texture_from_file(name, options)</code></td>
+<td>PNG, BMP, TGA. Baseline PNG only, <strong>no progressive
+PNG</strong></td>
+</tr>
+<tr>
+<td><code>load_texture_from_bytes(bytes, options)</code></td>
+<td>Encoded file in memory, e.g. <code>#load("a.png")</code>. Use on
+web</td>
+</tr>
+<tr>
+<td><code>load_texture_from_bytes_raw(bytes, w, h, format)</code></td>
+<td>Headerless pixels</td>
+</tr>
+<tr>
+<td><code>load_texture_from_image(image)</code></td>
+<td>From an <code>Image</code></td>
+</tr>
+<tr>
+<td><code>create_texture(w, h, format)</code></td>
+<td>Empty texture</td>
+</tr>
+<tr>
+<td><code>load_image_from_file/bytes</code>,
+<code>destroy_image</code></td>
+<td>Images</td>
+</tr>
+<tr>
+<td><code>update_texture(tex, bytes, rect, pitch := 0)</code></td>
+<td>Overwrite a region</td>
+</tr>
+<tr>
+<td><code>get_texture_rect(tex)</code></td>
+<td><code>{0, 0, w, h}</code></td>
+</tr>
+<tr>
+<td><code>set_texture_filter(tex, .Point/.Linear)</code></td>
+<td>Pixelated or smooth. <code>set_texture_filter_ex</code> splits
+down/up/mip</td>
+</tr>
+<tr>
+<td><code>destroy_texture(tex)</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><code>options</code> is <code>{ .Premultiply_Alpha }</code> for use
+with <code>set_blend_mode(.Premultiplied_Alpha)</code>.
+<code>Pixel_Format</code>: <code>RGBA_8_Norm</code>,
+<code>RG_8_Norm</code>, <code>R_8_Norm</code>, <code>R_8_UInt</code>,
+<code>RGBA_32_Float</code>, <code>RGB_32_Float</code>,
+<code>RG_32_Float</code>, <code>R_32_Float</code>.
+<code>pixel_format_size(f)</code> gives bytes per pixel.</p>
+<p><strong>Render textures</strong> let you draw into a texture.
+<code>create_render_texture(w, h)</code>,
+<code>set_render_texture(rt)</code> (<code>nil</code> returns to the
+screen), <code>destroy_render_texture(rt)</code>. Use
+<code>rt.texture</code> like any texture. <code>clear</code> clears the
+current target.</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">set_render_texture</span><span class="op">(</span>minimap<span class="op">)</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">clear</span><span class="op">(</span>k2<span class="op">.</span>DARK_GREEN<span class="op">)</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">draw_world_small</span><span class="op">()</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">set_render_texture</span><span class="op">(</span><span class="kw">nil</span><span class="op">)</span></span></code></pre></div>
+<h2 id="fonts">Fonts <a href="#fonts" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<p><code>FONT_DEFAULT</code> is built-in Roboto. Pass a
+<code>Font</code> as the <code>font</code> argument to
+<code>draw_text</code>/<code>measure_text</code>.</p>
+<table>
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 42%" />
+<col style="width: 47%" />
+</colgroup>
+<thead>
+<tr>
+<th></th>
+<th>Static</th>
+<th>Dynamic</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Load</td>
+<td><code>load_static_font_from_file/bytes(data, font_size, codepoints)</code></td>
+<td><code>load_dynamic_font_from_file/bytes(data)</code></td>
+</tr>
+<tr>
+<td>How</td>
+<td>Baked once at one size. ASCII unless you pass
+<code>codepoints</code></td>
+<td>Shared atlas grows as you draw. Any size</td>
+</tr>
+</tbody>
+</table>
+<p>The shared atlas maxes at 4096×4096. When full, the least recently
+used 50% of glyphs are dropped. <code>Font_Options</code>:
+<code>premultiply_alpha</code>, <code>filter</code>,
+<code>font_index</code> (for <code>.ttc</code>). A failed load draws
+with the default font. <code>destroy_font(font)</code>.</p>
+<h2 id="audio">Audio <a href="#audio" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<p>Mixer runs at 44100 Hz. <code>update</code> runs
+<code>update_audio</code>, which must run once per frame.</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Audio_Clip</code></td>
+<td>Fully loaded audio (WAV, OGG). For effects</td>
+</tr>
+<tr>
+<td><code>Audio_Stream</code></td>
+<td>OGG decoded bit by bit. For music</td>
+</tr>
+<tr>
+<td><code>Sound</code></td>
+<td>Something playing now. Returned by <code>play_audio_*</code></td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="va">sfx </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">load_audio_clip_from_file</span><span class="op">(</span><span class="st">&quot;jump.wav&quot;</span><span class="op">)</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">play_audio_clip</span><span class="op">(</span>sfx<span class="op">,</span> volume <span class="op">=</span> <span class="fl">0.8</span><span class="op">,</span> pitch <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="va">music </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">load_audio_stream_from_file</span><span class="op">(</span><span class="st">&quot;music.ogg&quot;</span><span class="op">)</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="va">song </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">play_audio_stream</span><span class="op">(</span>music<span class="op">,</span> loop <span class="op">=</span> <span class="kw">true</span><span class="op">)</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">// every frame:</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">update_audio_stream</span><span class="op">(</span>music<span class="op">)</span></span></code></pre></div>
+<ul>
+<li><strong>Clips:</strong> <code>load_audio_clip_from_file/bytes</code>
+(bytes must be the <strong>whole file</strong>),
+<code>load_audio_clip_from_bytes_raw(bytes, format, sample_rate, channels)</code>,
+<code>destroy_audio_clip</code>,
+<code>get_num_sounds_playing_clip</code></li>
+<li><strong>Streams:</strong>
+<code>load_audio_stream_from_file/bytes</code> (bytes are <strong>not
+copied</strong>, keep them alive), <code>update_audio_stream</code>
+every frame (safe on one thread per stream),
+<code>destroy_audio_stream</code>. A stream plays one sound at a time:
+playing again returns the existing sound and ignores new settings.
+<code>stop_sound</code> first to restart</li>
+<li><strong><code>play_audio_*</code> args:</strong> <code>volume</code>
+(0 to 1), <code>pan</code> (-1 to 1), <code>pitch</code> (0.01 and up),
+<code>loop</code>, <code>bus</code>. Looping with a discarded
+<code>Sound</code> can’t be stopped</li>
+<li><strong>Sound control:</strong> <code>stop_sound</code>,
+<code>set_sound_paused</code>, <code>sound_is_playing</code>,
+<code>sound_is_valid</code>,
+<code>set_sound_volume/pan/pitch/loop/time/bus</code>,
+<code>get_sound_time</code>, <code>get_sound_length</code></li>
+<li><strong>Buses</strong> group sounds: <code>create_audio_bus</code>,
+<code>destroy_audio_bus</code>, <code>set_audio_bus_volume/pan</code>,
+<code>set_audio_bus_effect(bus, proc, user_data)</code>.
+<code>AUDIO_BUS_MASTER</code> is the default, so
+<code>set_audio_bus_volume(k2.AUDIO_BUS_MASTER, v)</code> sets master
+volume</li>
+<li><strong>Effects:</strong>
+<code>proc(samples: [][2]Audio_Sample, user_data: rawptr)</code> edits
+the bus mix in place. State must live in <code>user_data</code></li>
+</ul>
+<h2 id="camera">Camera <a href="#camera" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Camera <span class="op">::</span> <span class="kw">struct</span> <span class="op">{</span> target<span class="op">,</span> offset<span class="op">:</span> Vec2<span class="op">,</span> rotation<span class="op">,</span> zoom<span class="op">:</span> <span class="dt">f32</span><span class="op">,</span> flip_y<span class="op">:</span> <span class="dt">bool</span> <span class="op">}</span></span></code></pre></div>
+<p><code>set_camera(cam)</code> applies to all later draws.
+<code>set_camera(nil)</code> returns to none.</p>
+<ul>
+<li><code>target</code> is the world point at the top-left of the
+screen. Set <code>offset</code> to half the screen size to center
+it</li>
+<li><code>zoom</code> bigger is closer. 0 counts as 1. For a fixed
+visible height use
+<code>f32(k2.get_screen_height()) / wanted_height</code></li>
+<li><code>flip_y</code> makes the origin bottom-left, Y up and rotation
+reversed. <code>Rect</code>s, textures and text then anchor at the
+bottom-left. This suits Box2D. The <code>rect_top_*</code>,
+<code>rect_bottom_*</code> and <code>rect_cut_*</code> helpers still
+assume top-left, so use <code>flip_y</code> only for the world camera
+and draw UI without it</li>
+</ul>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>camera<span class="op">.</span>target <span class="op">=</span> player<span class="op">.</span>pos</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>camera<span class="op">.</span>offset <span class="op">=</span> k2<span class="op">.</span><span class="fu">get_screen_size</span><span class="op">()</span> <span class="op">/</span> <span class="dv">2</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">set_camera</span><span class="op">(</span>camera<span class="op">);</span> <span class="fu">draw_world</span><span class="op">();</span> k2<span class="op">.</span><span class="fu">set_camera</span><span class="op">(</span><span class="kw">nil</span><span class="op">);</span> <span class="fu">draw_ui</span><span class="op">()</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="va">world_mouse </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">screen_to_camera</span><span class="op">(</span>k2<span class="op">.</span><span class="fu">get_mouse_position</span><span class="op">(),</span> camera<span class="op">)</span></span></code></pre></div>
+<p><code>screen_to_camera</code> and <code>camera_to_screen</code>
+convert points. <code>camera_view_matrix</code> and
+<code>camera_inverse_view_matrix</code> return the <code>Mat4</code>s
+behind them.</p>
+<h2 id="shaders">Shaders <a href="#shaders" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<p>Source files use the shading language of your render backend (D3D11,
+OpenGL or WebGL). There is no cross-API translation yet.</p>
+<table>
+<colgroup>
+<col style="width: 68%" />
+<col style="width: 31%" />
+</colgroup>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Job</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>load_shader_from_file(vert, frag, layout_formats)</code></td>
+<td>Pass the same file twice if both stages are in it</td>
+</tr>
+<tr>
+<td><code>load_shader_from_bytes(vert, frag, layout_formats)</code></td>
+<td>From memory</td>
+</tr>
+<tr>
+<td><code>set_shader(shader)</code> / <code>set_shader(nil)</code></td>
+<td>Use / back to default. <code>get_default_shader()</code></td>
+</tr>
+<tr>
+<td><code>set_shader_constant(shader, loc, val)</code></td>
+<td><code>loc := shader.constant_lookup["name"]</code></td>
+</tr>
+<tr>
+<td><code>set_shader_texture(shader, bindpoint, tex)</code></td>
+<td>Extra textures. <code>shader.texture_lookup["name"]</code></td>
+</tr>
+<tr>
+<td><code>override_shader_input(shader, index, val)</code></td>
+<td>Per-object vertex input data</td>
+</tr>
+<tr>
+<td><code>destroy_shader</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>A failed load makes <code>set_shader</code> do nothing. Default
+inputs are position, texcoord and color. <code>layout_formats</code> can
+usually stay default.</p>
+<h2 id="math-helpers">Math helpers <a href="#math-helpers"
+class="anchor" aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<table>
+<colgroup>
+<col style="width: 38%" />
+<col style="width: 61%" />
+</colgroup>
+<thead>
+<tr>
+<th>Group</th>
+<th>Procedures</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Overlap</td>
+<td><code>rect_overlapping(a, b)</code>,
+<code>rect_overlap(a, b) -&gt; (Rect, bool)</code>,
+<code>point_in_rect(p, r)</code></td>
+</tr>
+<tr>
+<td>Points</td>
+<td><code>rect_middle</code> (also
+<code>rect_center</code>/<code>rect_centre</code>),
+<code>rect_top_left/middle/right</code>,
+<code>rect_bottom_left/middle/right</code>,
+<code>rect_from_pos_size</code></td>
+</tr>
+<tr>
+<td>Size</td>
+<td><code>rect_shrink(r, x, y)</code>,
+<code>rect_expand(r, x, y)</code>: each edge moves, so width changes by
+<code>2x</code></td>
+</tr>
+<tr>
+<td>Cut</td>
+<td><code>rect_cut_top/bottom/left/right(&amp;r, size, margin)</code>
+returns the strip and shrinks <code>r</code> by
+<code>size + margin</code></td>
+</tr>
+<tr>
+<td>Split</td>
+<td><code>rect_split_left/right/top/bottom(r, size, margin)</code>
+returns two new rects without modifying <code>r</code></td>
+</tr>
+<tr>
+<td>Other</td>
+<td><code>rotate(v, radians)</code> around <code>(0, 0)</code>,
+<code>color_alpha(c, a)</code></td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="va">screen </span><span class="op">:=</span> k2<span class="op">.</span>Rect <span class="op">{</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">800</span><span class="op">,</span> <span class="dv">600</span> <span class="op">}</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="va">header  </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">rect_cut_top</span><span class="op">(&amp;</span>screen<span class="op">,</span> <span class="dv">60</span><span class="op">,</span> <span class="dv">8</span><span class="op">)</span>   <span class="co">// {0, 0, 800, 60}, screen is now {0, 68, 800, 532}</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="va">sidebar </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">rect_cut_left</span><span class="op">(&amp;</span>screen<span class="op">,</span> <span class="dv">200</span><span class="op">,</span> <span class="dv">8</span><span class="op">)</span></span></code></pre></div>
+<h2 id="misc">Misc <a href="#misc" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<ul>
+<li><strong>Blend:</strong>
+<code>set_blend_mode(.Alpha | .Premultiplied_Alpha | .Additive)</code>.
+Default <code>.Alpha</code></li>
+<li><strong>Scissor:</strong> <code>set_scissor_rect(rect)</code> clips
+to a screen rect, <code>nil</code> turns it off</li>
+<li><strong>Depth:</strong> set <code>depth_test</code> in
+<code>Init_Options</code>, then <code>set_z(z)</code> (higher is in
+front, <code>get_z()</code> reads it). Default range -1 to 1. Without
+<code>depth_test</code> it has no effect</li>
+<li><strong>Cursors:</strong> <code>set_cursor(.Hand)</code> with
+<code>Default Text Hand Crosshair Wait Progress Resize_EW Resize_NS Resize_NESW Resize_NWSE Move Not_Allowed</code>
+(missing ones fall back, e.g. macOS lacks <code>Wait</code> and diagonal
+resize). <code>create_custom_cursor(image, hotspot)</code>,
+<code>destroy_custom_cursor</code>. <code>set_cursor_hidden(bool)</code>
+and <code>is_cursor_hidden()</code>. The OS can unhide it, so check</li>
+<li><strong>URLs:</strong> <code>open_url(url)</code> needs
+<code>https://</code>, <code>http://</code> or <code>file:///</code> and
+no spaces. Returns <code>.None</code>, <code>.Invalid_URL</code> or
+<code>.Failed_To_Open</code></li>
+<li><strong>Icon and logo:</strong> <code>make_karl2d_icon(size)</code>
+(multiple of 16), <code>make_karl2d_logo(width)</code> (multiple of 30).
+Free with <code>destroy_image</code></li>
+<li><strong>Hot reload:</strong> keep the pointer from <code>init</code>
+and call <code>set_internal_state(ptr)</code> after reloading the
+library</li>
+<li><strong>Experimental UI:</strong>
+<code>ui_button(rect, text) -&gt; bool</code>,
+<code>ui_button_width(text, height)</code>. Copy it into your code
+rather than depend on it</li>
+</ul>
+<h2 id="web-builds">Web builds <a href="#web-builds" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<p>The browser calls your code once per redraw, so split
+<code>main</code> into <code>init</code> and <code>step</code>:</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">main </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">()</span> <span class="op">{</span> <span class="fu">init</span><span class="op">();</span> <span class="cf">for</span> <span class="fu">step</span><span class="op">()</span> <span class="op">{};</span> <span class="fu">shutdown</span><span class="op">()</span> <span class="op">}</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">init </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">()</span> <span class="op">{</span> k2<span class="op">.</span><span class="fu">init</span><span class="op">(</span><span class="dv">1280</span><span class="op">,</span> <span class="dv">720</span><span class="op">,</span> <span class="st">&quot;Game&quot;</span><span class="op">)</span> <span class="op">}</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">step </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">()</span> <span class="op">-&gt;</span> <span class="dt">bool</span> <span class="op">{</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">!</span>k2<span class="op">.</span><span class="fu">update</span><span class="op">()</span> <span class="op">{</span> <span class="cf">return</span> <span class="kw">false</span> <span class="op">}</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    k2<span class="op">.</span><span class="fu">clear</span><span class="op">(</span>k2<span class="op">.</span>LIGHT_BLUE<span class="op">)</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    k2<span class="op">.</span><span class="fu">present</span><span class="op">()</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="kw">true</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="fu">shutdown </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">()</span> <span class="op">{</span> k2<span class="op">.</span><span class="fu">shutdown</span><span class="op">()</span> <span class="op">}</span></span></code></pre></div>
+<p>Build with <code>odin run karl2d/build_web -- .</code> (add
+<code>-debug</code> after <code>--</code> for symbols,
+<code>-o:speed</code> or <code>-o:size</code> to optimize). Output goes
+to <code>bin/web</code>. If the page is blank, serve it with
+<code>python -m http.server</code> from that folder. On Linux and Mac
+you may need an <code>lld</code> package for <code>wasm-ld</code>.</p>
+<p>There is no file system on web, so use <code>_from_bytes</code> with
+<code>#load</code>:</p>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">load_texture_from_bytes</span><span class="op">(</span><span class="pp">#load</span><span class="op">(</span><span class="st">&quot;image.png&quot;</span><span class="op">))</span></span></code></pre></div>
+<p>To share code, define
+<code>load_texture :: proc($name: string)</code> twice: once in a file
+starting <code>#+build !js</code> (calls
+<code>load_texture_from_file(name)</code>), once in a file starting
+<code>#+build js</code> (calls
+<code>load_texture_from_bytes(#load(name))</code>). The <code>$</code>
+makes <code>name</code> a compile-time constant, which
+<code>#load</code> needs.</p>
+<h2 id="platform-notes">Platform notes <a href="#platform-notes"
+class="anchor" aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<p>Backends: D3D11, OpenGL and WebGL. On Windows pick with
+<code>-define:KARL2D_RENDER_BACKEND=gl</code> or <code>d3d11</code>. On
+Linux Karl2D tries Wayland, then X11 at runtime. Override with
+<code>KARL2D_LINUX_WINDOWING=x11</code> or <code>wayland</code>.</p>
+
+			
+		</main>
+
+		<aside class="sidebar compact">
+			<a class="brand" href="../index.html"><span class="brand-name">Yordanos Z.</span></a>
+			<nav class="side-group" aria-label="Site">
+				<a href="../index.html#products">Products</a>
+				<a href="../archive.html">Archive</a>
+			</nav>
+			<div class="side-tools">
+				<a href="../feed.xml">RSS</a>
+				<button id="theme-toggle">[dark]</button>
+			</div>
+		</aside>
+		</div>
+
+		<hr />
+		<footer><p>Creator of Worlds &amp; a Coffee Addict ;p</p></footer>
+	</body>
+</html>
