@@ -19,7 +19,7 @@ body.docs-page main { max-width: 740px; }
 	max-height: calc(100vh - 48px);
 	overflow-y: auto;
 	margin-top: -12px;
-	padding: 12px 24px 12px 0;
+	padding: 6px 24px 12px 0;
 	background: var(--bg);
 	border-right: 1px solid var(--border);
 	font-size: 14px;

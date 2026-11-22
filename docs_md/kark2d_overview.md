@@ -4,7 +4,11 @@ description: Compact reference for Karl2D, a beginner friendly 2D game library f
 project: Karl2D
 order: 1
 updated: 2026-11-22
+source: https://github.com/karl-zylinski/karl2d
 ---
+
+Library Author: [Karl Zylinski](https://zylinski.se/), Website: [karl2d.com](https://karl2d.com)
+
 Karl2D makes 2D games in [Odin](https://odin-lang.org) with few dependencies and no emscripten for web builds. Everything is called as `k2.name`. This page follows the API overview file `karl2d.doc.odin`.
 
 ## Getting started
@@ -36,7 +40,7 @@ Run with `odin run .` from the game folder.
 - **Units:** pixels, radians, seconds. Origin is top-left, Y grows down
 - **Types:** `Vec2` is `[2]f32`, `Color` is `[4]u8`, `Rect` is `{x, y, w, h}` with `(x, y)` top-left
 - **Loaders** return `(value, bool)`. Checking the `bool` is optional, failures are logged, and a failed value is safe to use but draws or plays nothing
-- **Handles** (`Texture`, `Sound`, `Font`...) are cheap to copy. A finished `Sound` handle is safe: its procs do nothing
+- **Handles** (`Texture`, `Sound`, `Font`...) are cheap to copy. Procs that take a destroyed or finished handle are safe: they do nothing or return zero
 - **Per-frame slices** from `get_events`, `get_typed_runes` and `get_touches` are only valid this frame. Clone with `slice.clone`
 - **`Maybe(...)` settings** (camera, shader, render texture, scissor): pass a value to enable, `nil` to reset
 
@@ -47,13 +51,13 @@ Run with `odin run .` from the game folder.
 | `init(w, h, title, options, allocator)` | Open window, start renderer and audio. Call before almost everything (`get_monitors` is the exception). Returns `^State` |
 | `update()` | Read input, update frame time, run audio. Returns `false` when the player tries to close |
 | `clear(color)` | Clear the screen (or the current render texture) |
-| `present()` | Show the frame. Call it on web too |
+| `present()` | Show the frame. Call it on web too. Also where the FPS limit sleeps |
 | `shutdown()` | Close and clean up |
 | `get_frame_time()` / `get_time()` | Seconds the last frame took (`f32`) / since start (`f64`) |
 
 `update` is shorthand for `reset_frame_allocator`, `calculate_frame_time`, `update_audio` and `process_events`. Call them yourself for more control, and test `close_window_requested()`.
 
-**`Init_Options`:** `window_mode` (`.Windowed`, `.Windowed_Resizable`, `.Borderless_Fullscreen`), `monitor`, `anti_alias`, `disable_auto_scale_hint`, `depth_test`, `depth_range_min`/`depth_range_max`.
+**`Init_Options`:** `window_mode` (`.Windowed`, `.Windowed_Resizable`, `.Borderless_Fullscreen`), `monitor`, `anti_alias`, `disable_auto_scale_hint`, `disable_vsync`, `fps_limit`, `depth_test`, `depth_range_min`/`depth_range_max`.
 
 ```odin
 k2.init(1280, 720, "Game", options = { window_mode = .Windowed_Resizable, anti_alias = true })
@@ -64,6 +68,8 @@ k2.init(1280, 720, "Game", options = { window_mode = .Windowed_Resizable, anti_a
 | `get_screen_width/height/size`, `set_screen_size(w, h)` | Drawable area |
 | `set_window_title`, `set_window_position`, `get_window_position` | Position does nothing on web. Get returns `{}` on web and Wayland |
 | `set_window_mode`, `get_window_mode` | Switch modes |
+| `set_vsync(bool)` | On by default. Can't be disabled on web |
+| `set_fps_limit(fps)` | 0 means no limit (default). Sleeps in `present`. Not available on web |
 | `get_window_scale()` | OS DPI scale (1.5 is 150%). **No automatic scaling:** multiply sizes yourself and use it as camera zoom |
 | `get_monitors()` | Callable before `init`. Slice and names are allocated: free them |
 | `get_window_monitor`, `set_window_monitor(id)` | Which monitor |
@@ -135,24 +141,37 @@ k2.draw_text("Game Over", (k2.get_screen_size() - size) / 2, 64, k2.WHITE)
 
 ## Textures and images
 
-A `Texture` (`handle`, `width`, `height`) is on the GPU. An `Image` (`pixels []Color`, `width`, `height`) is in RAM, always RGBA8 with straight alpha.
+A `Texture` is a handle to a GPU texture, so query its size with `get_texture_width/height/size` (there are no `width`/`height` fields). An `Image` (`pixels []Color`, `width`, `height`) is in RAM, always RGBA8 with straight alpha.
 
 | Procedure | Job |
 |-----------|-----|
 | `load_texture_from_file(name, options)` | PNG, BMP, TGA. Baseline PNG only, **no progressive PNG** |
 | `load_texture_from_bytes(bytes, options)` | Encoded file in memory, e.g. `#load("a.png")`. Use on web |
-| `load_texture_from_bytes_raw(bytes, w, h, format)` | Headerless pixels |
-| `load_texture_from_image(image)` | From an `Image` |
-| `create_texture(w, h, format)` | Empty texture |
+| `load_texture_from_bytes_raw(bytes, w, h, format, options)` | Headerless pixels |
+| `load_texture_from_image(image, options)` | From an `Image` |
+| `load_texture_from_mipmap_images(images)` | Mipmap from images. The first is full size, each next is the size from `get_mip_level_width/height` |
+| `create_texture(w, h, format, mip_levels := 1)` | Empty texture |
 | `load_image_from_file/bytes`, `destroy_image` | Images |
-| `update_texture(tex, bytes, rect, pitch := 0)` | Overwrite a region |
+| `update_texture(tex, bytes, rect, pitch := 0, mip_level := 0)` | Overwrite a region. `rect` must fit the chosen mip level |
+| `is_texture_valid(tex)` | `false` for `TEXTURE_NONE` or a destroyed texture |
 | `get_texture_rect(tex)` | `{0, 0, w, h}` |
-| `set_texture_filter(tex, .Point/.Linear)` | Pixelated or smooth. `set_texture_filter_ex` splits down/up/mip |
+| `get_texture_width/height(tex)`, `get_texture_size(tex)` | `int`, `int`, `Vec2`. Zero for invalid textures |
 | `destroy_texture(tex)` | |
 
-`options` is `{ .Premultiply_Alpha }` for use with `set_blend_mode(.Premultiplied_Alpha)`. `Pixel_Format`: `RGBA_8_Norm`, `RG_8_Norm`, `R_8_Norm`, `R_8_UInt`, `RGBA_32_Float`, `RGB_32_Float`, `RG_32_Float`, `R_32_Float`. `pixel_format_size(f)` gives bytes per pixel.
+**Load options** is a struct: `{ premultiply_alpha = true }` for use with `set_blend_mode(.Premultiplied_Alpha)`, and `generate_mipmap`/`mip_levels` for mipmaps (`mip_levels` of 0 gives a full chain). `Pixel_Format`: `RGBA_8_Norm`, `RG_8_Norm`, `R_8_Norm`, `R_8_UInt`, `RGBA_32_Float`, `RGB_32_Float`, `RG_32_Float`, `R_32_Float`. `pixel_format_size(f)` gives bytes per pixel.
 
-**Render textures** let you draw into a texture. `create_render_texture(w, h)`, `set_render_texture(rt)` (`nil` returns to the screen), `destroy_render_texture(rt)`. Use `rt.texture` like any texture. `clear` clears the current target.
+**Mipmaps** are smaller copies of a texture that avoid artifacts when it is drawn scaled down. `generate_mipmap(tex)` needs a texture made with 2 or more levels. Helpers: `get_max_mip_levels(w, h)`, `get_mip_level_width/height(level_0_size, level)`, `get_texture_mip_levels(tex)`.
+
+**Filtering and wrapping:**
+
+- `set_texture_filter(tex, .Point/.Linear)` is pixelated or smooth, for scaling up, down and mips
+- `set_texture_wrap(tex, wrap)` decides what happens when a `source` rect reaches outside the texture: `.Clamp`, `.Repeat`, `.Mirrored_Repeat` or `.Border` (web falls back to `.Clamp`)
+- `set_texture_sampler(tex, sampler)` controls everything per texture. A `Texture_Sampler` has `scale_down_filter`, `scale_up_filter`, `mip_filter`, `wrap_x`, `wrap_y` and `wrap_border_color` (`.Transparent_Black`, `.Black` or `.White`). Pass `nil` to use the default sampler. `get_texture_sampler(tex)` reads it
+- `set_default_texture_sampler(s)` and `get_default_texture_sampler()` change what textures without their own settings use
+
+The sampler is copied into the queued draw call, so changing it after a draw does not affect that draw.
+
+**Render textures** let you draw into a texture. `create_render_texture(w, h, mip_levels := 1)` (call `generate_mipmap` to fill extra levels), `set_render_texture(rt)` (`nil` returns to the screen), `destroy_render_texture(rt)`. Use `rt.texture` like any texture. `clear` clears the current target.
 
 ```odin
 k2.set_render_texture(minimap)
@@ -179,24 +198,33 @@ Mixer runs at 44100 Hz. `update` runs `update_audio`, which must run once per fr
 | Type | Meaning |
 |------|---------|
 | `Audio_Clip` | Fully loaded audio (WAV, OGG). For effects |
-| `Audio_Stream` | OGG decoded bit by bit. For music |
-| `Sound` | Something playing now. Returned by `play_audio_*` |
+| `Sound` | A persistent, controllable way to play a clip. Remembers its settings, can loop |
+| `Audio_Stream` | OGG decoded bit by bit. For music. Controlled directly, no `Sound` needed |
 
 ```odin
+// fire and forget
 sfx := k2.load_audio_clip_from_file("jump.wav")
 k2.play_audio_clip(sfx, volume = 0.8, pitch = 1.2)
 
+// controllable and loopable
+engine := k2.create_sound(engine_clip, loop = true)
+k2.play_sound(engine)
+k2.set_sound_pitch(engine, 1.0 + speed * 0.5)
+
+// music
 music := k2.load_audio_stream_from_file("music.ogg")
-song := k2.play_audio_stream(music, loop = true)
+k2.set_audio_stream_loop(music, true)
+k2.play_audio_stream(music)
 // every frame:
 k2.update_audio_stream(music)
 ```
 
-- **Clips:** `load_audio_clip_from_file/bytes` (bytes must be the **whole file**), `load_audio_clip_from_bytes_raw(bytes, format, sample_rate, channels)`, `destroy_audio_clip`, `get_num_sounds_playing_clip`
-- **Streams:** `load_audio_stream_from_file/bytes` (bytes are **not copied**, keep them alive), `update_audio_stream` every frame (safe on one thread per stream), `destroy_audio_stream`. A stream plays one sound at a time: playing again returns the existing sound and ignores new settings. `stop_sound` first to restart
-- **`play_audio_*` args:** `volume` (0 to 1), `pan` (-1 to 1), `pitch` (0.01 and up), `loop`, `bus`. Looping with a discarded `Sound` can't be stopped
-- **Sound control:** `stop_sound`, `set_sound_paused`, `sound_is_playing`, `sound_is_valid`, `set_sound_volume/pan/pitch/loop/time/bus`, `get_sound_time`, `get_sound_length`
-- **Buses** group sounds: `create_audio_bus`, `destroy_audio_bus`, `set_audio_bus_volume/pan`, `set_audio_bus_effect(bus, proc, user_data)`. `AUDIO_BUS_MASTER` is the default, so `set_audio_bus_volume(k2.AUDIO_BUS_MASTER, v)` sets master volume
+- **Clips:** `load_audio_clip_from_file/bytes` (bytes must be the **whole file**), `load_audio_clip_from_bytes_raw(bytes, format, sample_rate, channels)`, `destroy_audio_clip` (also stops its instances and destroys its `Sound`s), `get_audio_clip_duration`, `count_audio_clip_instances` (includes paused), `count_sounds_from_clip`
+- **`play_audio_clip(clip, volume, pan, pitch, bus)`:** fire and forget, returns nothing and **cannot loop**. Volume is 0 to 1, pan -1 to 1, pitch 0.01 and up
+- **Sounds:** `create_sound(clip, volume, pan, pitch, loop, bus)`, `play_sound` (restarts if playing), `pause_sound` (`play_sound` resumes), `stop_sound`, `destroy_sound`, `sound_is_playing`, `sound_is_paused`. Settings: `set_sound_volume/pan/pitch/loop/time/bus`. Read: `get_sound_time`, `get_sound_duration`. Settings stay for the next play. `set_sound_time` on a stopped or paused sound is where it starts
+- **Streams:** `load_audio_stream_from_file/bytes` (bytes are **not copied**, keep them alive), `update_audio_stream` every frame (safe on one thread per stream), `destroy_audio_stream`. A stream can only play once at a time
+- **Stream control:** `play_audio_stream` (restarts if playing, resumes if paused), `pause_audio_stream`, `stop_audio_stream` (rewinds), `audio_stream_is_playing`, `audio_stream_is_paused`, `set_audio_stream_volume/pan/pitch/loop/bus/time`, `get_audio_stream_time`, `get_audio_stream_duration`
+- **Buses** group sounds: `create_audio_bus`, `destroy_audio_bus`, `set_audio_bus_volume/pan`, `set_audio_bus_effect(bus, proc, user_data)`. `AUDIO_BUS_MASTER` is the default, so `set_audio_bus_volume(k2.AUDIO_BUS_MASTER, v)` sets master volume. Streams use `set_audio_stream_bus`
 - **Effects:** `proc(samples: [][2]Audio_Sample, user_data: rawptr)` edits the bus mix in place. State must live in `user_data`
 
 ## Camera
@@ -242,7 +270,7 @@ A failed load makes `set_shader` do nothing. Default inputs are position, texcoo
 | Group | Procedures |
 |-------|-----------|
 | Overlap | `rect_overlapping(a, b)`, `rect_overlap(a, b) -> (Rect, bool)`, `point_in_rect(p, r)` |
-| Points | `rect_middle` (also `rect_center`/`rect_centre`), `rect_top_left/middle/right`, `rect_bottom_left/middle/right`, `rect_from_pos_size` |
+| Points | `rect_middle` (also `rect_center`/`rect_centre`), `rect_top_left/middle/right`, `rect_bottom_left/middle/right`, `rect_left_middle`, `rect_right_middle`, `rect_from_pos_size` |
 | Size | `rect_shrink(r, x, y)`, `rect_expand(r, x, y)`: each edge moves, so width changes by `2x` |
 | Cut | `rect_cut_top/bottom/left/right(&r, size, margin)` returns the strip and shrinks `r` by `size + margin` |
 | Split | `rect_split_left/right/top/bottom(r, size, margin)` returns two new rects without modifying `r` |

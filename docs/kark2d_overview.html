@@ -87,10 +87,12 @@ class="anchor-mark">#</span></a></li>
 				<p class="description">Compact reference for Karl2D, a beginner friendly
 2D game library for Odin (Windows, Linux, Mac, Web).</p>
 				<p class="meta doc-meta"><span>Updated <time datetime="2026-11-22">2026-11-22</time></span></p>
-				
+				<p class="source"><span class="source-label">Source</span><a href="https://github.com/karl-zylinski/karl2d" rel="noopener">github.com/karl-zylinski/karl2d</a></p>
 			</header>
 
-			<p>Karl2D makes 2D games in <a href="https://odin-lang.org">Odin</a>
+			<p>Library Author: <a href="https://zylinski.se/">Karl Zylinski</a>,
+Website: <a href="https://karl2d.com">karl2d.com</a></p>
+<p>Karl2D makes 2D games in <a href="https://odin-lang.org">Odin</a>
 with few dependencies and no emscripten for web builds. Everything is
 called as <code>k2.name</code>. This page follows the API overview file
 <code>karl2d.doc.odin</code>.</p>
@@ -129,8 +131,8 @@ top-left, Y grows down</li>
 the <code>bool</code> is optional, failures are logged, and a failed
 value is safe to use but draws or plays nothing</li>
 <li><strong>Handles</strong> (<code>Texture</code>, <code>Sound</code>,
-<code>Font</code>…) are cheap to copy. A finished <code>Sound</code>
-handle is safe: its procs do nothing</li>
+<code>Font</code>…) are cheap to copy. Procs that take a destroyed or
+finished handle are safe: they do nothing or return zero</li>
 <li><strong>Per-frame slices</strong> from <code>get_events</code>,
 <code>get_typed_runes</code> and <code>get_touches</code> are only valid
 this frame. Clone with <code>slice.clone</code></li>
@@ -170,7 +172,8 @@ when the player tries to close</td>
 </tr>
 <tr>
 <td><code>present()</code></td>
-<td>Show the frame. Call it on web too</td>
+<td>Show the frame. Call it on web too. Also where the FPS limit
+sleeps</td>
 </tr>
 <tr>
 <td><code>shutdown()</code></td>
@@ -192,6 +195,7 @@ yourself for more control, and test
 (<code>.Windowed</code>, <code>.Windowed_Resizable</code>,
 <code>.Borderless_Fullscreen</code>), <code>monitor</code>,
 <code>anti_alias</code>, <code>disable_auto_scale_hint</code>,
+<code>disable_vsync</code>, <code>fps_limit</code>,
 <code>depth_test</code>,
 <code>depth_range_min</code>/<code>depth_range_max</code>.</p>
 <div class="sourceCode" id="cb2"><pre
@@ -222,6 +226,15 @@ Wayland</td>
 <tr>
 <td><code>set_window_mode</code>, <code>get_window_mode</code></td>
 <td>Switch modes</td>
+</tr>
+<tr>
+<td><code>set_vsync(bool)</code></td>
+<td>On by default. Can’t be disabled on web</td>
+</tr>
+<tr>
+<td><code>set_fps_limit(fps)</code></td>
+<td>0 means no limit (default). Sleeps in <code>present</code>. Not
+available on web</td>
 </tr>
 <tr>
 <td><code>get_window_scale()</code></td>
@@ -431,8 +444,9 @@ atlas and group draws by texture.</p>
 href="#textures-and-images" class="anchor"
 aria-label="Link to this section"><span
 class="anchor-mark">#</span></a></h2>
-<p>A <code>Texture</code> (<code>handle</code>, <code>width</code>,
-<code>height</code>) is on the GPU. An <code>Image</code>
+<p>A <code>Texture</code> is a handle to a GPU texture, so query its
+size with <code>get_texture_width/height/size</code> (there are no
+<code>width</code>/<code>height</code> fields). An <code>Image</code>
 (<code>pixels []Color</code>, <code>width</code>, <code>height</code>)
 is in RAM, always RGBA8 with straight alpha.</p>
 <table>
@@ -458,15 +472,20 @@ PNG</strong></td>
 web</td>
 </tr>
 <tr>
-<td><code>load_texture_from_bytes_raw(bytes, w, h, format)</code></td>
+<td><code>load_texture_from_bytes_raw(bytes, w, h, format, options)</code></td>
 <td>Headerless pixels</td>
 </tr>
 <tr>
-<td><code>load_texture_from_image(image)</code></td>
+<td><code>load_texture_from_image(image, options)</code></td>
 <td>From an <code>Image</code></td>
 </tr>
 <tr>
-<td><code>create_texture(w, h, format)</code></td>
+<td><code>load_texture_from_mipmap_images(images)</code></td>
+<td>Mipmap from images. The first is full size, each next is the size
+from <code>get_mip_level_width/height</code></td>
+</tr>
+<tr>
+<td><code>create_texture(w, h, format, mip_levels := 1)</code></td>
 <td>Empty texture</td>
 </tr>
 <tr>
@@ -475,17 +494,24 @@ web</td>
 <td>Images</td>
 </tr>
 <tr>
-<td><code>update_texture(tex, bytes, rect, pitch := 0)</code></td>
-<td>Overwrite a region</td>
+<td><code>update_texture(tex, bytes, rect, pitch := 0, mip_level := 0)</code></td>
+<td>Overwrite a region. <code>rect</code> must fit the chosen mip
+level</td>
+</tr>
+<tr>
+<td><code>is_texture_valid(tex)</code></td>
+<td><code>false</code> for <code>TEXTURE_NONE</code> or a destroyed
+texture</td>
 </tr>
 <tr>
 <td><code>get_texture_rect(tex)</code></td>
 <td><code>{0, 0, w, h}</code></td>
 </tr>
 <tr>
-<td><code>set_texture_filter(tex, .Point/.Linear)</code></td>
-<td>Pixelated or smooth. <code>set_texture_filter_ex</code> splits
-down/up/mip</td>
+<td><code>get_texture_width/height(tex)</code>,
+<code>get_texture_size(tex)</code></td>
+<td><code>int</code>, <code>int</code>, <code>Vec2</code>. Zero for
+invalid textures</td>
 </tr>
 <tr>
 <td><code>destroy_texture(tex)</code></td>
@@ -493,15 +519,47 @@ down/up/mip</td>
 </tr>
 </tbody>
 </table>
-<p><code>options</code> is <code>{ .Premultiply_Alpha }</code> for use
-with <code>set_blend_mode(.Premultiplied_Alpha)</code>.
+<p><strong>Load options</strong> is a struct:
+<code>{ premultiply_alpha = true }</code> for use with
+<code>set_blend_mode(.Premultiplied_Alpha)</code>, and
+<code>generate_mipmap</code>/<code>mip_levels</code> for mipmaps
+(<code>mip_levels</code> of 0 gives a full chain).
 <code>Pixel_Format</code>: <code>RGBA_8_Norm</code>,
 <code>RG_8_Norm</code>, <code>R_8_Norm</code>, <code>R_8_UInt</code>,
 <code>RGBA_32_Float</code>, <code>RGB_32_Float</code>,
 <code>RG_32_Float</code>, <code>R_32_Float</code>.
 <code>pixel_format_size(f)</code> gives bytes per pixel.</p>
+<p><strong>Mipmaps</strong> are smaller copies of a texture that avoid
+artifacts when it is drawn scaled down.
+<code>generate_mipmap(tex)</code> needs a texture made with 2 or more
+levels. Helpers: <code>get_max_mip_levels(w, h)</code>,
+<code>get_mip_level_width/height(level_0_size, level)</code>,
+<code>get_texture_mip_levels(tex)</code>.</p>
+<p><strong>Filtering and wrapping:</strong></p>
+<ul>
+<li><code>set_texture_filter(tex, .Point/.Linear)</code> is pixelated or
+smooth, for scaling up, down and mips</li>
+<li><code>set_texture_wrap(tex, wrap)</code> decides what happens when a
+<code>source</code> rect reaches outside the texture:
+<code>.Clamp</code>, <code>.Repeat</code>, <code>.Mirrored_Repeat</code>
+or <code>.Border</code> (web falls back to <code>.Clamp</code>)</li>
+<li><code>set_texture_sampler(tex, sampler)</code> controls everything
+per texture. A <code>Texture_Sampler</code> has
+<code>scale_down_filter</code>, <code>scale_up_filter</code>,
+<code>mip_filter</code>, <code>wrap_x</code>, <code>wrap_y</code> and
+<code>wrap_border_color</code> (<code>.Transparent_Black</code>,
+<code>.Black</code> or <code>.White</code>). Pass <code>nil</code> to
+use the default sampler. <code>get_texture_sampler(tex)</code> reads
+it</li>
+<li><code>set_default_texture_sampler(s)</code> and
+<code>get_default_texture_sampler()</code> change what textures without
+their own settings use</li>
+</ul>
+<p>The sampler is copied into the queued draw call, so changing it after
+a draw does not affect that draw.</p>
 <p><strong>Render textures</strong> let you draw into a texture.
-<code>create_render_texture(w, h)</code>,
+<code>create_render_texture(w, h, mip_levels := 1)</code> (call
+<code>generate_mipmap</code> to fill extra levels),
 <code>set_render_texture(rt)</code> (<code>nil</code> returns to the
 screen), <code>destroy_render_texture(rt)</code>. Use
 <code>rt.texture</code> like any texture. <code>clear</code> clears the
@@ -555,6 +613,10 @@ class="anchor-mark">#</span></a></h2>
 <p>Mixer runs at 44100 Hz. <code>update</code> runs
 <code>update_audio</code>, which must run once per frame.</p>
 <table>
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
 <thead>
 <tr>
 <th>Type</th>
@@ -567,51 +629,74 @@ class="anchor-mark">#</span></a></h2>
 <td>Fully loaded audio (WAV, OGG). For effects</td>
 </tr>
 <tr>
-<td><code>Audio_Stream</code></td>
-<td>OGG decoded bit by bit. For music</td>
+<td><code>Sound</code></td>
+<td>A persistent, controllable way to play a clip. Remembers its
+settings, can loop</td>
 </tr>
 <tr>
-<td><code>Sound</code></td>
-<td>Something playing now. Returned by <code>play_audio_*</code></td>
+<td><code>Audio_Stream</code></td>
+<td>OGG decoded bit by bit. For music. Controlled directly, no
+<code>Sound</code> needed</td>
 </tr>
 </tbody>
 </table>
 <div class="sourceCode" id="cb7"><pre
-class="sourceCode odin"><code class="sourceCode odin"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="va">sfx </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">load_audio_clip_from_file</span><span class="op">(</span><span class="st">&quot;jump.wav&quot;</span><span class="op">)</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">play_audio_clip</span><span class="op">(</span>sfx<span class="op">,</span> volume <span class="op">=</span> <span class="fl">0.8</span><span class="op">,</span> pitch <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="va">music </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">load_audio_stream_from_file</span><span class="op">(</span><span class="st">&quot;music.ogg&quot;</span><span class="op">)</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="va">song </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">play_audio_stream</span><span class="op">(</span>music<span class="op">,</span> loop <span class="op">=</span> <span class="kw">true</span><span class="op">)</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">// every frame:</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">update_audio_stream</span><span class="op">(</span>music<span class="op">)</span></span></code></pre></div>
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">// fire and forget</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="va">sfx </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">load_audio_clip_from_file</span><span class="op">(</span><span class="st">&quot;jump.wav&quot;</span><span class="op">)</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">play_audio_clip</span><span class="op">(</span>sfx<span class="op">,</span> volume <span class="op">=</span> <span class="fl">0.8</span><span class="op">,</span> pitch <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">// controllable and loopable</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="va">engine </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">create_sound</span><span class="op">(</span>engine_clip<span class="op">,</span> loop <span class="op">=</span> <span class="kw">true</span><span class="op">)</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">play_sound</span><span class="op">(</span>engine<span class="op">)</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">set_sound_pitch</span><span class="op">(</span>engine<span class="op">,</span> <span class="fl">1.0</span> <span class="op">+</span> speed <span class="op">*</span> <span class="fl">0.5</span><span class="op">)</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">// music</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="va">music </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">load_audio_stream_from_file</span><span class="op">(</span><span class="st">&quot;music.ogg&quot;</span><span class="op">)</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">set_audio_stream_loop</span><span class="op">(</span>music<span class="op">,</span> <span class="kw">true</span><span class="op">)</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">play_audio_stream</span><span class="op">(</span>music<span class="op">)</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">// every frame:</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">update_audio_stream</span><span class="op">(</span>music<span class="op">)</span></span></code></pre></div>
 <ul>
 <li><strong>Clips:</strong> <code>load_audio_clip_from_file/bytes</code>
 (bytes must be the <strong>whole file</strong>),
 <code>load_audio_clip_from_bytes_raw(bytes, format, sample_rate, channels)</code>,
-<code>destroy_audio_clip</code>,
-<code>get_num_sounds_playing_clip</code></li>
+<code>destroy_audio_clip</code> (also stops its instances and destroys
+its <code>Sound</code>s), <code>get_audio_clip_duration</code>,
+<code>count_audio_clip_instances</code> (includes paused),
+<code>count_sounds_from_clip</code></li>
+<li><strong><code>play_audio_clip(clip, volume, pan, pitch, bus)</code>:</strong>
+fire and forget, returns nothing and <strong>cannot loop</strong>.
+Volume is 0 to 1, pan -1 to 1, pitch 0.01 and up</li>
+<li><strong>Sounds:</strong>
+<code>create_sound(clip, volume, pan, pitch, loop, bus)</code>,
+<code>play_sound</code> (restarts if playing), <code>pause_sound</code>
+(<code>play_sound</code> resumes), <code>stop_sound</code>,
+<code>destroy_sound</code>, <code>sound_is_playing</code>,
+<code>sound_is_paused</code>. Settings:
+<code>set_sound_volume/pan/pitch/loop/time/bus</code>. Read:
+<code>get_sound_time</code>, <code>get_sound_duration</code>. Settings
+stay for the next play. <code>set_sound_time</code> on a stopped or
+paused sound is where it starts</li>
 <li><strong>Streams:</strong>
 <code>load_audio_stream_from_file/bytes</code> (bytes are <strong>not
 copied</strong>, keep them alive), <code>update_audio_stream</code>
 every frame (safe on one thread per stream),
-<code>destroy_audio_stream</code>. A stream plays one sound at a time:
-playing again returns the existing sound and ignores new settings.
-<code>stop_sound</code> first to restart</li>
-<li><strong><code>play_audio_*</code> args:</strong> <code>volume</code>
-(0 to 1), <code>pan</code> (-1 to 1), <code>pitch</code> (0.01 and up),
-<code>loop</code>, <code>bus</code>. Looping with a discarded
-<code>Sound</code> can’t be stopped</li>
-<li><strong>Sound control:</strong> <code>stop_sound</code>,
-<code>set_sound_paused</code>, <code>sound_is_playing</code>,
-<code>sound_is_valid</code>,
-<code>set_sound_volume/pan/pitch/loop/time/bus</code>,
-<code>get_sound_time</code>, <code>get_sound_length</code></li>
+<code>destroy_audio_stream</code>. A stream can only play once at a
+time</li>
+<li><strong>Stream control:</strong> <code>play_audio_stream</code>
+(restarts if playing, resumes if paused),
+<code>pause_audio_stream</code>, <code>stop_audio_stream</code>
+(rewinds), <code>audio_stream_is_playing</code>,
+<code>audio_stream_is_paused</code>,
+<code>set_audio_stream_volume/pan/pitch/loop/bus/time</code>,
+<code>get_audio_stream_time</code>,
+<code>get_audio_stream_duration</code></li>
 <li><strong>Buses</strong> group sounds: <code>create_audio_bus</code>,
 <code>destroy_audio_bus</code>, <code>set_audio_bus_volume/pan</code>,
 <code>set_audio_bus_effect(bus, proc, user_data)</code>.
 <code>AUDIO_BUS_MASTER</code> is the default, so
 <code>set_audio_bus_volume(k2.AUDIO_BUS_MASTER, v)</code> sets master
-volume</li>
+volume. Streams use <code>set_audio_stream_bus</code></li>
 <li><strong>Effects:</strong>
 <code>proc(samples: [][2]Audio_Sample, user_data: rawptr)</code> edits
 the bus mix in place. State must live in <code>user_data</code></li>
@@ -724,6 +809,7 @@ class="anchor-mark">#</span></a></h2>
 <code>rect_center</code>/<code>rect_centre</code>),
 <code>rect_top_left/middle/right</code>,
 <code>rect_bottom_left/middle/right</code>,
+<code>rect_left_middle</code>, <code>rect_right_middle</code>,
 <code>rect_from_pos_size</code></td>
 </tr>
 <tr>
