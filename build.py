@@ -1,4 +1,5 @@
-"""Build articles/*.html from articles_md/*.md and docs/*.html from docs_md/*.md
+"""
+Build articles/*.html from articles_md/*.md and docs/*.html from docs_md/*.md
 with Pandoc, then refresh the lists in index.html (latest INDEX_LIMIT articles),
 archive.html (everything) and feed.xml (articles and docs).
 
