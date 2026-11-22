@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="Shapes, lines, textures and text, plus
+how Karl2D batches draw calls.">
+
+		<title>Drawing</title>
+
+		<meta property="og:type" content="article">
+		<meta property="og:site_name" content="Yordanos">
+		<meta property="og:title" content="Drawing">
+		<meta property="og:description" content="Shapes, lines, textures and text, plus how Karl2D batches draw calls.">
+		<meta property="og:url" content="https://theyordanos.github.io/docs/karl2d_drawing.html">
+		<meta property="og:image" content="https://theyordanos.github.io/res/article_og.png">
+		<meta name="twitter:card" content="summary_large_image">
+		<link rel="canonical" href="https://theyordanos.github.io/docs/karl2d_drawing.html">
+
+		<link rel="alternate" type="application/atom+xml" title="Yordanos" href="https://theyordanos.github.io/feed.xml">
+
+		<link rel="icon" type="image/png" href="../res/theyordanos-icon.png">
+		<script>
+		try {
+			if (localStorage.getItem("ty_theme") === "dark") document.documentElement.classList.add("dark");
+		} catch (e) {}
+		</script>
+		<link rel="stylesheet" href="../styles/style.css">
+		<link rel="stylesheet" href="../styles/article.css">
+		<link rel="stylesheet" href="../styles/docs.css">
+
+		<script src="../scripts/theme.js" defer></script>
+		<script src="../scripts/copy.js" defer></script>
+		<script src="../scripts/docs.js" defer></script>
+	</head>
+	<body class="docs-page">
+		<div class="layout docs">
+		<aside class="docs-nav">
+			<input type="checkbox" id="docs-toggle" class="docs-toggle" aria-label="Show contents">
+
+			<div class="docs-head">
+				<label class="docs-menu-btn" for="docs-toggle" aria-hidden="true">Contents &#9776;</label>
+			</div>
+
+			<div class="docs-body">
+				<nav class="docs-pages" aria-label="Karl2D documentation"><p class="side-label">Karl2D</p><ul><li><a href="karl2d_overview.html">Overview</a></li><li><a href="karl2d_window.html">Window and frame</a></li><li><a href="karl2d_input.html">Input</a></li><li><a href="karl2d_drawing.html" aria-current="page">Drawing</a></li><li><a href="karl2d_textures.html">Textures and images</a></li><li><a href="karl2d_fonts.html">Fonts</a></li><li><a href="karl2d_audio.html">Audio</a></li><li><a href="karl2d_camera.html">Camera</a></li><li><a href="karl2d_shaders.html">Shaders</a></li><li><a href="karl2d_math.html">Math helpers</a></li><li><a href="karl2d_misc.html">Misc</a></li></ul></nav>
+
+								<nav id="TOC" role="doc-toc" aria-label="On this page">
+					<p class="toc-title">On this page</p>
+					<ul>
+<li><a href="#colors" id="toc-colors">Colors <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#rectangles" id="toc-rectangles">Rectangles <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#circles-lines-and-triangles"
+id="toc-circles-lines-and-triangles">Circles, lines and triangles <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#textures" id="toc-textures">Textures <span
+class="anchor-mark">#</span></a>
+<ul>
+<li><a href="#draw_texture" id="toc-draw_texture">draw_texture <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#draw_texture_rect"
+id="toc-draw_texture_rect">draw_texture_rect <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#draw_texture_fit"
+id="toc-draw_texture_fit">draw_texture_fit <span
+class="anchor-mark">#</span></a></li>
+</ul></li>
+<li><a href="#text" id="toc-text">Text <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#batching-and-draw-calls"
+id="toc-batching-and-draw-calls">Batching and draw calls <span
+class="anchor-mark">#</span></a></li>
+</ul>
+				</nav>
+							</div>
+		</aside>
+
+		<main>
+			<header>
+				<h1>Drawing</h1>
+				<p class="description">Shapes, lines, textures and text, plus how Karl2D
+batches draw calls.</p>
+				<p class="meta doc-meta"><span>Updated <time datetime="2026-11-22">2026-11-22</time></span></p>
+				
+			</header>
+
+			<p>All drawing happens between <code>clear</code> and
+<code>present</code>. Positions are in pixels, rotation in radians, and
+colors are <code>Color</code> values (<code>[4]u8</code>).</p>
+<h2 id="colors">Colors <a href="#colors" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<p>Karl2D has named colors such as <code>WHITE</code>,
+<code>BLACK</code>, <code>BLANK</code> (fully transparent),
+<code>RED</code>, <code>GREEN</code>, <code>BLUE</code>,
+<code>ORANGE</code>, <code>PURPLE</code>, <code>MAGENTA</code>,
+<code>YELLOW</code> and <code>BROWN</code>. Most come in
+<code>LIGHT_</code> and <code>DARK_</code> variants, and there are
+grays: <code>LIGHT_GRAY</code>, <code>GRAY</code> and
+<code>DARK_GRAY</code>. The <code>examples/palette</code> folder in the
+repository has a demo that shows them all.</p>
+<p>For porting from Raylib there are <code>RL_</code> colors, such as
+<code>RL_RAYWHITE</code>, <code>RL_SKYBLUE</code> and
+<code>RL_GOLD</code>.</p>
+<p>You can also write colors out directly. <code>color_alpha</code>
+returns the same color with a different alpha:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="va">glass </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">color_alpha</span><span class="op">(</span>k2<span class="op">.</span>BLUE<span class="op">,</span> <span class="dv">128</span><span class="op">)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="va">custom </span><span class="op">:=</span> k2<span class="op">.</span>Color <span class="op">{</span> <span class="dv">30</span><span class="op">,</span> <span class="dv">30</span><span class="op">,</span> <span class="dv">40</span><span class="op">,</span> <span class="dv">255</span> <span class="op">}</span></span></code></pre></div>
+<h2 id="rectangles">Rectangles <a href="#rectangles" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">draw_rect </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>rect<span class="op">:</span> Rect<span class="op">,</span> color<span class="op">:</span> Color<span class="op">,</span> origin<span class="op">:</span> Vec2 <span class="op">=</span> <span class="op">{},</span> rotation<span class="op">:</span> <span class="dt">f32</span> <span class="op">=</span> <span class="dv">0</span><span class="op">)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">draw_rect_vec </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>position<span class="op">:</span> Vec2<span class="op">,</span> size<span class="op">:</span> Vec2<span class="op">,</span> color<span class="op">:</span> Color<span class="op">,</span> origin<span class="op">:</span> Vec2 <span class="op">=</span> <span class="op">{},</span> rotation<span class="op">:</span> <span class="dt">f32</span> <span class="op">=</span> <span class="dv">0</span><span class="op">)</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">draw_rect_outline </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>r<span class="op">:</span> Rect<span class="op">,</span> thickness<span class="op">:</span> <span class="dt">f32</span><span class="op">,</span> color<span class="op">:</span> Color<span class="op">)</span></span></code></pre></div>
+<p>The <code>x</code> and <code>y</code> of a <code>Rect</code> is its
+top-left corner. <code>draw_rect_vec</code> is the same thing with a
+position and a size instead of a <code>Rect</code>.</p>
+<p><code>origin</code> is the point the rectangle rotates around. It
+also shifts the rectangle. With <code>{0, 0}</code> it rotates around
+its top-left corner. With <code>{w/2, h/2}</code> it rotates around its
+center.</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="va">r </span><span class="op">:=</span> k2<span class="op">.</span>Rect <span class="op">{</span> <span class="dv">400</span><span class="op">,</span> <span class="dv">300</span><span class="op">,</span> <span class="dv">100</span><span class="op">,</span> <span class="dv">60</span> <span class="op">}</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">draw_rect</span><span class="op">(</span>r<span class="op">,</span> k2<span class="op">.</span>ORANGE<span class="op">,</span> origin <span class="op">=</span> <span class="op">{</span><span class="dv">50</span><span class="op">,</span> <span class="dv">30</span><span class="op">},</span> rotation <span class="op">=</span> <span class="dt">f32</span><span class="op">(</span>k2<span class="op">.</span><span class="fu">get_time</span><span class="op">()))</span></span></code></pre></div>
+<p><code>draw_rect_outline</code> draws the border with four
+rectangles.</p>
+<h2 id="circles-lines-and-triangles">Circles, lines and triangles <a
+href="#circles-lines-and-triangles" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">draw_circle </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>center<span class="op">:</span> Vec2<span class="op">,</span> radius<span class="op">:</span> <span class="dt">f32</span><span class="op">,</span> color<span class="op">:</span> Color<span class="op">,</span> segments <span class="op">:=</span> <span class="dv">16</span><span class="op">)</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">draw_circle_outline </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>center<span class="op">:</span> Vec2<span class="op">,</span> radius<span class="op">:</span> <span class="dt">f32</span><span class="op">,</span> thickness<span class="op">:</span> <span class="dt">f32</span><span class="op">,</span> color<span class="op">:</span> Color<span class="op">,</span> segments <span class="op">:=</span> <span class="dv">16</span><span class="op">)</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">draw_line </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>start<span class="op">:</span> Vec2<span class="op">,</span> end<span class="op">:</span> Vec2<span class="op">,</span> thickness<span class="op">:</span> <span class="dt">f32</span><span class="op">,</span> color<span class="op">:</span> Color<span class="op">)</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">draw_triangle </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>vertices<span class="op">:</span> <span class="op">[</span><span class="dv">3</span><span class="op">]</span>Vec2<span class="op">,</span> c<span class="op">:</span> Color<span class="op">)</span></span></code></pre></div>
+<p>Circles are not perfect: they are made from <code>segments</code>
+triangle slices. Raise the number for large circles. Triangles can be
+wound either way and look the same.</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">draw_circle</span><span class="op">({</span><span class="dv">200</span><span class="op">,</span> <span class="dv">200</span><span class="op">},</span> <span class="dv">40</span><span class="op">,</span> k2<span class="op">.</span>RED<span class="op">,</span> segments <span class="op">=</span> <span class="dv">48</span><span class="op">)</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">draw_line</span><span class="op">({</span><span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">},</span> <span class="op">{</span><span class="dv">300</span><span class="op">,</span> <span class="dv">200</span><span class="op">},</span> <span class="dv">4</span><span class="op">,</span> k2<span class="op">.</span>WHITE<span class="op">)</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">draw_triangle</span><span class="op">({{</span><span class="dv">100</span><span class="op">,</span> <span class="dv">400</span><span class="op">},</span> <span class="op">{</span><span class="dv">160</span><span class="op">,</span> <span class="dv">300</span><span class="op">},</span> <span class="op">{</span><span class="dv">220</span><span class="op">,</span> <span class="dv">400</span><span class="op">}},</span> k2<span class="op">.</span>GREEN<span class="op">)</span></span></code></pre></div>
+<h2 id="textures">Textures <a href="#textures" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<p>There are three ways to draw a texture. Load it first, see <a
+href="karl2d_textures.html">Textures and images</a>.</p>
+<h3 id="draw_texture">draw_texture <a href="#draw_texture"
+class="anchor" aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">draw_texture </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    texture<span class="op">:</span> Texture<span class="op">,</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    position<span class="op">:</span> Vec2<span class="op">,</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="va">origin</span><span class="op">:</span> Vec2 <span class="op">=</span> <span class="op">{},</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="va">rotation</span><span class="op">:</span> <span class="dt">f32</span> <span class="op">=</span> <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="va">tint </span><span class="op">:=</span> WHITE<span class="op">,</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="op">)</span></span></code></pre></div>
+<p>Draws the whole texture with its top-left corner at
+<code>position</code>.</p>
+<ul>
+<li><code>origin</code> is an offset for the position and the point to
+rotate around</li>
+<li><code>rotation</code> is in radians</li>
+<li><code>tint</code> is multiplied with the texture colors, and
+<code>WHITE</code> means no change</li>
+</ul>
+<p>To rotate around the middle of a texture, use the texture’s middle as
+the origin and add it to the position so the sprite stays where it
+was:</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="va">middle </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">rect_middle</span><span class="op">(</span>k2<span class="op">.</span><span class="fu">get_texture_rect</span><span class="op">(</span>tex<span class="op">))</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">draw_texture</span><span class="op">(</span>tex<span class="op">,</span> pos <span class="op">+</span> middle<span class="op">,</span> middle<span class="op">,</span> rot<span class="op">)</span></span></code></pre></div>
+<h3 id="draw_texture_rect">draw_texture_rect <a
+href="#draw_texture_rect" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">draw_texture_rect </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>texture<span class="op">:</span> Texture<span class="op">,</span> source<span class="op">:</span> Rect<span class="op">,</span> position<span class="op">:</span> Vec2<span class="op">,</span> origin<span class="op">:</span> Vec2 <span class="op">=</span> <span class="op">{},</span> rotation<span class="op">:</span> <span class="dt">f32</span> <span class="op">=</span> <span class="dv">0</span><span class="op">,</span> tint <span class="op">:=</span> WHITE<span class="op">)</span></span></code></pre></div>
+<p>Draws only the part of the texture inside <code>source</code>, which
+is measured in texture pixels. Use it for sprite sheets. A negative
+width or height in <code>source</code> flips the image.</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">// the third frame in a row of 32x32 frames</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="va">frame </span><span class="op">:=</span> k2<span class="op">.</span>Rect <span class="op">{</span> <span class="dv">64</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">32</span><span class="op">,</span> <span class="dv">32</span> <span class="op">}</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">draw_texture_rect</span><span class="op">(</span>sheet<span class="op">,</span> frame<span class="op">,</span> player<span class="op">.</span>pos<span class="op">)</span></span></code></pre></div>
+<h3 id="draw_texture_fit">draw_texture_fit <a href="#draw_texture_fit"
+class="anchor" aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">draw_texture_fit </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>texture<span class="op">:</span> Texture<span class="op">,</span> source<span class="op">:</span> Rect<span class="op">,</span> dest<span class="op">:</span> Rect<span class="op">,</span> origin<span class="op">:</span> Vec2 <span class="op">=</span> <span class="op">{},</span> rotation<span class="op">:</span> <span class="dt">f32</span> <span class="op">=</span> <span class="dv">0</span><span class="op">,</span> tint <span class="op">:=</span> WHITE<span class="op">)</span></span></code></pre></div>
+<p>Takes a <code>source</code> rectangle (texture pixels) and stretches
+it into a <code>dest</code> rectangle (world pixels). Use it to scale an
+image to a size.</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">draw_texture_fit</span><span class="op">(</span>tex<span class="op">,</span> k2<span class="op">.</span><span class="fu">get_texture_rect</span><span class="op">(</span>tex<span class="op">),</span> <span class="op">{</span><span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">640</span><span class="op">,</span> <span class="dv">360</span><span class="op">})</span></span></code></pre></div>
+<h2 id="text">Text <a href="#text" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">draw_text </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    text<span class="op">:</span> <span class="dt">string</span><span class="op">,</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    position<span class="op">:</span> Vec2<span class="op">,</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    font_size<span class="op">:</span> <span class="dt">f32</span><span class="op">,</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    color<span class="op">:</span> Color<span class="op">,</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="va">font </span><span class="op">:=</span> FONT_DEFAULT<span class="op">,</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="va">origin</span><span class="op">:</span> Vec2 <span class="op">=</span> <span class="op">{},</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="va">rotation</span><span class="op">:</span> <span class="dt">f32</span> <span class="op">=</span> <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="op">)</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="fu">measure_text </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>text<span class="op">:</span> <span class="dt">string</span><span class="op">,</span> font_size<span class="op">:</span> <span class="dt">f32</span><span class="op">,</span> font<span class="op">:</span> Font <span class="op">=</span> FONT_DEFAULT<span class="op">)</span> <span class="op">-&gt;</span> Vec2</span></code></pre></div>
+<p><code>position</code> is the top-left of the text. If you use a
+camera, Karl2D scales the font size internally so text stays sharp.
+Without a <code>font</code> argument the built-in Roboto font is used.
+See <a href="karl2d_fonts.html">Fonts</a> for loading your own.</p>
+<p><code>measure_text</code> returns how much room text takes. Use it to
+center or right-align:</p>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="va">msg </span><span class="op">:=</span> <span class="st">&quot;Game Over&quot;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="va">size </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">measure_text</span><span class="op">(</span>msg<span class="op">,</span> <span class="dv">64</span><span class="op">)</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="va">pos </span><span class="op">:=</span><span class="fu"> </span><span class="op">(</span>k2<span class="op">.</span><span class="fu">get_screen_size</span><span class="op">()</span> <span class="op">-</span> size<span class="op">)</span> <span class="op">/</span> <span class="dv">2</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">draw_text</span><span class="op">(</span>msg<span class="op">,</span> pos<span class="op">,</span> <span class="dv">64</span><span class="op">,</span> k2<span class="op">.</span>WHITE<span class="op">)</span></span></code></pre></div>
+<h2 id="batching-and-draw-calls">Batching and draw calls <a
+href="#batching-and-draw-calls" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<p>Karl2D collects what you draw into a <strong>batch</strong>: a list
+of vertices plus a list of draw calls. The batch is sent to the GPU when
+it is flushed. This happens when you call <code>present</code> or
+<code>clear</code>, when the vertex buffer is full, or when you destroy
+a resource that the current batch uses. You can also flush by hand:</p>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">draw_current_batch </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">()</span></span></code></pre></div>
+<p>You rarely need to. What matters is that some changes start a
+<strong>new draw call</strong>, and fewer draw calls is faster:</p>
+<table>
+<thead>
+<tr>
+<th>Change</th>
+<th>Starts a new draw call?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Drawing with a different texture</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>set_shader</code></td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>set_blend_mode</code></td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>set_scissor_rect</code></td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>set_camera</code></td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>set_render_texture</code></td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>set_z</code></td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<p>The practical advice: put many images in one big texture (an atlas)
+and draw things that share a texture together.</p>
+<p>Within a batch, the vertex buffer holds
+<code>VERTEX_BUFFER_MAX</code> bytes. The maximum vertex count is
+<code>VERTEX_BUFFER_MAX / shader.vertex_size</code>. If you run out of
+room, the batch is flushed for you.</p>
+
+			<nav class="series-pager" aria-label="Series navigation"><a class="prev" rel="prev" href="karl2d_input.html"><span class="pager-label">Previous</span><span class="pager-title">Input</span></a><a class="next" rel="next" href="karl2d_textures.html"><span class="pager-label">Next</span><span class="pager-title">Textures and images</span></a></nav>
+		</main>
+
+		<aside class="sidebar compact">
+			<a class="brand" href="../index.html"><span class="brand-name">Yordanos Z.</span></a>
+			<nav class="side-group" aria-label="Site">
+				<a href="../index.html#products">Products</a>
+				<a href="../archive.html">Archive</a>
+			</nav>
+			<div class="side-tools">
+				<a href="../feed.xml">RSS</a>
+				<button id="theme-toggle">[dark]</button>
+			</div>
+		</aside>
+		</div>
+
+		<hr />
+		<footer><p>Creator of Worlds &amp; a Coffee Addict ;p</p></footer>
+	</body>
+</html>

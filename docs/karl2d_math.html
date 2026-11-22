@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="Rectangle helpers, cutting and
+splitting rectangles for layouts, and vector rotation.">
+
+		<title>Math helpers</title>
+
+		<meta property="og:type" content="article">
+		<meta property="og:site_name" content="Yordanos">
+		<meta property="og:title" content="Math helpers">
+		<meta property="og:description" content="Rectangle helpers, cutting and splitting rectangles for layouts, and vector rotation.">
+		<meta property="og:url" content="https://theyordanos.github.io/docs/karl2d_math.html">
+		<meta property="og:image" content="https://theyordanos.github.io/res/article_og.png">
+		<meta name="twitter:card" content="summary_large_image">
+		<link rel="canonical" href="https://theyordanos.github.io/docs/karl2d_math.html">
+
+		<link rel="alternate" type="application/atom+xml" title="Yordanos" href="https://theyordanos.github.io/feed.xml">
+
+		<link rel="icon" type="image/png" href="../res/theyordanos-icon.png">
+		<script>
+		try {
+			if (localStorage.getItem("ty_theme") === "dark") document.documentElement.classList.add("dark");
+		} catch (e) {}
+		</script>
+		<link rel="stylesheet" href="../styles/style.css">
+		<link rel="stylesheet" href="../styles/article.css">
+		<link rel="stylesheet" href="../styles/docs.css">
+
+		<script src="../scripts/theme.js" defer></script>
+		<script src="../scripts/copy.js" defer></script>
+		<script src="../scripts/docs.js" defer></script>
+	</head>
+	<body class="docs-page">
+		<div class="layout docs">
+		<aside class="docs-nav">
+			<input type="checkbox" id="docs-toggle" class="docs-toggle" aria-label="Show contents">
+
+			<div class="docs-head">
+				<label class="docs-menu-btn" for="docs-toggle" aria-hidden="true">Contents &#9776;</label>
+			</div>
+
+			<div class="docs-body">
+				<nav class="docs-pages" aria-label="Karl2D documentation"><p class="side-label">Karl2D</p><ul><li><a href="karl2d_overview.html">Overview</a></li><li><a href="karl2d_window.html">Window and frame</a></li><li><a href="karl2d_input.html">Input</a></li><li><a href="karl2d_drawing.html">Drawing</a></li><li><a href="karl2d_textures.html">Textures and images</a></li><li><a href="karl2d_fonts.html">Fonts</a></li><li><a href="karl2d_audio.html">Audio</a></li><li><a href="karl2d_camera.html">Camera</a></li><li><a href="karl2d_shaders.html">Shaders</a></li><li><a href="karl2d_math.html" aria-current="page">Math helpers</a></li><li><a href="karl2d_misc.html">Misc</a></li></ul></nav>
+
+								<nav id="TOC" role="doc-toc" aria-label="On this page">
+					<p class="toc-title">On this page</p>
+					<ul>
+<li><a href="#overlap-and-containment"
+id="toc-overlap-and-containment">Overlap and containment <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#points-on-a-rectangle"
+id="toc-points-on-a-rectangle">Points on a rectangle <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#growing-and-shrinking"
+id="toc-growing-and-shrinking">Growing and shrinking <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#cutting-rectangles" id="toc-cutting-rectangles">Cutting
+rectangles <span class="anchor-mark">#</span></a></li>
+<li><a href="#splitting-rectangles"
+id="toc-splitting-rectangles">Splitting rectangles <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#colors" id="toc-colors">Colors <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#rotating-vectors" id="toc-rotating-vectors">Rotating
+vectors <span class="anchor-mark">#</span></a></li>
+<li><a href="#types" id="toc-types">Types <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#flipped-cameras" id="toc-flipped-cameras">Flipped cameras
+<span class="anchor-mark">#</span></a></li>
+</ul>
+				</nav>
+							</div>
+		</aside>
+
+		<main>
+			<header>
+				<h1>Math helpers</h1>
+				<p class="description">Rectangle helpers, cutting and splitting
+rectangles for layouts, and vector rotation.</p>
+				<p class="meta doc-meta"><span>Updated <time datetime="2026-11-22">2026-11-22</time></span></p>
+				
+			</header>
+
+			<p>Karl2D has a small set of math helpers. Most of them work on
+<code>Rect</code>, which is <code>{x, y, w, h}</code> with
+<code>(x, y)</code> in the top-left corner.</p>
+<h2 id="overlap-and-containment">Overlap and containment <a
+href="#overlap-and-containment" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<table>
+<colgroup>
+<col style="width: 57%" />
+<col style="width: 42%" />
+</colgroup>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rect_overlapping(a, b)</code></td>
+<td><code>true</code> if the rectangles overlap</td>
+</tr>
+<tr>
+<td><code>rect_overlap(a, b)</code></td>
+<td><code>(Rect, bool)</code>: the overlapping area, and
+<code>false</code> if there is none</td>
+</tr>
+<tr>
+<td><code>point_in_rect(point, rect)</code></td>
+<td><code>true</code> if the point is inside</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="va">button </span><span class="op">:=</span> k2<span class="op">.</span>Rect <span class="op">{</span> <span class="dv">100</span><span class="op">,</span> <span class="dv">100</span><span class="op">,</span> <span class="dv">200</span><span class="op">,</span> <span class="dv">50</span> <span class="op">}</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> k2<span class="op">.</span><span class="fu">point_in_rect</span><span class="op">(</span>k2<span class="op">.</span><span class="fu">get_mouse_position</span><span class="op">(),</span> button<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    k2<span class="op">.</span><span class="fu">draw_rect</span><span class="op">(</span>button<span class="op">,</span> k2<span class="op">.</span>LIGHT_BLUE<span class="op">)</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h2 id="points-on-a-rectangle">Points on a rectangle <a
+href="#points-on-a-rectangle" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<table>
+<colgroup>
+<col style="width: 57%" />
+<col style="width: 42%" />
+</colgroup>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rect_middle(r)</code></td>
+<td>The middle. Also named <code>rect_center</code> and
+<code>rect_centre</code></td>
+</tr>
+<tr>
+<td><code>rect_top_left(r)</code>, <code>rect_top_middle(r)</code>,
+<code>rect_top_right(r)</code></td>
+<td>Top edge points</td>
+</tr>
+<tr>
+<td><code>rect_bottom_left(r)</code>,
+<code>rect_bottom_middle(r)</code>,
+<code>rect_bottom_right(r)</code></td>
+<td>Bottom edge points</td>
+</tr>
+<tr>
+<td><code>rect_from_pos_size(pos, size)</code></td>
+<td>Build a <code>Rect</code> from a <code>Vec2</code> position and a
+<code>Vec2</code> size</td>
+</tr>
+</tbody>
+</table>
+<p><code>rect_middle</code> is handy as the <code>origin</code> when you
+want something to rotate around its center.</p>
+<h2 id="growing-and-shrinking">Growing and shrinking <a
+href="#growing-and-shrinking" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rect_shrink </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>r<span class="op">:</span> Rect<span class="op">,</span> x<span class="op">:</span> <span class="dt">f32</span><span class="op">,</span> y<span class="op">:</span> <span class="dt">f32</span><span class="op">)</span> <span class="op">-&gt;</span> Rect</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rect_expand </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>r<span class="op">:</span> Rect<span class="op">,</span> x<span class="op">:</span> <span class="dt">f32</span><span class="op">,</span> y<span class="op">:</span> <span class="dt">f32</span><span class="op">)</span> <span class="op">-&gt;</span> Rect</span></code></pre></div>
+<p>Each edge moves by <code>x</code> (left and right) or <code>y</code>
+(top and bottom), so the width changes by <code>2 * x</code> and the
+height by <code>2 * y</code>. The center stays where it is. Use
+<code>rect_shrink</code> for padding.</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="va">panel </span><span class="op">:=</span> k2<span class="op">.</span>Rect <span class="op">{</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">300</span><span class="op">,</span> <span class="dv">200</span> <span class="op">}</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="va">inner </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">rect_shrink</span><span class="op">(</span>panel<span class="op">,</span> <span class="dv">10</span><span class="op">,</span> <span class="dv">10</span><span class="op">)</span> <span class="co">// {10, 10, 280, 180}</span></span></code></pre></div>
+<h2 id="cutting-rectangles">Cutting rectangles <a
+href="#cutting-rectangles" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<p>The cut procedures take a <strong>pointer</strong> to a rectangle.
+They remove a strip from one side, shrink the original and return the
+strip. That is perfect for laying out UI step by step:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rect_cut_top    </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>r<span class="op">:</span> <span class="op">^</span>Rect<span class="op">,</span> h<span class="op">:</span> <span class="dt">f32</span><span class="op">,</span> m<span class="op">:</span> <span class="dt">f32</span><span class="op">)</span> <span class="op">-&gt;</span> Rect</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rect_cut_bottom </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>r<span class="op">:</span> <span class="op">^</span>Rect<span class="op">,</span> h<span class="op">:</span> <span class="dt">f32</span><span class="op">,</span> m<span class="op">:</span> <span class="dt">f32</span><span class="op">)</span> <span class="op">-&gt;</span> Rect</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rect_cut_left   </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>r<span class="op">:</span> <span class="op">^</span>Rect<span class="op">,</span> w<span class="op">:</span> <span class="dt">f32</span><span class="op">,</span> m<span class="op">:</span> <span class="dt">f32</span><span class="op">)</span> <span class="op">-&gt;</span> Rect</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">rect_cut_right  </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>r<span class="op">:</span> <span class="op">^</span>Rect<span class="op">,</span> w<span class="op">:</span> <span class="dt">f32</span><span class="op">,</span> m<span class="op">:</span> <span class="dt">f32</span><span class="op">)</span> <span class="op">-&gt;</span> Rect</span></code></pre></div>
+<p><code>h</code> or <code>w</code> is the size of the strip.
+<code>m</code> is a margin that is skipped between the strip and what is
+left. So <code>r</code> shrinks by the size plus the margin.</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="va">screen </span><span class="op">:=</span> k2<span class="op">.</span>Rect <span class="op">{</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">800</span><span class="op">,</span> <span class="dv">600</span> <span class="op">}</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="va">header </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">rect_cut_top</span><span class="op">(&amp;</span>screen<span class="op">,</span> <span class="dv">60</span><span class="op">,</span> <span class="dv">8</span><span class="op">)</span>   <span class="co">// {0, 0, 800, 60}</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                                           <span class="co">// screen is now {0, 68, 800, 532}</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="va">footer </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">rect_cut_bottom</span><span class="op">(&amp;</span>screen<span class="op">,</span> <span class="dv">40</span><span class="op">,</span> <span class="dv">8</span><span class="op">)</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="va">sidebar </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">rect_cut_left</span><span class="op">(&amp;</span>screen<span class="op">,</span> <span class="dv">200</span><span class="op">,</span> <span class="dv">8</span><span class="op">)</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">// `screen` is now the content area that remains</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">draw_rect</span><span class="op">(</span>header<span class="op">,</span> k2<span class="op">.</span>DARK_BLUE<span class="op">)</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">draw_rect</span><span class="op">(</span>sidebar<span class="op">,</span> k2<span class="op">.</span>GRAY<span class="op">)</span></span></code></pre></div>
+<h2 id="splitting-rectangles">Splitting rectangles <a
+href="#splitting-rectangles" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<p>The split procedures do not modify the rectangle. They return two new
+ones.</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rect_split_left   </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>r<span class="op">:</span> Rect<span class="op">,</span> x<span class="op">:</span> <span class="dt">f32</span><span class="op">,</span> m<span class="op">:</span> <span class="dt">f32</span><span class="op">)</span> <span class="op">-&gt;</span><span class="fu"> </span><span class="op">(</span>left<span class="op">:</span> Rect<span class="op">,</span> right<span class="op">:</span> Rect<span class="op">)</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rect_split_right  </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>r<span class="op">:</span> Rect<span class="op">,</span> x<span class="op">:</span> <span class="dt">f32</span><span class="op">,</span> m<span class="op">:</span> <span class="dt">f32</span><span class="op">)</span> <span class="op">-&gt;</span><span class="fu"> </span><span class="op">(</span>left<span class="op">:</span> Rect<span class="op">,</span> right<span class="op">:</span> Rect<span class="op">)</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rect_split_top    </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>r<span class="op">:</span> Rect<span class="op">,</span> y<span class="op">:</span> <span class="dt">f32</span><span class="op">,</span> m<span class="op">:</span> <span class="dt">f32</span><span class="op">)</span> <span class="op">-&gt;</span><span class="fu"> </span><span class="op">(</span>top<span class="op">:</span> Rect<span class="op">,</span> bottom<span class="op">:</span> Rect<span class="op">)</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">rect_split_bottom </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>r<span class="op">:</span> Rect<span class="op">,</span> y<span class="op">:</span> <span class="dt">f32</span><span class="op">,</span> m<span class="op">:</span> <span class="dt">f32</span><span class="op">)</span> <span class="op">-&gt;</span><span class="fu"> </span><span class="op">(</span>top<span class="op">:</span> Rect<span class="op">,</span> bottom<span class="op">:</span> Rect<span class="op">)</span></span></code></pre></div>
+<ul>
+<li><code>rect_split_left(r, x, m)</code>: the left part is
+<code>x</code> wide and the right part starts at <code>x + m</code></li>
+<li><code>rect_split_right(r, x, m)</code>: the right part is
+<code>x</code> wide, measured from the right edge, and the left part
+gets smaller by <code>x + m</code></li>
+<li><code>rect_split_top</code> and <code>rect_split_bottom</code> work
+the same way vertically</li>
+</ul>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="va">list, details </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">rect_split_left</span><span class="op">(</span>screen<span class="op">,</span> <span class="dv">250</span><span class="op">,</span> <span class="dv">10</span><span class="op">)</span></span></code></pre></div>
+<h2 id="colors">Colors <a href="#colors" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<p><code>color_alpha(c, a)</code> returns color <code>c</code> with its
+alpha replaced by <code>a</code>:</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="va">shadow </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">color_alpha</span><span class="op">(</span>k2<span class="op">.</span>BLACK<span class="op">,</span> <span class="dv">100</span><span class="op">)</span></span></code></pre></div>
+<h2 id="rotating-vectors">Rotating vectors <a href="#rotating-vectors"
+class="anchor" aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rotate </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>v<span class="op">:</span> Vec2<span class="op">,</span> angle_radians<span class="op">:</span> <span class="dt">f32</span><span class="op">)</span> <span class="op">-&gt;</span> Vec2</span></code></pre></div>
+<p>Rotates <code>v</code> around <code>(0, 0)</code>. To rotate around
+another point, subtract that point, rotate, and add it back:</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="va">rotated </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">rotate</span><span class="op">(</span>p <span class="op">-</span> pivot<span class="op">,</span> angle<span class="op">)</span> <span class="op">+</span> pivot</span></code></pre></div>
+<h2 id="types">Types <a href="#types" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Vec2</code>, <code>Vec3</code>, <code>Vec4</code></td>
+<td><code>[2]f32</code>, <code>[3]f32</code>, <code>[4]f32</code></td>
+</tr>
+<tr>
+<td><code>Mat4</code></td>
+<td><code>matrix[4,4]f32</code></td>
+</tr>
+<tr>
+<td><code>Rect</code></td>
+<td><code>struct { x, y, w, h: f32 }</code></td>
+</tr>
+<tr>
+<td><code>Color</code></td>
+<td><code>[4]u8</code></td>
+</tr>
+</tbody>
+</table>
+<p>Because vectors are Odin arrays, you can add, subtract and multiply
+them directly: <code>a + b</code>, <code>v * 2</code>.</p>
+<h2 id="flipped-cameras">Flipped cameras <a href="#flipped-cameras"
+class="anchor" aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<p>The corner and cut helpers assume <code>(x, y)</code> is the
+top-left. If you use a camera with <code>flip_y</code>, see the caveat
+in <a href="karl2d_camera.html#flipping-y">Camera</a>.</p>
+
+			<nav class="series-pager" aria-label="Series navigation"><a class="prev" rel="prev" href="karl2d_shaders.html"><span class="pager-label">Previous</span><span class="pager-title">Shaders</span></a><a class="next" rel="next" href="karl2d_misc.html"><span class="pager-label">Next</span><span class="pager-title">Misc</span></a></nav>
+		</main>
+
+		<aside class="sidebar compact">
+			<a class="brand" href="../index.html"><span class="brand-name">Yordanos Z.</span></a>
+			<nav class="side-group" aria-label="Site">
+				<a href="../index.html#products">Products</a>
+				<a href="../archive.html">Archive</a>
+			</nav>
+			<div class="side-tools">
+				<a href="../feed.xml">RSS</a>
+				<button id="theme-toggle">[dark]</button>
+			</div>
+		</aside>
+		</div>
+
+		<hr />
+		<footer><p>Creator of Worlds &amp; a Coffee Addict ;p</p></footer>
+	</body>
+</html>

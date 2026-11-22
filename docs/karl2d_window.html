@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="Starting Karl2D, the main loop, window
+modes, monitors and frame timing.">
+
+		<title>Window and frame</title>
+
+		<meta property="og:type" content="article">
+		<meta property="og:site_name" content="Yordanos">
+		<meta property="og:title" content="Window and frame">
+		<meta property="og:description" content="Starting Karl2D, the main loop, window modes, monitors and frame timing.">
+		<meta property="og:url" content="https://theyordanos.github.io/docs/karl2d_window.html">
+		<meta property="og:image" content="https://theyordanos.github.io/res/article_og.png">
+		<meta name="twitter:card" content="summary_large_image">
+		<link rel="canonical" href="https://theyordanos.github.io/docs/karl2d_window.html">
+
+		<link rel="alternate" type="application/atom+xml" title="Yordanos" href="https://theyordanos.github.io/feed.xml">
+
+		<link rel="icon" type="image/png" href="../res/theyordanos-icon.png">
+		<script>
+		try {
+			if (localStorage.getItem("ty_theme") === "dark") document.documentElement.classList.add("dark");
+		} catch (e) {}
+		</script>
+		<link rel="stylesheet" href="../styles/style.css">
+		<link rel="stylesheet" href="../styles/article.css">
+		<link rel="stylesheet" href="../styles/docs.css">
+
+		<script src="../scripts/theme.js" defer></script>
+		<script src="../scripts/copy.js" defer></script>
+		<script src="../scripts/docs.js" defer></script>
+	</head>
+	<body class="docs-page">
+		<div class="layout docs">
+		<aside class="docs-nav">
+			<input type="checkbox" id="docs-toggle" class="docs-toggle" aria-label="Show contents">
+
+			<div class="docs-head">
+				<label class="docs-menu-btn" for="docs-toggle" aria-hidden="true">Contents &#9776;</label>
+			</div>
+
+			<div class="docs-body">
+				<nav class="docs-pages" aria-label="Karl2D documentation"><p class="side-label">Karl2D</p><ul><li><a href="karl2d_overview.html">Overview</a></li><li><a href="karl2d_window.html" aria-current="page">Window and frame</a></li><li><a href="karl2d_input.html">Input</a></li><li><a href="karl2d_drawing.html">Drawing</a></li><li><a href="karl2d_textures.html">Textures and images</a></li><li><a href="karl2d_fonts.html">Fonts</a></li><li><a href="karl2d_audio.html">Audio</a></li><li><a href="karl2d_camera.html">Camera</a></li><li><a href="karl2d_shaders.html">Shaders</a></li><li><a href="karl2d_math.html">Math helpers</a></li><li><a href="karl2d_misc.html">Misc</a></li></ul></nav>
+
+								<nav id="TOC" role="doc-toc" aria-label="On this page">
+					<p class="toc-title">On this page</p>
+					<ul>
+<li><a href="#init" id="toc-init">init <span
+class="anchor-mark">#</span></a>
+<ul>
+<li><a href="#init_options" id="toc-init_options">Init_Options <span
+class="anchor-mark">#</span></a></li>
+</ul></li>
+<li><a href="#the-main-loop" id="toc-the-main-loop">The main loop <span
+class="anchor-mark">#</span></a>
+<ul>
+<li><a href="#update" id="toc-update">update <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#clear" id="toc-clear">clear <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#present" id="toc-present">present <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#shutdown" id="toc-shutdown">shutdown <span
+class="anchor-mark">#</span></a></li>
+</ul></li>
+<li><a href="#doing-the-frame-by-hand"
+id="toc-doing-the-frame-by-hand">Doing the frame by hand <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#time" id="toc-time">Time <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#window-size" id="toc-window-size">Window size <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#window-scale" id="toc-window-scale">Window scale <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#title-and-position" id="toc-title-and-position">Title and
+position <span class="anchor-mark">#</span></a></li>
+<li><a href="#window-modes" id="toc-window-modes">Window modes <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#monitors" id="toc-monitors">Monitors <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#window-icon" id="toc-window-icon">Window icon <span
+class="anchor-mark">#</span></a></li>
+</ul>
+				</nav>
+							</div>
+		</aside>
+
+		<main>
+			<header>
+				<h1>Window and frame</h1>
+				<p class="description">Starting Karl2D, the main loop, window modes,
+monitors and frame timing.</p>
+				<p class="meta doc-meta"><span>Updated <time datetime="2026-11-22">2026-11-22</time></span></p>
+				
+			</header>
+
+			<h2 id="init">init <a href="#init" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">init </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    screen_width<span class="op">:</span> <span class="dt">int</span><span class="op">,</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    screen_height<span class="op">:</span> <span class="dt">int</span><span class="op">,</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    window_title<span class="op">:</span> <span class="dt">string</span><span class="op">,</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="va">options </span><span class="op">:=</span> Init_Options <span class="op">{},</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="va">allocator </span><span class="op">:=</span> <span class="kw">context</span><span class="op">.</span>allocator<span class="op">,</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="va">loc </span><span class="op">:=</span> <span class="pp">#caller_location</span><span class="op">,</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="va">audio_thread_logger </span><span class="op">:=</span> <span class="kw">context</span><span class="op">.</span>logger<span class="op">,</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="op">)</span> <span class="op">-&gt;</span> <span class="op">^</span>State</span></code></pre></div>
+<p>Opens a window, sets up the renderer and starts the audio
+systems.</p>
+<p><code>screen_width</code> and <code>screen_height</code> are the size
+of the drawable area. The window itself may be a bit larger because of
+borders and the title bar. The real size is also multiplied by the OS
+scaling setting, see <a href="#window-scale">Window scale</a>.</p>
+<p><code>allocator</code> is used for everything that lives longer than
+one frame. Single-frame allocations use an internal frame allocator that
+is emptied by <code>update</code>.</p>
+<p><code>audio_thread_logger</code> is kept for the audio thread, so use
+a thread safe logger. The file and console loggers in Odin are.</p>
+<p>The return value is a pointer to Karl2D’s internal state. You can
+ignore it unless you do hot reload, see <a
+href="karl2d_misc.html#hot-reload">Misc</a>.</p>
+<h3 id="init_options">Init_Options <a href="#init_options"
+class="anchor" aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
+<table>
+<colgroup>
+<col style="width: 43%" />
+<col style="width: 56%" />
+</colgroup>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>window_mode</code></td>
+<td><code>.Windowed</code>, <code>.Windowed_Resizable</code> or
+<code>.Borderless_Fullscreen</code></td>
+</tr>
+<tr>
+<td><code>monitor</code></td>
+<td>Which monitor to start on. Zero means the default one</td>
+</tr>
+<tr>
+<td><code>anti_alias</code></td>
+<td>Request anti-aliasing. On most systems this is 4x MSAA</td>
+</tr>
+<tr>
+<td><code>disable_auto_scale_hint</code></td>
+<td>A hint to skip OS scaling. Works on some platforms (Windows), not on
+others (Linux with Wayland)</td>
+</tr>
+<tr>
+<td><code>depth_test</code></td>
+<td>Sort draws by the value from <code>set_z</code></td>
+</tr>
+<tr>
+<td><code>depth_range_min</code>, <code>depth_range_max</code></td>
+<td>The z range. Both zero gives the default of -1 to 1</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">init</span><span class="op">(</span><span class="dv">1280</span><span class="op">,</span> <span class="dv">720</span><span class="op">,</span> <span class="st">&quot;My game&quot;</span><span class="op">,</span> options <span class="op">=</span> <span class="op">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    window_mode <span class="op">=</span> <span class="op">.</span>Windowed_Resizable<span class="op">,</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    anti_alias <span class="op">=</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="op">})</span></span></code></pre></div>
+<p>With <code>.Borderless_Fullscreen</code> the width and height
+arguments are ignored and the full desktop resolution is used.</p>
+<p>When the monitor is set and the mode is not fullscreen, the window is
+centered on that monitor.</p>
+<h2 id="the-main-loop">The main loop <a href="#the-main-loop"
+class="anchor" aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k2<span class="op">.</span><span class="fu">update</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    k2<span class="op">.</span><span class="fu">clear</span><span class="op">(</span>k2<span class="op">.</span>BLACK<span class="op">)</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">// draw things</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    k2<span class="op">.</span><span class="fu">present</span><span class="op">()</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">shutdown</span><span class="op">()</span></span></code></pre></div>
+<h3 id="update">update <a href="#update" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
+<p><code>update</code> should run early in the frame so that input and
+frame times are fresh. It returns <code>false</code> when the player has
+asked to close the window. You decide what to do with that. A game can
+show a “Really quit?” screen instead of leaving.</p>
+<h3 id="clear">clear <a href="#clear" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
+<p><code>clear(color)</code> fills the screen with a color. If you have
+set a render texture, that texture is cleared instead.</p>
+<h3 id="present">present <a href="#present" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
+<p><code>present</code> shows what you drew. Drawing goes to an
+invisible backbuffer, and <code>present</code> flips it to the screen so
+no half-drawn frame is ever seen. On the web the flip happens
+automatically, but call <code>present</code> anyway because it also
+sends the remaining draw work to the GPU.</p>
+<h3 id="shutdown">shutdown <a href="#shutdown" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
+<p>Closes the window and cleans up the internal state.</p>
+<h2 id="doing-the-frame-by-hand">Doing the frame by hand <a
+href="#doing-the-frame-by-hand" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<p><code>update</code> is a shortcut for a handful of smaller
+procedures. If you need more control, call them yourself in this
+order:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    k2<span class="op">.</span><span class="fu">reset_frame_allocator</span><span class="op">()</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    k2<span class="op">.</span><span class="fu">calculate_frame_time</span><span class="op">()</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    k2<span class="op">.</span><span class="fu">update_audio</span><span class="op">()</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    k2<span class="op">.</span><span class="fu">process_events</span><span class="op">()</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    k2<span class="op">.</span><span class="fu">clear</span><span class="op">(</span>k2<span class="op">.</span>BLUE<span class="op">)</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    k2<span class="op">.</span><span class="fu">present</span><span class="op">()</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> k2<span class="op">.</span><span class="fu">close_window_requested</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<table>
+<colgroup>
+<col style="width: 68%" />
+<col style="width: 31%" />
+</colgroup>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Job</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>reset_frame_allocator</code></td>
+<td>Empties the frame allocator</td>
+</tr>
+<tr>
+<td><code>calculate_frame_time</code></td>
+<td>Updates the values behind <code>get_frame_time</code> and
+<code>get_time</code></td>
+</tr>
+<tr>
+<td><code>update_audio</code></td>
+<td>Runs the mixer where there is no audio thread, and removes finished
+sounds. Must run once per frame</td>
+</tr>
+<tr>
+<td><code>process_events</code></td>
+<td>Reads keyboard, mouse, gamepad and window events from the OS</td>
+</tr>
+<tr>
+<td><code>close_window_requested</code></td>
+<td><code>true</code> if the player pressed the close button or used a
+shortcut like ALT+F4</td>
+</tr>
+</tbody>
+</table>
+<h2 id="time">Time <a href="#time" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="va">dt </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">get_frame_time</span><span class="op">()</span> <span class="co">// f32, seconds the previous frame took</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="va">t  </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">get_time</span><span class="op">()</span>       <span class="co">// f64, seconds since the game started</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>player<span class="op">.</span>x <span class="op">+=</span> speed <span class="op">*</span> dt</span></code></pre></div>
+<p>Both are updated when <code>calculate_frame_time</code> runs, which
+<code>update</code> does for you. <code>get_time</code> is an
+<code>f64</code> so it stays precise in a game that runs for a long
+time.</p>
+<h2 id="window-size">Window size <a href="#window-size" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<table>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>get_screen_width()</code></td>
+<td>Width of the drawable area, <code>int</code></td>
+</tr>
+<tr>
+<td><code>get_screen_height()</code></td>
+<td>Height of the drawable area, <code>int</code></td>
+</tr>
+<tr>
+<td><code>get_screen_size()</code></td>
+<td>Both as a <code>Vec2</code></td>
+</tr>
+<tr>
+<td><code>set_screen_size(w, h)</code></td>
+<td>Resize the drawable area</td>
+</tr>
+</tbody>
+</table>
+<p>A user cannot resize a <code>.Windowed</code> window, but
+<code>set_screen_size</code> can. Use <code>.Windowed_Resizable</code>
+if you want the player to drag the edges. When the size changes an
+<code>Event_Screen_Resize</code> is sent, see <a
+href="karl2d_input.html#events">Input</a>.</p>
+<h2 id="window-scale">Window scale <a href="#window-scale"
+class="anchor" aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">get_window_scale </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">()</span> <span class="op">-&gt;</span> <span class="dt">f32</span></span></code></pre></div>
+<p>Returns the OS scaling, where 1 means 100% and 1.5 means 150%. Karl2D
+does <strong>not</strong> scale anything automatically. If you want a
+bigger window on a scaled display, multiply your size by the scale and
+pass it to <code>set_screen_size</code>. Then set a camera zoom equal to
+the scale so that things keep the same apparent size:</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="va">scale </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">get_window_scale</span><span class="op">()</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">set_screen_size</span><span class="op">(</span><span class="dt">int</span><span class="op">(</span><span class="dv">1280</span> <span class="op">*</span> scale<span class="op">),</span> <span class="dt">int</span><span class="op">(</span><span class="dv">720</span> <span class="op">*</span> scale<span class="op">))</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="va">camera </span><span class="op">:=</span> k2<span class="op">.</span>Camera <span class="op">{</span> zoom <span class="op">=</span> scale <span class="op">}</span></span></code></pre></div>
+<p>An <code>Event_Window_Scale_Changed</code> event tells you when the
+scale changes.</p>
+<h2 id="title-and-position">Title and position <a
+href="#title-and-position" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">set_window_title</span><span class="op">(</span><span class="st">&quot;Level 2&quot;</span><span class="op">)</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">set_window_position</span><span class="op">(</span><span class="dv">100</span><span class="op">,</span> <span class="dv">100</span><span class="op">)</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="va">pos </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">get_window_position</span><span class="op">()</span></span></code></pre></div>
+<p><code>set_window_position</code> does nothing on web.
+<code>get_window_position</code> returns <code>{}</code> on web and on
+Wayland.</p>
+<h2 id="window-modes">Window modes <a href="#window-modes"
+class="anchor" aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<p><code>set_window_mode</code> switches between <code>.Windowed</code>,
+<code>.Windowed_Resizable</code> and
+<code>.Borderless_Fullscreen</code>. <code>get_window_mode</code>
+returns the latest mode, whether it was set by <code>init</code> or by
+<code>set_window_mode</code>.</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> k2<span class="op">.</span><span class="fu">key_went_down</span><span class="op">(.</span>F11<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> k2<span class="op">.</span><span class="fu">get_window_mode</span><span class="op">()</span> <span class="op">==</span> <span class="op">.</span>Borderless_Fullscreen <span class="op">{</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>        k2<span class="op">.</span><span class="fu">set_window_mode</span><span class="op">(.</span>Windowed_Resizable<span class="op">)</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>        k2<span class="op">.</span><span class="fu">set_window_mode</span><span class="op">(.</span>Borderless_Fullscreen<span class="op">)</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h2 id="monitors">Monitors <a href="#monitors" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<p><code>get_monitors</code> lists the connected monitors. It is the one
+procedure that is safe to call before <code>init</code>, which is handy
+for building a “start on this monitor” option.</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="va">monitors </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">get_monitors</span><span class="op">()</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">defer</span> <span class="op">{</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> m <span class="cf">in</span> monitors <span class="op">{</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">delete</span><span class="op">(</span>m<span class="op">.</span>name<span class="op">)</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">delete</span><span class="op">(</span>monitors<span class="op">)</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Both the slice and each <code>name</code> are allocated with the
+<code>allocator</code> argument (the default is
+<code>context.allocator</code>), so free them when you are done.</p>
+<p><code>Monitor_Info</code> has these fields:</p>
+<table>
+<colgroup>
+<col style="width: 43%" />
+<col style="width: 56%" />
+</colgroup>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>A <code>Monitor_Id</code> for <code>set_window_monitor</code> and
+<code>Init_Options</code></td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>The monitor’s name (allocated)</td>
+</tr>
+<tr>
+<td><code>position</code></td>
+<td>Window-space position. Top-left is <code>{0, 0}</code> and Y grows
+down on most platforms. On Mac the position is measured from the
+bottom-left and Y grows up</td>
+</tr>
+<tr>
+<td><code>size</code></td>
+<td>Resolution in pixels</td>
+</tr>
+<tr>
+<td><code>physical_size</code></td>
+<td>Size in millimeters</td>
+</tr>
+<tr>
+<td><code>scale</code></td>
+<td>OS scale of the monitor</td>
+</tr>
+<tr>
+<td><code>primary</code></td>
+<td><code>true</code> for the primary monitor</td>
+</tr>
+</tbody>
+</table>
+<p><code>get_window_monitor</code> returns the monitor the window is on.
+If it spans several, the one it overlaps most wins.
+<code>set_window_monitor(id)</code> moves the window there. A fullscreen
+window is moved and resized properly. <code>MONITOR_NONE</code> is the
+zero value.</p>
+<h2 id="window-icon">Window icon <a href="#window-icon" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set_window_icon </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>image<span class="op">:</span> Image<span class="op">)</span> <span class="op">-&gt;</span> <span class="dt">bool</span></span></code></pre></div>
+<p>Sets the icon in the title bar and program switcher (on web, the tab
+icon). The image data is copied, so you can destroy the image straight
+afterwards. Returns <code>true</code> if the icon was set. By default
+Karl2D shows its own icon, see <a
+href="karl2d_misc.html#built-in-images">Misc</a>.</p>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="va">icon </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">load_image_from_file</span><span class="op">(</span><span class="st">&quot;icon.png&quot;</span><span class="op">)</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">set_window_icon</span><span class="op">(</span>icon<span class="op">)</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">destroy_image</span><span class="op">(</span>icon<span class="op">)</span></span></code></pre></div>
+
+			<nav class="series-pager" aria-label="Series navigation"><a class="prev" rel="prev" href="karl2d_overview.html"><span class="pager-label">Previous</span><span class="pager-title">Overview</span></a><a class="next" rel="next" href="karl2d_input.html"><span class="pager-label">Next</span><span class="pager-title">Input</span></a></nav>
+		</main>
+
+		<aside class="sidebar compact">
+			<a class="brand" href="../index.html"><span class="brand-name">Yordanos Z.</span></a>
+			<nav class="side-group" aria-label="Site">
+				<a href="../index.html#products">Products</a>
+				<a href="../archive.html">Archive</a>
+			</nav>
+			<div class="side-tools">
+				<a href="../feed.xml">RSS</a>
+				<button id="theme-toggle">[dark]</button>
+			</div>
+		</aside>
+		</div>
+
+		<hr />
+		<footer><p>Creator of Worlds &amp; a Coffee Addict ;p</p></footer>
+	</body>
+</html>

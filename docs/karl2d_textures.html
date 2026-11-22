@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="Loading textures and images, texture
+filtering, updating pixels and render textures.">
+
+		<title>Textures and images</title>
+
+		<meta property="og:type" content="article">
+		<meta property="og:site_name" content="Yordanos">
+		<meta property="og:title" content="Textures and images">
+		<meta property="og:description" content="Loading textures and images, texture filtering, updating pixels and render textures.">
+		<meta property="og:url" content="https://theyordanos.github.io/docs/karl2d_textures.html">
+		<meta property="og:image" content="https://theyordanos.github.io/res/article_og.png">
+		<meta name="twitter:card" content="summary_large_image">
+		<link rel="canonical" href="https://theyordanos.github.io/docs/karl2d_textures.html">
+
+		<link rel="alternate" type="application/atom+xml" title="Yordanos" href="https://theyordanos.github.io/feed.xml">
+
+		<link rel="icon" type="image/png" href="../res/theyordanos-icon.png">
+		<script>
+		try {
+			if (localStorage.getItem("ty_theme") === "dark") document.documentElement.classList.add("dark");
+		} catch (e) {}
+		</script>
+		<link rel="stylesheet" href="../styles/style.css">
+		<link rel="stylesheet" href="../styles/article.css">
+		<link rel="stylesheet" href="../styles/docs.css">
+
+		<script src="../scripts/theme.js" defer></script>
+		<script src="../scripts/copy.js" defer></script>
+		<script src="../scripts/docs.js" defer></script>
+	</head>
+	<body class="docs-page">
+		<div class="layout docs">
+		<aside class="docs-nav">
+			<input type="checkbox" id="docs-toggle" class="docs-toggle" aria-label="Show contents">
+
+			<div class="docs-head">
+				<label class="docs-menu-btn" for="docs-toggle" aria-hidden="true">Contents &#9776;</label>
+			</div>
+
+			<div class="docs-body">
+				<nav class="docs-pages" aria-label="Karl2D documentation"><p class="side-label">Karl2D</p><ul><li><a href="karl2d_overview.html">Overview</a></li><li><a href="karl2d_window.html">Window and frame</a></li><li><a href="karl2d_input.html">Input</a></li><li><a href="karl2d_drawing.html">Drawing</a></li><li><a href="karl2d_textures.html" aria-current="page">Textures and images</a></li><li><a href="karl2d_fonts.html">Fonts</a></li><li><a href="karl2d_audio.html">Audio</a></li><li><a href="karl2d_camera.html">Camera</a></li><li><a href="karl2d_shaders.html">Shaders</a></li><li><a href="karl2d_math.html">Math helpers</a></li><li><a href="karl2d_misc.html">Misc</a></li></ul></nav>
+
+								<nav id="TOC" role="doc-toc" aria-label="On this page">
+					<p class="toc-title">On this page</p>
+					<ul>
+<li><a href="#texture" id="toc-texture">Texture <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#loading-textures" id="toc-loading-textures">Loading
+textures <span class="anchor-mark">#</span></a>
+<ul>
+<li><a href="#load-options" id="toc-load-options">Load options <span
+class="anchor-mark">#</span></a></li>
+</ul></li>
+<li><a href="#pixel-formats" id="toc-pixel-formats">Pixel formats <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#sizes-and-sub-rectangles"
+id="toc-sizes-and-sub-rectangles">Sizes and sub-rectangles <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#updating-a-texture" id="toc-updating-a-texture">Updating a
+texture <span class="anchor-mark">#</span></a></li>
+<li><a href="#filtering" id="toc-filtering">Filtering <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#destroying" id="toc-destroying">Destroying <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#images" id="toc-images">Images <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#render-textures" id="toc-render-textures">Render textures
+<span class="anchor-mark">#</span></a></li>
+</ul>
+				</nav>
+							</div>
+		</aside>
+
+		<main>
+			<header>
+				<h1>Textures and images</h1>
+				<p class="description">Loading textures and images, texture filtering,
+updating pixels and render textures.</p>
+				<p class="meta doc-meta"><span>Updated <time datetime="2026-11-22">2026-11-22</time></span></p>
+				
+			</header>
+
+			<p>A <strong>texture</strong> lives on the GPU and is what you draw. An
+<strong>image</strong> lives in RAM as an array of pixels. You load an
+image when you want the pixels themselves, for example for a window icon
+or a custom cursor.</p>
+<h2 id="texture">Texture <a href="#texture" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Texture <span class="op">::</span> <span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    handle<span class="op">:</span> Texture_Handle<span class="op">,</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    width<span class="op">:</span>  <span class="dt">int</span><span class="op">,</span>  <span class="co">// pixels</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    height<span class="op">:</span> <span class="dt">int</span><span class="op">,</span>  <span class="co">// pixels</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h2 id="loading-textures">Loading textures <a href="#loading-textures"
+class="anchor" aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<table>
+<colgroup>
+<col style="width: 57%" />
+<col style="width: 42%" />
+</colgroup>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>load_texture_from_file(filename, options)</code></td>
+<td>A file on disk</td>
+</tr>
+<tr>
+<td><code>load_texture_from_bytes(bytes, options)</code></td>
+<td>An encoded file in memory, for example
+<code>#load("x.png")</code></td>
+</tr>
+<tr>
+<td><code>load_texture_from_bytes_raw(bytes, width, height, format)</code></td>
+<td>Raw pixels with no header</td>
+</tr>
+<tr>
+<td><code>load_texture_from_image(image)</code></td>
+<td>An <code>Image</code> in RAM</td>
+</tr>
+<tr>
+<td><code>create_texture(width, height, format)</code></td>
+<td>A new empty texture</td>
+</tr>
+</tbody>
+</table>
+<p>All of them return <code>(Texture, bool)</code>. The
+<code>bool</code> is <code>true</code> if it worked. A failed texture is
+safe to use but draws nothing.</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="va">tex, ok </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">load_texture_from_file</span><span class="op">(</span><span class="st">&quot;hero.png&quot;</span><span class="op">)</span></span></code></pre></div>
+<p>Supported formats are PNG, BMP and TGA. Progressive PNG files are
+<strong>not</strong> supported, only the baseline kind.</p>
+<p>Use <code>_from_bytes</code> instead of <code>_from_file</code> on
+the web and whenever you want to embed assets in the executable. Use
+<code>_from_bytes_raw</code> only for data without a file header, such
+as pixels you generated. If you read a whole file from disk, use the
+plain <code>_from_bytes</code>.</p>
+<h3 id="load-options">Load options <a href="#load-options"
+class="anchor" aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
+<p><code>options</code> is a <code>bit_set[Load_Texture_Option]</code>.
+The only option so far is <code>Premultiply_Alpha</code>, which
+multiplies alpha into the color channels when loading. Use it together
+with <code>set_blend_mode(.Premultiplied_Alpha)</code>, see <a
+href="karl2d_misc.html#blend-modes">Misc</a>.</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="va">tex </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">load_texture_from_file</span><span class="op">(</span><span class="st">&quot;glow.png&quot;</span><span class="op">,</span> <span class="op">{</span> <span class="op">.</span>Premultiply_Alpha <span class="op">})</span></span></code></pre></div>
+<h2 id="pixel-formats">Pixel formats <a href="#pixel-formats"
+class="anchor" aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<p><code>Pixel_Format</code> describes how pixels are stored. It is used
+by <code>create_texture</code>, <code>load_texture_from_bytes_raw</code>
+and shader layouts.</p>
+<table>
+<colgroup>
+<col style="width: 46%" />
+<col style="width: 53%" />
+</colgroup>
+<thead>
+<tr>
+<th>Group</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>8-bit normalized</td>
+<td><code>RGBA_8_Norm</code>, <code>RG_8_Norm</code>,
+<code>R_8_Norm</code></td>
+</tr>
+<tr>
+<td>8-bit integer</td>
+<td><code>R_8_UInt</code></td>
+</tr>
+<tr>
+<td>32-bit float</td>
+<td><code>RGBA_32_Float</code>, <code>RGB_32_Float</code>,
+<code>RG_32_Float</code>, <code>R_32_Float</code></td>
+</tr>
+<tr>
+<td>Unset</td>
+<td><code>Unknown</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>pixel_format_size(format)</code> returns how many bytes one
+pixel uses.</p>
+<h2 id="sizes-and-sub-rectangles">Sizes and sub-rectangles <a
+href="#sizes-and-sub-rectangles" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<p><code>get_texture_rect(tex)</code> returns a <code>Rect</code>
+covering the whole texture, <code>{0, 0, width, height}</code>. It is a
+good source rectangle for <code>draw_texture_fit</code>.</p>
+<h2 id="updating-a-texture">Updating a texture <a
+href="#updating-a-texture" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">update_texture </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>tex<span class="op">:</span> Texture<span class="op">,</span> bytes<span class="op">:</span> <span class="op">[]</span><span class="dt">u8</span><span class="op">,</span> rect<span class="op">:</span> Rect<span class="op">,</span> pitch <span class="op">:=</span> <span class="dv">0</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="dt">bool</span></span></code></pre></div>
+<p>Writes new pixels into part of an existing texture. <code>rect</code>
+is the area to overwrite, <code>bytes</code> holds the new pixels, and
+<code>pitch</code> is the number of bytes from the start of one row to
+the start of the next. The default of <code>0</code> means the rows are
+tightly packed.</p>
+<h2 id="filtering">Filtering <a href="#filtering" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<p>Choose how a texture is filtered with
+<code>set_texture_filter</code>:</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">set_texture_filter</span><span class="op">(</span>sprite<span class="op">,</span> <span class="op">.</span>Point<span class="op">)</span>   <span class="co">// sharp pixels, good for pixel art</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">set_texture_filter</span><span class="op">(</span>photo<span class="op">,</span>  <span class="op">.</span>Linear<span class="op">)</span>  <span class="co">// smooth</span></span></code></pre></div>
+<p><code>Texture_Filter</code> is <code>.Point</code> (like nearest
+neighbor) or <code>.Linear</code> (smooth). The setting is used for
+scaling up, scaling down and mipmap sampling.</p>
+<p>For separate control use
+<code>set_texture_filter_ex(tex, scale_down_filter, scale_up_filter, mip_filter)</code>.</p>
+<h2 id="destroying">Destroying <a href="#destroying" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<p><code>destroy_texture(tex)</code> frees the GPU memory. If the
+current batch uses the texture, the batch is flushed first.</p>
+<h2 id="images">Images <a href="#images" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>Image <span class="op">::</span> <span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    pixels<span class="op">:</span> <span class="op">[]</span>Color<span class="op">,</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    width<span class="op">:</span>  <span class="dt">int</span><span class="op">,</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    height<span class="op">:</span> <span class="dt">int</span><span class="op">,</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><code>load_image_from_file</code> and
+<code>load_image_from_bytes</code> give you an <code>Image</code>. It is
+always RGBA8 with straight (not premultiplied) alpha. Call
+<code>destroy_image</code> when you are done. A failed load gives an
+empty image: no pixels and size zero.</p>
+<p>There are no procedures for editing images yet, but you can build an
+<code>Image</code> yourself by filling in <code>pixels</code>,
+<code>width</code> and <code>height</code>, then pass it to
+<code>load_texture_from_image</code>.</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="va">img </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">load_image_from_file</span><span class="op">(</span><span class="st">&quot;map.png&quot;</span><span class="op">)</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">defer</span> k2<span class="op">.</span><span class="fu">destroy_image</span><span class="op">(</span>img<span class="op">)</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="va">tex </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">load_texture_from_image</span><span class="op">(</span>img<span class="op">)</span></span></code></pre></div>
+<h2 id="render-textures">Render textures <a href="#render-textures"
+class="anchor" aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<p>A render texture is a texture you can draw <strong>into</strong>
+instead of drawing on the screen. Use it for minimap views,
+post-effects, caching expensive drawings, or a low-resolution game that
+is scaled up.</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Render_Texture <span class="op">::</span> <span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    texture<span class="op">:</span>       Texture<span class="op">,</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    render_target<span class="op">:</span> Render_Target_Handle<span class="op">,</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<table>
+<colgroup>
+<col style="width: 68%" />
+<col style="width: 31%" />
+</colgroup>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Job</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>create_render_texture(w, h)</code></td>
+<td>Create one. Returns <code>(Render_Texture, bool)</code></td>
+</tr>
+<tr>
+<td><code>set_render_texture(rt)</code></td>
+<td>Make drawing go into it. Pass <code>nil</code> to go back to the
+screen</td>
+</tr>
+<tr>
+<td><code>destroy_render_texture(rt)</code></td>
+<td>Free it</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>texture</code> field is a normal <code>Texture</code>, so
+you can draw it like any other. If creating the render texture fails,
+setting it does nothing and drawing stays on the screen.</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="va">minimap, _ </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">create_render_texture</span><span class="op">(</span><span class="dv">200</span><span class="op">,</span> <span class="dv">200</span><span class="op">)</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k2<span class="op">.</span><span class="fu">update</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">// draw the world into the minimap</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    k2<span class="op">.</span><span class="fu">set_render_texture</span><span class="op">(</span>minimap<span class="op">)</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    k2<span class="op">.</span><span class="fu">clear</span><span class="op">(</span>k2<span class="op">.</span>DARK_GREEN<span class="op">)</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">draw_world_small</span><span class="op">()</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    k2<span class="op">.</span><span class="fu">set_render_texture</span><span class="op">(</span><span class="kw">nil</span><span class="op">)</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">// draw the real frame</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    k2<span class="op">.</span><span class="fu">clear</span><span class="op">(</span>k2<span class="op">.</span>BLACK<span class="op">)</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">draw_world</span><span class="op">()</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    k2<span class="op">.</span><span class="fu">draw_texture</span><span class="op">(</span>minimap<span class="op">.</span>texture<span class="op">,</span> <span class="op">{</span><span class="dt">f32</span><span class="op">(</span>k2<span class="op">.</span><span class="fu">get_screen_width</span><span class="op">())</span> <span class="op">-</span> <span class="dv">220</span><span class="op">,</span> <span class="dv">20</span><span class="op">})</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    k2<span class="op">.</span><span class="fu">present</span><span class="op">()</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>While a render texture is set, <code>clear</code> clears the render
+texture, not the screen.</p>
+
+			<nav class="series-pager" aria-label="Series navigation"><a class="prev" rel="prev" href="karl2d_drawing.html"><span class="pager-label">Previous</span><span class="pager-title">Drawing</span></a><a class="next" rel="next" href="karl2d_fonts.html"><span class="pager-label">Next</span><span class="pager-title">Fonts</span></a></nav>
+		</main>
+
+		<aside class="sidebar compact">
+			<a class="brand" href="../index.html"><span class="brand-name">Yordanos Z.</span></a>
+			<nav class="side-group" aria-label="Site">
+				<a href="../index.html#products">Products</a>
+				<a href="../archive.html">Archive</a>
+			</nav>
+			<div class="side-tools">
+				<a href="../feed.xml">RSS</a>
+				<button id="theme-toggle">[dark]</button>
+			</div>
+		</aside>
+		</div>
+
+		<hr />
+		<footer><p>Creator of Worlds &amp; a Coffee Addict ;p</p></footer>
+	</body>
+</html>

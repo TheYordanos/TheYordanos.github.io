@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="Keyboard, mouse, touch and gamepad
+input, plus the raw event list.">
+
+		<title>Input</title>
+
+		<meta property="og:type" content="article">
+		<meta property="og:site_name" content="Yordanos">
+		<meta property="og:title" content="Input">
+		<meta property="og:description" content="Keyboard, mouse, touch and gamepad input, plus the raw event list.">
+		<meta property="og:url" content="https://theyordanos.github.io/docs/karl2d_input.html">
+		<meta property="og:image" content="https://theyordanos.github.io/res/article_og.png">
+		<meta name="twitter:card" content="summary_large_image">
+		<link rel="canonical" href="https://theyordanos.github.io/docs/karl2d_input.html">
+
+		<link rel="alternate" type="application/atom+xml" title="Yordanos" href="https://theyordanos.github.io/feed.xml">
+
+		<link rel="icon" type="image/png" href="../res/theyordanos-icon.png">
+		<script>
+		try {
+			if (localStorage.getItem("ty_theme") === "dark") document.documentElement.classList.add("dark");
+		} catch (e) {}
+		</script>
+		<link rel="stylesheet" href="../styles/style.css">
+		<link rel="stylesheet" href="../styles/article.css">
+		<link rel="stylesheet" href="../styles/docs.css">
+
+		<script src="../scripts/theme.js" defer></script>
+		<script src="../scripts/copy.js" defer></script>
+		<script src="../scripts/docs.js" defer></script>
+	</head>
+	<body class="docs-page">
+		<div class="layout docs">
+		<aside class="docs-nav">
+			<input type="checkbox" id="docs-toggle" class="docs-toggle" aria-label="Show contents">
+
+			<div class="docs-head">
+				<label class="docs-menu-btn" for="docs-toggle" aria-hidden="true">Contents &#9776;</label>
+			</div>
+
+			<div class="docs-body">
+				<nav class="docs-pages" aria-label="Karl2D documentation"><p class="side-label">Karl2D</p><ul><li><a href="karl2d_overview.html">Overview</a></li><li><a href="karl2d_window.html">Window and frame</a></li><li><a href="karl2d_input.html" aria-current="page">Input</a></li><li><a href="karl2d_drawing.html">Drawing</a></li><li><a href="karl2d_textures.html">Textures and images</a></li><li><a href="karl2d_fonts.html">Fonts</a></li><li><a href="karl2d_audio.html">Audio</a></li><li><a href="karl2d_camera.html">Camera</a></li><li><a href="karl2d_shaders.html">Shaders</a></li><li><a href="karl2d_math.html">Math helpers</a></li><li><a href="karl2d_misc.html">Misc</a></li></ul></nav>
+
+								<nav id="TOC" role="doc-toc" aria-label="On this page">
+					<p class="toc-title">On this page</p>
+					<ul>
+<li><a href="#keyboard" id="toc-keyboard">Keyboard <span
+class="anchor-mark">#</span></a>
+<ul>
+<li><a href="#keys" id="toc-keys">Keys <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#typed-text" id="toc-typed-text">Typed text <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#modifiers" id="toc-modifiers">Modifiers <span
+class="anchor-mark">#</span></a></li>
+</ul></li>
+<li><a href="#mouse" id="toc-mouse">Mouse <span
+class="anchor-mark">#</span></a>
+<ul>
+<li><a href="#locking-the-mouse" id="toc-locking-the-mouse">Locking the
+mouse <span class="anchor-mark">#</span></a></li>
+</ul></li>
+<li><a href="#touch" id="toc-touch">Touch <span
+class="anchor-mark">#</span></a>
+<ul>
+<li><a href="#mouse-and-touch-emulation"
+id="toc-mouse-and-touch-emulation">Mouse and touch emulation <span
+class="anchor-mark">#</span></a></li>
+</ul></li>
+<li><a href="#gamepad" id="toc-gamepad">Gamepad <span
+class="anchor-mark">#</span></a>
+<ul>
+<li><a href="#buttons" id="toc-buttons">Buttons <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#axes" id="toc-axes">Axes <span
+class="anchor-mark">#</span></a></li>
+</ul></li>
+<li><a href="#events" id="toc-events">Events <span
+class="anchor-mark">#</span></a></li>
+</ul>
+				</nav>
+							</div>
+		</aside>
+
+		<main>
+			<header>
+				<h1>Input</h1>
+				<p class="description">Keyboard, mouse, touch and gamepad input, plus
+the raw event list.</p>
+				<p class="meta doc-meta"><span>Updated <time datetime="2026-11-22">2026-11-22</time></span></p>
+				
+			</header>
+
+			<p>Input is read from state that <code>process_events</code> fills in.
+<code>update</code> calls it, so in a normal game you can query input
+anywhere after <code>update</code>.</p>
+<p>Most input procedures answer one of three questions:</p>
+<table>
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 39%" />
+</colgroup>
+<thead>
+<tr>
+<th>Name pattern</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>..._went_down</code></td>
+<td>Became pressed between the previous and the current frame</td>
+</tr>
+<tr>
+<td><code>..._went_up</code></td>
+<td>Was released between the previous and the current frame</td>
+</tr>
+<tr>
+<td><code>..._is_held</code></td>
+<td>Is down right now</td>
+</tr>
+</tbody>
+</table>
+<h2 id="keyboard">Keyboard <a href="#keyboard" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> k2<span class="op">.</span><span class="fu">key_is_held</span><span class="op">(.</span>Right<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    player<span class="op">.</span>x <span class="op">+=</span> <span class="dv">300</span> <span class="op">*</span> k2<span class="op">.</span><span class="fu">get_frame_time</span><span class="op">()</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> k2<span class="op">.</span><span class="fu">key_went_down</span><span class="op">(.</span>Space<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">jump</span><span class="op">()</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<table>
+<colgroup>
+<col style="width: 57%" />
+<col style="width: 42%" />
+</colgroup>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>key_went_down(key, allow_repeat := false)</code></td>
+<td><code>true</code> on the frame a key goes down</td>
+</tr>
+<tr>
+<td><code>key_went_up(key)</code></td>
+<td><code>true</code> on the frame a key is released</td>
+</tr>
+<tr>
+<td><code>key_is_held(key)</code></td>
+<td><code>true</code> while the key is down</td>
+</tr>
+<tr>
+<td><code>get_typed_runes()</code></td>
+<td>Unicode code points typed since the last frame</td>
+</tr>
+</tbody>
+</table>
+<p>With <code>allow_repeat = true</code>, <code>key_went_down</code> is
+also <code>true</code> for OS key-repeat events. That is what a text
+field wants for Backspace. Rate and delay come from the OS keyboard
+settings.</p>
+<h3 id="keys">Keys <a href="#keys" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
+<p>The <code>Keyboard_Key</code> enum follows Raylib and GLFW. Names you
+will use most:</p>
+<ul>
+<li>Letters <code>.A</code> to <code>.Z</code> and digits
+<code>.N0</code> to <code>.N9</code></li>
+<li>Arrows <code>.Left</code>, <code>.Right</code>, <code>.Up</code>,
+<code>.Down</code></li>
+<li><code>.Space</code>, <code>.Enter</code>, <code>.Escape</code>,
+<code>.Tab</code>, <code>.Backspace</code>, <code>.Delete</code>,
+<code>.Insert</code></li>
+<li><code>.Home</code>, <code>.End</code>, <code>.Page_Up</code>,
+<code>.Page_Down</code></li>
+<li><code>.F1</code> to <code>.F12</code></li>
+<li><code>.Left_Shift</code>, <code>.Right_Shift</code>,
+<code>.Left_Control</code>, <code>.Right_Control</code>,
+<code>.Left_Alt</code>, <code>.Right_Alt</code>,
+<code>.Left_Super</code>, <code>.Right_Super</code>,
+<code>.Menu</code></li>
+<li>Punctuation: <code>.Apostrophe</code>, <code>.Comma</code>,
+<code>.Minus</code>, <code>.Period</code>, <code>.Slash</code>,
+<code>.Semicolon</code>, <code>.Equal</code>,
+<code>.Left_Bracket</code>, <code>.Backslash</code>,
+<code>.Right_Bracket</code>, <code>.Backtick</code></li>
+<li>Numpad: <code>.NP_0</code> to <code>.NP_9</code>,
+<code>.NP_Decimal</code>, <code>.NP_Divide</code>,
+<code>.NP_Multiply</code>, <code>.NP_Subtract</code>,
+<code>.NP_Add</code>, <code>.NP_Enter</code>,
+<code>.NP_Equal</code></li>
+<li>Lock and system keys: <code>.Caps_Lock</code>,
+<code>.Scroll_Lock</code>, <code>.Num_Lock</code>,
+<code>.Print_Screen</code>, <code>.Pause</code></li>
+</ul>
+<h3 id="typed-text">Typed text <a href="#typed-text" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
+<p>For text fields use <code>get_typed_runes</code> rather than key
+presses. It respects the keyboard layout.</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> r <span class="cf">in</span> k2<span class="op">.</span><span class="fu">get_typed_runes</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    strings<span class="op">.</span><span class="fu">write_rune</span><span class="op">(&amp;</span>builder<span class="op">,</span> r<span class="op">)</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>The returned slice is only valid for the current frame.</p>
+<h3 id="modifiers">Modifiers <a href="#modifiers" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
+<p><code>get_held_modifiers</code> returns a
+<code>bit_set[Modifier]</code> with <code>Control</code>,
+<code>Alt</code>, <code>Shift</code> and <code>Super</code>. Left and
+right keys count as the same modifier. Compare against an exact set to
+match a hotkey:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> k2<span class="op">.</span><span class="fu">get_held_modifiers</span><span class="op">()</span> <span class="op">==</span> <span class="op">{</span> <span class="op">.</span>Control<span class="op">,</span> <span class="op">.</span>Shift <span class="op">}</span> <span class="op">&amp;&amp;</span> k2<span class="op">.</span><span class="fu">key_went_down</span><span class="op">(.</span>S<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">save_as</span><span class="op">()</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>That is only true when Control and Shift are held and Alt and Super
+are not. For an in-game action tied to one specific key, use
+<code>key_is_held(.Left_Control)</code> instead.</p>
+<h2 id="mouse">Mouse <a href="#mouse" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<table>
+<colgroup>
+<col style="width: 57%" />
+<col style="width: 42%" />
+</colgroup>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mouse_button_went_down(button)</code></td>
+<td>Button pressed this frame</td>
+</tr>
+<tr>
+<td><code>mouse_button_went_up(button)</code></td>
+<td>Button released this frame</td>
+</tr>
+<tr>
+<td><code>mouse_button_is_held(button)</code></td>
+<td>Button is down</td>
+</tr>
+<tr>
+<td><code>get_mouse_position()</code></td>
+<td><code>Vec2</code>, from the top-left of the window</td>
+</tr>
+<tr>
+<td><code>get_mouse_delta()</code></td>
+<td><code>Vec2</code>, pixels moved since the previous frame</td>
+</tr>
+<tr>
+<td><code>get_mouse_wheel_delta()</code></td>
+<td>Wheel clicks, positive is up</td>
+</tr>
+<tr>
+<td><code>get_mouse_wheel_delta_horizontal()</code></td>
+<td>Positive is right. Driven by tilt wheels and sideways trackpad
+swipes</td>
+</tr>
+</tbody>
+</table>
+<p><code>Mouse_Button</code> is <code>.Left</code>, <code>.Right</code>
+or <code>.Middle</code>.</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> k2<span class="op">.</span><span class="fu">mouse_button_went_down</span><span class="op">(.</span>Left<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">shoot_at</span><span class="op">(</span>k2<span class="op">.</span><span class="fu">get_mouse_position</span><span class="op">())</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>The mouse position is in screen space. To get a position in the world
+when you use a camera, convert it with <code>screen_to_camera</code>,
+see <a href="karl2d_camera.html#converting-points">Camera</a>.</p>
+<h3 id="locking-the-mouse">Locking the mouse <a
+href="#locking-the-mouse" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">set_mouse_locked</span><span class="op">(</span><span class="kw">true</span><span class="op">)</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">set_cursor_hidden</span><span class="op">(</span><span class="kw">true</span><span class="op">)</span></span></code></pre></div>
+<p>While the mouse is locked, <code>get_mouse_position</code> can give
+odd or static values. Use <code>get_mouse_delta</code> for look
+controls. Depending on the platform the mouse is either pinned in place
+or teleported back to the middle of the window each frame.</p>
+<p>The OS can unlock the mouse for you, for example when the window
+loses focus. So check <code>is_mouse_locked()</code> and lock it again
+as needed, instead of assuming your earlier call is still in effect.</p>
+<p>Locking does not hide the cursor. Do that with
+<code>set_cursor_hidden</code>, see <a
+href="karl2d_misc.html#cursors">Misc</a>.</p>
+<h2 id="touch">Touch <a href="#touch" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> t <span class="cf">in</span> k2<span class="op">.</span><span class="fu">get_touches</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> t<span class="op">.</span>went_down <span class="op">{</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">spawn_marker</span><span class="op">(</span>t<span class="op">.</span>position<span class="op">)</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><code>get_touches</code> returns every touch active this frame,
+including ones that ended this frame (their <code>went_up</code> is
+<code>true</code>). The order can change from frame to frame, so
+identify a finger with its <code>id</code>.</p>
+<p>A <code>Touch</code> has:</p>
+<table>
+<colgroup>
+<col style="width: 43%" />
+<col style="width: 56%" />
+</colgroup>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>Stable from touch down until touch up. May be reused afterwards</td>
+</tr>
+<tr>
+<td><code>position</code></td>
+<td>From the top-left of the window</td>
+</tr>
+<tr>
+<td><code>delta</code></td>
+<td>Pixels moved since the previous frame</td>
+</tr>
+<tr>
+<td><code>went_down</code></td>
+<td>Started this frame</td>
+</tr>
+<tr>
+<td><code>went_up</code></td>
+<td>Ended this frame</td>
+</tr>
+<tr>
+<td><code>cancelled</code></td>
+<td>The OS discarded the touch (palm rejection, focus loss).
+<code>went_up</code> is also set</td>
+</tr>
+</tbody>
+</table>
+<p>Karl2D tracks up to <code>MAX_TOUCHES</code> (11) touches: ten
+fingers plus the one made by mouse emulation.</p>
+<h3 id="mouse-and-touch-emulation">Mouse and touch emulation <a
+href="#mouse-and-touch-emulation" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
+<p><code>set_mouse_touch_emulation</code> takes a
+<code>Mouse_Touch_Emulation</code>:</p>
+<table>
+<colgroup>
+<col style="width: 38%" />
+<col style="width: 61%" />
+</colgroup>
+<thead>
+<tr>
+<th>Value</th>
+<th>Behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.Touch_To_Mouse</code></td>
+<td>Touches become left mouse button events. This is the default, so
+mouse-only games work on touch screens</td>
+</tr>
+<tr>
+<td><code>.Mouse_To_Touch</code></td>
+<td>Mouse events become touches. Handy for testing touch controls on
+desktop</td>
+</tr>
+<tr>
+<td><code>.None</code></td>
+<td>No conversion</td>
+</tr>
+</tbody>
+</table>
+<p>If your game handles both mouse and touch itself, set
+<code>.None</code>, or a tap will count twice.</p>
+<h2 id="gamepad">Gamepad <a href="#gamepad" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<p>Up to <code>MAX_GAMEPADS</code> (4) gamepads are supported. A
+<code>Gamepad_Index</code> is an <code>int</code> from 0 to 3.</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="va">pad </span><span class="op">:=</span> <span class="dv">0</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> k2<span class="op">.</span><span class="fu">is_gamepad_active</span><span class="op">(</span>pad<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="va">move </span><span class="op">:=</span> k2<span class="op">.</span>Vec2 <span class="op">{</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>        k2<span class="op">.</span><span class="fu">get_gamepad_axis</span><span class="op">(</span>pad<span class="op">,</span> <span class="op">.</span>Left_Stick_X<span class="op">),</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>        k2<span class="op">.</span><span class="fu">get_gamepad_axis</span><span class="op">(</span>pad<span class="op">,</span> <span class="op">.</span>Left_Stick_Y<span class="op">),</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> k2<span class="op">.</span><span class="fu">gamepad_button_went_down</span><span class="op">(</span>pad<span class="op">,</span> <span class="op">.</span>Right_Face_Down<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>        <span class="fu">jump</span><span class="op">()</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<table>
+<colgroup>
+<col style="width: 57%" />
+<col style="width: 42%" />
+</colgroup>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>is_gamepad_active(i)</code></td>
+<td>A gamepad is connected at that index</td>
+</tr>
+<tr>
+<td><code>gamepad_button_went_down(i, b)</code></td>
+<td>Button pressed this frame</td>
+</tr>
+<tr>
+<td><code>gamepad_button_went_up(i, b)</code></td>
+<td>Button released this frame</td>
+</tr>
+<tr>
+<td><code>gamepad_button_is_held(i, b)</code></td>
+<td>Button is down</td>
+</tr>
+<tr>
+<td><code>get_gamepad_axis(i, axis)</code></td>
+<td>Analogue value. -1 to 1 for sticks, 0 to 1 for triggers</td>
+</tr>
+<tr>
+<td><code>set_gamepad_vibration(i, left, right)</code></td>
+<td>Motor speeds from 0 to 1</td>
+</tr>
+</tbody>
+</table>
+<p>On most gamepads the left motor is low frequency and the right is
+high frequency, so they do not feel the same at the same value.</p>
+<h3 id="buttons">Buttons <a href="#buttons" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
+<p>The face buttons are named by position, so they work for every
+controller:</p>
+<table>
+<thead>
+<tr>
+<th>Enum value</th>
+<th>Xbox</th>
+<th>PlayStation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.Right_Face_Up</code></td>
+<td>Y</td>
+<td>Triangle</td>
+</tr>
+<tr>
+<td><code>.Right_Face_Down</code></td>
+<td>A</td>
+<td>X</td>
+</tr>
+<tr>
+<td><code>.Right_Face_Left</code></td>
+<td>X</td>
+<td>Square</td>
+</tr>
+<tr>
+<td><code>.Right_Face_Right</code></td>
+<td>B</td>
+<td>Circle</td>
+</tr>
+</tbody>
+</table>
+<p>Other buttons: the d-pad as <code>.Left_Face_Up</code>,
+<code>.Left_Face_Down</code>, <code>.Left_Face_Left</code>,
+<code>.Left_Face_Right</code>, then <code>.Left_Shoulder</code>,
+<code>.Right_Shoulder</code>, <code>.Left_Trigger</code>,
+<code>.Right_Trigger</code>, <code>.Left_Stick_Press</code>,
+<code>.Right_Stick_Press</code>, <code>.Middle_Face_Left</code>
+(select/back), <code>.Middle_Face_Middle</code> (PS button, not on Xbox)
+and <code>.Middle_Face_Right</code> (start).</p>
+<p>Triggers also exist as axes. The button tells you “pressed”, the axis
+<code>.Left_Trigger</code> or <code>.Right_Trigger</code> tells you how
+far.</p>
+<h3 id="axes">Axes <a href="#axes" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
+<p><code>.Left_Stick_X</code>, <code>.Left_Stick_Y</code>,
+<code>.Right_Stick_X</code>, <code>.Right_Stick_Y</code>,
+<code>.Left_Trigger</code>, <code>.Right_Trigger</code>.</p>
+<h2 id="events">Events <a href="#events" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<p>If you prefer a list of what happened this frame over polling, use
+<code>get_events</code>. It also reports things polling cannot, like
+focus and resize.</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> event <span class="cf">in</span> k2<span class="op">.</span><span class="fu">get_events</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="pp">#partial</span> <span class="cf">switch</span> e <span class="cf">in</span> event <span class="op">{</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">case</span> k2<span class="op">.</span>Event_Screen_Resize<span class="op">:</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">relayout</span><span class="op">(</span>e<span class="op">.</span>width<span class="op">,</span> e<span class="op">.</span>height<span class="op">)</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">case</span> k2<span class="op">.</span>Event_Window_Unfocused<span class="op">:</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">pause_game</span><span class="op">()</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">case</span> k2<span class="op">.</span>Event_Key_Went_Down<span class="op">:</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> e<span class="op">.</span>key <span class="op">==</span> <span class="op">.</span>Escape <span class="op">{</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>            <span class="fu">open_menu</span><span class="op">()</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>The slice is only valid during the current frame. Analogue stick and
+trigger movement is <strong>not</strong> an event: use
+<code>get_gamepad_axis</code>.</p>
+<table>
+<colgroup>
+<col style="width: 46%" />
+<col style="width: 53%" />
+</colgroup>
+<thead>
+<tr>
+<th>Event</th>
+<th>Fields</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Event_Close_Window_Requested</code></td>
+<td>none</td>
+</tr>
+<tr>
+<td><code>Event_Key_Went_Down</code>,
+<code>Event_Key_Went_Up</code></td>
+<td><code>key</code></td>
+</tr>
+<tr>
+<td><code>Event_Key_Repeat</code></td>
+<td><code>key</code>. Sent in addition to the first
+<code>Event_Key_Went_Down</code></td>
+</tr>
+<tr>
+<td><code>Event_Typed_Rune</code></td>
+<td><code>typed</code></td>
+</tr>
+<tr>
+<td><code>Event_Mouse_Move</code></td>
+<td><code>position</code></td>
+</tr>
+<tr>
+<td><code>Event_Mouse_Teleported</code></td>
+<td><code>position</code>. Like a move, but ignored when computing the
+mouse delta</td>
+</tr>
+<tr>
+<td><code>Event_Mouse_Wheel</code>,
+<code>Event_Mouse_Wheel_Horizontal</code></td>
+<td><code>delta</code></td>
+</tr>
+<tr>
+<td><code>Event_Mouse_Button_Went_Down</code>,
+<code>Event_Mouse_Button_Went_Up</code></td>
+<td><code>button</code></td>
+</tr>
+<tr>
+<td><code>Event_Gamepad_Button_Went_Down</code>,
+<code>Event_Gamepad_Button_Went_Up</code></td>
+<td><code>gamepad</code>, <code>button</code></td>
+</tr>
+<tr>
+<td><code>Event_Screen_Resize</code></td>
+<td><code>width</code>, <code>height</code></td>
+</tr>
+<tr>
+<td><code>Event_Window_Focused</code>,
+<code>Event_Window_Unfocused</code></td>
+<td>none</td>
+</tr>
+<tr>
+<td><code>Event_Window_Scale_Changed</code></td>
+<td><code>scale</code>, <code>screen_width</code>,
+<code>screen_height</code></td>
+</tr>
+<tr>
+<td><code>Event_Touch_Went_Down</code>, <code>Event_Touch_Moved</code>,
+<code>Event_Touch_Went_Up</code></td>
+<td><code>id</code>, <code>position</code></td>
+</tr>
+<tr>
+<td><code>Event_Touch_Cancelled</code></td>
+<td><code>id</code> only, since not every platform knows where it
+was</td>
+</tr>
+</tbody>
+</table>
+
+			<nav class="series-pager" aria-label="Series navigation"><a class="prev" rel="prev" href="karl2d_window.html"><span class="pager-label">Previous</span><span class="pager-title">Window and frame</span></a><a class="next" rel="next" href="karl2d_drawing.html"><span class="pager-label">Next</span><span class="pager-title">Drawing</span></a></nav>
+		</main>
+
+		<aside class="sidebar compact">
+			<a class="brand" href="../index.html"><span class="brand-name">Yordanos Z.</span></a>
+			<nav class="side-group" aria-label="Site">
+				<a href="../index.html#products">Products</a>
+				<a href="../archive.html">Archive</a>
+			</nav>
+			<div class="side-tools">
+				<a href="../feed.xml">RSS</a>
+				<button id="theme-toggle">[dark]</button>
+			</div>
+		</aside>
+		</div>
+
+		<hr />
+		<footer><p>Creator of Worlds &amp; a Coffee Addict ;p</p></footer>
+	</body>
+</html>

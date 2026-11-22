@@ -56,7 +56,7 @@ body.docs-page main { max-width: 740px; }
 
 .docs-pages ul {
 	margin: 0;
-	padding: 0;
+	padding-left: 12px;
 	list-style: none;
 }
 
@@ -67,7 +67,10 @@ body.docs-page main { max-width: 740px; }
 	padding: 2px 0;
 }
 
-.docs-pages a[aria-current] { font-weight: 700; }
+.docs-pages a[aria-current] {
+	font-weight: 700;
+	text-decoration: underline;
+}
 
 .docs-nav #TOC ul {
 	margin: 0;

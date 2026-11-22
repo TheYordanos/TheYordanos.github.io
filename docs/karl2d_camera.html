@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="Moving, zooming and rotating the view,
+flipping Y, and converting between screen and world.">
+
+		<title>Camera</title>
+
+		<meta property="og:type" content="article">
+		<meta property="og:site_name" content="Yordanos">
+		<meta property="og:title" content="Camera">
+		<meta property="og:description" content="Moving, zooming and rotating the view, flipping Y, and converting between screen and world.">
+		<meta property="og:url" content="https://theyordanos.github.io/docs/karl2d_camera.html">
+		<meta property="og:image" content="https://theyordanos.github.io/res/article_og.png">
+		<meta name="twitter:card" content="summary_large_image">
+		<link rel="canonical" href="https://theyordanos.github.io/docs/karl2d_camera.html">
+
+		<link rel="alternate" type="application/atom+xml" title="Yordanos" href="https://theyordanos.github.io/feed.xml">
+
+		<link rel="icon" type="image/png" href="../res/theyordanos-icon.png">
+		<script>
+		try {
+			if (localStorage.getItem("ty_theme") === "dark") document.documentElement.classList.add("dark");
+		} catch (e) {}
+		</script>
+		<link rel="stylesheet" href="../styles/style.css">
+		<link rel="stylesheet" href="../styles/article.css">
+		<link rel="stylesheet" href="../styles/docs.css">
+
+		<script src="../scripts/theme.js" defer></script>
+		<script src="../scripts/copy.js" defer></script>
+		<script src="../scripts/docs.js" defer></script>
+	</head>
+	<body class="docs-page">
+		<div class="layout docs">
+		<aside class="docs-nav">
+			<input type="checkbox" id="docs-toggle" class="docs-toggle" aria-label="Show contents">
+
+			<div class="docs-head">
+				<label class="docs-menu-btn" for="docs-toggle" aria-hidden="true">Contents &#9776;</label>
+			</div>
+
+			<div class="docs-body">
+				<nav class="docs-pages" aria-label="Karl2D documentation"><p class="side-label">Karl2D</p><ul><li><a href="karl2d_overview.html">Overview</a></li><li><a href="karl2d_window.html">Window and frame</a></li><li><a href="karl2d_input.html">Input</a></li><li><a href="karl2d_drawing.html">Drawing</a></li><li><a href="karl2d_textures.html">Textures and images</a></li><li><a href="karl2d_fonts.html">Fonts</a></li><li><a href="karl2d_audio.html">Audio</a></li><li><a href="karl2d_camera.html" aria-current="page">Camera</a></li><li><a href="karl2d_shaders.html">Shaders</a></li><li><a href="karl2d_math.html">Math helpers</a></li><li><a href="karl2d_misc.html">Misc</a></li></ul></nav>
+
+								<nav id="TOC" role="doc-toc" aria-label="On this page">
+					<p class="toc-title">On this page</p>
+					<ul>
+<li><a href="#camera" id="toc-camera">Camera <span
+class="anchor-mark">#</span></a>
+<ul>
+<li><a href="#a-camera-that-follows-the-player"
+id="toc-a-camera-that-follows-the-player">A camera that follows the
+player <span class="anchor-mark">#</span></a></li>
+<li><a href="#fitting-a-fixed-height"
+id="toc-fitting-a-fixed-height">Fitting a fixed height <span
+class="anchor-mark">#</span></a></li>
+</ul></li>
+<li><a href="#converting-points" id="toc-converting-points">Converting
+points <span class="anchor-mark">#</span></a></li>
+<li><a href="#view-matrices" id="toc-view-matrices">View matrices <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#flipping-y" id="toc-flipping-y">Flipping Y <span
+class="anchor-mark">#</span></a></li>
+</ul>
+				</nav>
+							</div>
+		</aside>
+
+		<main>
+			<header>
+				<h1>Camera</h1>
+				<p class="description">Moving, zooming and rotating the view, flipping
+Y, and converting between screen and world.</p>
+				<p class="meta doc-meta"><span>Updated <time datetime="2026-11-22">2026-11-22</time></span></p>
+				
+			</header>
+
+			<p>A camera changes how everything you draw is placed on the screen. Set
+one with <code>set_camera</code> and every draw after that uses it,
+until you change it again.</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set_camera </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>camera<span class="op">:</span> <span class="fu">Maybe</span><span class="op">(</span>Camera<span class="op">))</span></span></code></pre></div>
+<p>Pass <code>nil</code> to go back to the default camera (no
+transform).</p>
+<h2 id="camera">Camera <a href="#camera" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Camera <span class="op">::</span> <span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    target<span class="op">:</span>   Vec2<span class="op">,</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    offset<span class="op">:</span>   Vec2<span class="op">,</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    rotation<span class="op">:</span> <span class="dt">f32</span><span class="op">,</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    zoom<span class="op">:</span>     <span class="dt">f32</span><span class="op">,</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    flip_y<span class="op">:</span>   <span class="dt">bool</span><span class="op">,</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<table>
+<colgroup>
+<col style="width: 43%" />
+<col style="width: 56%" />
+</colgroup>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>target</code></td>
+<td>The world position the camera looks at. By default it ends up in the
+<strong>top-left</strong> corner of the screen</td>
+</tr>
+<tr>
+<td><code>offset</code></td>
+<td>Moves where <code>target</code> appears on screen. Half the screen
+size puts the target in the middle</td>
+</tr>
+<tr>
+<td><code>rotation</code></td>
+<td>Radians</td>
+</tr>
+<tr>
+<td><code>zoom</code></td>
+<td>Bigger means more zoomed in. A zoom of 0 is treated as 1, so an
+empty camera draws at normal size</td>
+</tr>
+<tr>
+<td><code>flip_y</code></td>
+<td>Flips the Y axis, see below</td>
+</tr>
+</tbody>
+</table>
+<h3 id="a-camera-that-follows-the-player">A camera that follows the
+player <a href="#a-camera-that-follows-the-player" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="va">camera </span><span class="op">:=</span> k2<span class="op">.</span>Camera <span class="op">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    zoom <span class="op">=</span> <span class="dv">2</span><span class="op">,</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k2<span class="op">.</span><span class="fu">update</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    camera<span class="op">.</span>target <span class="op">=</span> player<span class="op">.</span>pos</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    camera<span class="op">.</span>offset <span class="op">=</span> k2<span class="op">.</span><span class="fu">get_screen_size</span><span class="op">()</span> <span class="op">/</span> <span class="dv">2</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    k2<span class="op">.</span><span class="fu">clear</span><span class="op">(</span>k2<span class="op">.</span>DARK_GRAY<span class="op">)</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    k2<span class="op">.</span><span class="fu">set_camera</span><span class="op">(</span>camera<span class="op">)</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">draw_world</span><span class="op">()</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    k2<span class="op">.</span><span class="fu">set_camera</span><span class="op">(</span><span class="kw">nil</span><span class="op">)</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">draw_ui</span><span class="op">()</span> <span class="co">// not affected by the camera</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    k2<span class="op">.</span><span class="fu">present</span><span class="op">()</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Drawing the UI with <code>set_camera(nil)</code> keeps it fixed on
+screen.</p>
+<h3 id="fitting-a-fixed-height">Fitting a fixed height <a
+href="#fitting-a-fixed-height" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h3>
+<p>To always show the same number of world pixels vertically, set the
+zoom like this:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>camera<span class="op">.</span>zoom <span class="op">=</span> <span class="dt">f32</span><span class="op">(</span>k2<span class="op">.</span><span class="fu">get_screen_height</span><span class="op">())</span> <span class="op">/</span> wanted_pixel_height</span></code></pre></div>
+<h2 id="converting-points">Converting points <a
+href="#converting-points" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">screen_to_camera </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>pos<span class="op">:</span> Vec2<span class="op">,</span> camera<span class="op">:</span> Camera<span class="op">)</span> <span class="op">-&gt;</span> Vec2</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">camera_to_screen </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>pos<span class="op">:</span> Vec2<span class="op">,</span> camera<span class="op">:</span> Camera<span class="op">)</span> <span class="op">-&gt;</span> Vec2</span></code></pre></div>
+<p><code>screen_to_camera</code> turns a point on the screen into the
+camera’s world coordinates. The classic use is the mouse:</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="va">world_mouse </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">screen_to_camera</span><span class="op">(</span>k2<span class="op">.</span><span class="fu">get_mouse_position</span><span class="op">(),</span> camera<span class="op">)</span></span></code></pre></div>
+<p><code>camera_to_screen</code> goes the other way. Use it to place a
+UI marker over something in the world.</p>
+<h2 id="view-matrices">View matrices <a href="#view-matrices"
+class="anchor" aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<p><code>camera_view_matrix(camera)</code> returns the matrix used by
+the two procedures above, as a <code>Mat4</code>.
+<code>camera_inverse_view_matrix(camera)</code> returns its inverse,
+which undoes the camera. Only the upper-left 3×3 part is used. You only
+need these for your own math or shaders.</p>
+<p>A view matrix is the camera’s world transform, inverted: instead of
+bringing the camera to the world, it brings the world in front of the
+camera. Karl2D builds it directly in backwards order (inverse offset,
+inverse scale, inverse rotation, inverse target) instead of inverting a
+matrix, which is faster.</p>
+<h2 id="flipping-y">Flipping Y <a href="#flipping-y" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<p>By default the origin is the top-left corner and Y grows
+<strong>down</strong>. With <code>flip_y = true</code>:</p>
+<ul>
+<li>The origin is the bottom-left of the screen and Y grows
+<strong>up</strong></li>
+<li>Rotation goes the other way</li>
+<li>A <code>Rect</code> has its <code>(x, y)</code> at its
+<strong>bottom-left</strong> corner</li>
+<li>Textures are drawn from their bottom-left corner</li>
+<li>Text blocks have their origin at the bottom-left</li>
+</ul>
+<p>This makes Karl2D match libraries like Box2D, where Y is up, so you
+do not need to convert between gameplay and drawing code.</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="va">world_camera </span><span class="op">:=</span> k2<span class="op">.</span>Camera <span class="op">{</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    zoom <span class="op">=</span> <span class="dv">20</span><span class="op">,</span> <span class="co">// 20 pixels per meter</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    flip_y <span class="op">=</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<blockquote>
+<p><strong>Caveat:</strong> the <code>rect_top_*</code> and
+<code>rect_bottom_*</code> helpers and the rectangle cut procedures
+still assume <code>(x, y)</code> is the top-left corner. Those are
+mostly used for screen-space UI. Use <code>flip_y</code> only for the
+world camera, and draw UI with no camera or a non-flipped one.</p>
+</blockquote>
+
+			<nav class="series-pager" aria-label="Series navigation"><a class="prev" rel="prev" href="karl2d_audio.html"><span class="pager-label">Previous</span><span class="pager-title">Audio</span></a><a class="next" rel="next" href="karl2d_shaders.html"><span class="pager-label">Next</span><span class="pager-title">Shaders</span></a></nav>
+		</main>
+
+		<aside class="sidebar compact">
+			<a class="brand" href="../index.html"><span class="brand-name">Yordanos Z.</span></a>
+			<nav class="side-group" aria-label="Site">
+				<a href="../index.html#products">Products</a>
+				<a href="../archive.html">Archive</a>
+			</nav>
+			<div class="side-tools">
+				<a href="../feed.xml">RSS</a>
+				<button id="theme-toggle">[dark]</button>
+			</div>
+		</aside>
+		</div>
+
+		<hr />
+		<footer><p>Creator of Worlds &amp; a Coffee Addict ;p</p></footer>
+	</body>
+</html>

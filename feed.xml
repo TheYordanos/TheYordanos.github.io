@@ -5,8 +5,85 @@
 <link href="https://theyordanos.github.io/"/>
 <link rel="self" href="https://theyordanos.github.io/feed.xml"/>
 <id>https://theyordanos.github.io/</id>
-<updated>2026-11-21T00:00:00Z</updated>
+<updated>2026-11-22T00:00:00Z</updated>
 <author><name>Yordanos Z.</name></author>
+<entry>
+<title>Karl2D: Audio</title>
+<link href="https://theyordanos.github.io/docs/karl2d_audio.html"/>
+<id>https://theyordanos.github.io/docs/karl2d_audio.html</id>
+<updated>2026-11-22T00:00:00Z</updated>
+<summary>Playing sound effects and music, controlling sounds, buses and custom effects.</summary>
+</entry>
+<entry>
+<title>Karl2D: Camera</title>
+<link href="https://theyordanos.github.io/docs/karl2d_camera.html"/>
+<id>https://theyordanos.github.io/docs/karl2d_camera.html</id>
+<updated>2026-11-22T00:00:00Z</updated>
+<summary>Moving, zooming and rotating the view, flipping Y, and converting between screen and world.</summary>
+</entry>
+<entry>
+<title>Karl2D: Drawing</title>
+<link href="https://theyordanos.github.io/docs/karl2d_drawing.html"/>
+<id>https://theyordanos.github.io/docs/karl2d_drawing.html</id>
+<updated>2026-11-22T00:00:00Z</updated>
+<summary>Shapes, lines, textures and text, plus how Karl2D batches draw calls.</summary>
+</entry>
+<entry>
+<title>Karl2D: Fonts</title>
+<link href="https://theyordanos.github.io/docs/karl2d_fonts.html"/>
+<id>https://theyordanos.github.io/docs/karl2d_fonts.html</id>
+<updated>2026-11-22T00:00:00Z</updated>
+<summary>The default font, loading your own TTF fonts, and the difference between static and dynamic fonts.</summary>
+</entry>
+<entry>
+<title>Karl2D: Input</title>
+<link href="https://theyordanos.github.io/docs/karl2d_input.html"/>
+<id>https://theyordanos.github.io/docs/karl2d_input.html</id>
+<updated>2026-11-22T00:00:00Z</updated>
+<summary>Keyboard, mouse, touch and gamepad input, plus the raw event list.</summary>
+</entry>
+<entry>
+<title>Karl2D: Math helpers</title>
+<link href="https://theyordanos.github.io/docs/karl2d_math.html"/>
+<id>https://theyordanos.github.io/docs/karl2d_math.html</id>
+<updated>2026-11-22T00:00:00Z</updated>
+<summary>Rectangle helpers, cutting and splitting rectangles for layouts, and vector rotation.</summary>
+</entry>
+<entry>
+<title>Karl2D: Misc</title>
+<link href="https://theyordanos.github.io/docs/karl2d_misc.html"/>
+<id>https://theyordanos.github.io/docs/karl2d_misc.html</id>
+<updated>2026-11-22T00:00:00Z</updated>
+<summary>Blend modes, scissor, depth sorting, cursors, hot reload, opening URLs and the experimental UI button.</summary>
+</entry>
+<entry>
+<title>Karl2D: Overview</title>
+<link href="https://theyordanos.github.io/docs/karl2d_overview.html"/>
+<id>https://theyordanos.github.io/docs/karl2d_overview.html</id>
+<updated>2026-11-22T00:00:00Z</updated>
+<summary>Make 2D games in Odin with Karl2D. What it is, how to start, and how the pieces fit together.</summary>
+</entry>
+<entry>
+<title>Karl2D: Shaders</title>
+<link href="https://theyordanos.github.io/docs/karl2d_shaders.html"/>
+<id>https://theyordanos.github.io/docs/karl2d_shaders.html</id>
+<updated>2026-11-22T00:00:00Z</updated>
+<summary>Loading custom shaders, setting constants, textures and per-object inputs.</summary>
+</entry>
+<entry>
+<title>Karl2D: Textures and images</title>
+<link href="https://theyordanos.github.io/docs/karl2d_textures.html"/>
+<id>https://theyordanos.github.io/docs/karl2d_textures.html</id>
+<updated>2026-11-22T00:00:00Z</updated>
+<summary>Loading textures and images, texture filtering, updating pixels and render textures.</summary>
+</entry>
+<entry>
+<title>Karl2D: Window and frame</title>
+<link href="https://theyordanos.github.io/docs/karl2d_window.html"/>
+<id>https://theyordanos.github.io/docs/karl2d_window.html</id>
+<updated>2026-11-22T00:00:00Z</updated>
+<summary>Starting Karl2D, the main loop, window modes, monitors and frame timing.</summary>
+</entry>
 <entry>
 <title>Sidewinder Algorithm</title>
 <link href="https://theyordanos.github.io/articles/sidewinder.html"/>

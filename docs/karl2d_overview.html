@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="Make 2D games in Odin with Karl2D.
+What it is, how to start, and how the pieces fit together.">
+
+		<title>Overview</title>
+
+		<meta property="og:type" content="article">
+		<meta property="og:site_name" content="Yordanos">
+		<meta property="og:title" content="Overview">
+		<meta property="og:description" content="Make 2D games in Odin with Karl2D. What it is, how to start, and how the pieces fit together.">
+		<meta property="og:url" content="https://theyordanos.github.io/docs/karl2d_overview.html">
+		<meta property="og:image" content="https://theyordanos.github.io/res/article_og.png">
+		<meta name="twitter:card" content="summary_large_image">
+		<link rel="canonical" href="https://theyordanos.github.io/docs/karl2d_overview.html">
+
+		<link rel="alternate" type="application/atom+xml" title="Yordanos" href="https://theyordanos.github.io/feed.xml">
+
+		<link rel="icon" type="image/png" href="../res/theyordanos-icon.png">
+		<script>
+		try {
+			if (localStorage.getItem("ty_theme") === "dark") document.documentElement.classList.add("dark");
+		} catch (e) {}
+		</script>
+		<link rel="stylesheet" href="../styles/style.css">
+		<link rel="stylesheet" href="../styles/article.css">
+		<link rel="stylesheet" href="../styles/docs.css">
+
+		<script src="../scripts/theme.js" defer></script>
+		<script src="../scripts/copy.js" defer></script>
+		<script src="../scripts/docs.js" defer></script>
+	</head>
+	<body class="docs-page">
+		<div class="layout docs">
+		<aside class="docs-nav">
+			<input type="checkbox" id="docs-toggle" class="docs-toggle" aria-label="Show contents">
+
+			<div class="docs-head">
+				<label class="docs-menu-btn" for="docs-toggle" aria-hidden="true">Contents &#9776;</label>
+			</div>
+
+			<div class="docs-body">
+				<nav class="docs-pages" aria-label="Karl2D documentation"><p class="side-label">Karl2D</p><ul><li><a href="karl2d_overview.html" aria-current="page">Overview</a></li><li><a href="karl2d_window.html">Window and frame</a></li><li><a href="karl2d_input.html">Input</a></li><li><a href="karl2d_drawing.html">Drawing</a></li><li><a href="karl2d_textures.html">Textures and images</a></li><li><a href="karl2d_fonts.html">Fonts</a></li><li><a href="karl2d_audio.html">Audio</a></li><li><a href="karl2d_camera.html">Camera</a></li><li><a href="karl2d_shaders.html">Shaders</a></li><li><a href="karl2d_math.html">Math helpers</a></li><li><a href="karl2d_misc.html">Misc</a></li></ul></nav>
+
+								<nav id="TOC" role="doc-toc" aria-label="On this page">
+					<p class="toc-title">On this page</p>
+					<ul>
+<li><a href="#getting-started" id="toc-getting-started">Getting started
+<span class="anchor-mark">#</span></a></li>
+<li><a href="#the-shape-of-a-game" id="toc-the-shape-of-a-game">The
+shape of a game <span class="anchor-mark">#</span></a></li>
+<li><a href="#conventions" id="toc-conventions">Conventions <span
+class="anchor-mark">#</span></a></li>
+<li><a href="#making-a-web-build" id="toc-making-a-web-build">Making a
+web build <span class="anchor-mark">#</span></a></li>
+<li><a href="#where-to-go-next" id="toc-where-to-go-next">Where to go
+next <span class="anchor-mark">#</span></a></li>
+</ul>
+				</nav>
+							</div>
+		</aside>
+
+		<main>
+			<header>
+				<h1>Overview</h1>
+				<p class="description">Make 2D games in Odin with Karl2D. What it is,
+how to start, and how the pieces fit together.</p>
+				<p class="meta doc-meta"><span>Updated <time datetime="2026-11-22">2026-11-22</time></span></p>
+				
+			</header>
+
+			<ul>
+<li>Author: <a href="https://zylinski.se/">Karl Zylinkski</a></li>
+<li>Site: <a href="https://karl2d.com/">karl2d.com</a></li>
+</ul>
+<p>Karl2D is a beginner friendly 2D game library for the <a
+href="https://odin-lang.org">Odin programming language</a>. It keeps its
+dependencies low: the code goes all the way down to the OS and rendering
+APIs. You can ship desktop games and web games, and the web builds do
+not need emscripten.</p>
+<p>It handles the things most 2D games need:</p>
+<ul>
+<li>Windows, Linux, Mac and Web</li>
+<li>Textures, shapes and text</li>
+<li>Cameras that move, rotate and zoom the view</li>
+<li>Audio clips, music streaming, buses and effects</li>
+<li>Keyboard, mouse, touch and gamepad input</li>
+<li>Render textures and custom shaders</li>
+</ul>
+<p>These docs follow the API overview file,
+<code>karl2d.doc.odin</code>. Every procedure mentioned is called as
+<code>k2.name</code>.</p>
+<h2 id="getting-started">Getting started <a href="#getting-started"
+class="anchor" aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<ol type="1">
+<li>Install the Odin compiler from <a
+href="https://odin-lang.org">odin-lang.org</a>.</li>
+<li>Create a folder for your game.</li>
+<li>Put the contents of the Karl2D repository in a subfolder called
+<code>karl2d</code>.</li>
+<li>Create <code>game.odin</code> in your game folder and paste this
+in:</li>
+</ol>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">package</span> hello_world</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> k2 <span class="st">&quot;karl2d&quot;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">main </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    k2<span class="op">.</span><span class="fu">init</span><span class="op">(</span><span class="dv">1280</span><span class="op">,</span> <span class="dv">720</span><span class="op">,</span> <span class="st">&quot;Greetings from Karl2D!&quot;</span><span class="op">)</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k2<span class="op">.</span><span class="fu">update</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>        k2<span class="op">.</span><span class="fu">clear</span><span class="op">(</span>k2<span class="op">.</span>LIGHT_BLUE<span class="op">)</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>        k2<span class="op">.</span><span class="fu">draw_text</span><span class="op">(</span><span class="st">&quot;Hellope!&quot;</span><span class="op">,</span> <span class="op">{</span><span class="dv">50</span><span class="op">,</span> <span class="dv">50</span><span class="op">},</span> <span class="dv">100</span><span class="op">,</span> k2<span class="op">.</span>DARK_BLUE<span class="op">)</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        k2<span class="op">.</span><span class="fu">present</span><span class="op">()</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    k2<span class="op">.</span><span class="fu">shutdown</span><span class="op">()</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<ol start="5" type="1">
+<li>Run it from the game folder with <code>odin run .</code> (the period
+matters).</li>
+</ol>
+<p>A window opens that says “Hellope!”.</p>
+<h2 id="the-shape-of-a-game">The shape of a game <a
+href="#the-shape-of-a-game" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<p>Every Karl2D game has the same skeleton:</p>
+<table>
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 35%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr>
+<th>Step</th>
+<th>Procedure</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Start</td>
+<td><code>init</code></td>
+<td>Opens the window, starts the renderer and the audio</td>
+</tr>
+<tr>
+<td>Each frame</td>
+<td><code>update</code></td>
+<td>Reads input, updates frame time, runs audio. Returns
+<code>false</code> when the player tries to close the window</td>
+</tr>
+<tr>
+<td>Each frame</td>
+<td><code>clear</code>, <code>draw_*</code></td>
+<td>Your drawing</td>
+</tr>
+<tr>
+<td>Each frame</td>
+<td><code>present</code></td>
+<td>Shows the finished frame</td>
+</tr>
+<tr>
+<td>End</td>
+<td><code>shutdown</code></td>
+<td>Closes the window and cleans up</td>
+</tr>
+</tbody>
+</table>
+<p><code>init</code> must run before almost everything else. The one
+exception is <code>get_monitors</code>, which can be called before
+<code>init</code>.</p>
+<h2 id="conventions">Conventions <a href="#conventions" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<p>A few rules apply across the whole API, so they are worth knowing up
+front.</p>
+<p><strong>Units.</strong> Positions and sizes are in pixels. Rotation
+is in radians. Time is in seconds.</p>
+<p><strong>Types.</strong> <code>Vec2</code> is <code>[2]f32</code>.
+<code>Color</code> is <code>[4]u8</code> (red, green, blue, alpha, 0 to
+255). <code>Rect</code> is a struct with <code>x</code>, <code>y</code>,
+<code>w</code> and <code>h</code>.</p>
+<p><strong>Coordinates.</strong> The origin is the top-left corner of
+the window and Y grows downwards. A camera can flip this, see <a
+href="karl2d_camera.html">Camera</a>.</p>
+<p><strong>Loading returns two values.</strong> Procedures that load or
+create something return the thing and a <code>bool</code> for success.
+Handling the <code>bool</code> is optional, because failures are logged
+too. A failed load still gives you a value you can pass around safely,
+it just draws or plays nothing.</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="va">tex, ok </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">load_texture_from_file</span><span class="op">(</span><span class="st">&quot;player.png&quot;</span><span class="op">)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">!</span>ok <span class="op">{</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">// handle it, or ignore it: the log already has the error</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">// or just ignore the second value</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="va">tex2 </span><span class="op">:=</span> k2<span class="op">.</span><span class="fu">load_texture_from_file</span><span class="op">(</span><span class="st">&quot;enemy.png&quot;</span><span class="op">)</span></span></code></pre></div>
+<p><strong>Handles.</strong> Textures, sounds, fonts and similar
+resources are small handle values. Copy them freely. A
+<code>Sound</code> handle stays safe to use after the sound has
+finished: the procedures just do nothing.</p>
+<p><strong>Per-frame slices.</strong> <code>get_events</code>,
+<code>get_typed_runes</code> and <code>get_touches</code> return slices
+that are only valid for the current frame. Clone them with
+<code>slice.clone</code> if you need to keep them.</p>
+<p><strong><code>Maybe</code> and <code>nil</code>.</strong> Settings
+such as the camera, shader, render texture and scissor rectangle take a
+<code>Maybe(...)</code>. Pass a value to turn it on and <code>nil</code>
+to go back to the default.</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">set_camera</span><span class="op">(</span>my_camera<span class="op">)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">// ... draw the world ...</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">set_camera</span><span class="op">(</span><span class="kw">nil</span><span class="op">)</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">// ... draw the UI ...</span></span></code></pre></div>
+<h2 id="making-a-web-build">Making a web build <a
+href="#making-a-web-build" class="anchor"
+aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<p>A browser cannot run a blocking loop like
+<code>for k2.update() {}</code>. Instead it calls your code once each
+time it wants to redraw. So split the game into <code>init</code>,
+<code>step</code> and <code>shutdown</code>:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">package</span> hello_world</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> k2 <span class="st">&quot;karl2d&quot;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">main </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">init</span><span class="op">()</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="fu">step</span><span class="op">()</span> <span class="op">{}</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">shutdown</span><span class="op">()</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="fu">init </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    k2<span class="op">.</span><span class="fu">init</span><span class="op">(</span><span class="dv">1280</span><span class="op">,</span> <span class="dv">720</span><span class="op">,</span> <span class="st">&quot;Greetings from Karl2D!&quot;</span><span class="op">)</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="fu">step </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">()</span> <span class="op">-&gt;</span> <span class="dt">bool</span> <span class="op">{</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">!</span>k2<span class="op">.</span><span class="fu">update</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="kw">false</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    k2<span class="op">.</span><span class="fu">clear</span><span class="op">(</span>k2<span class="op">.</span>LIGHT_BLUE<span class="op">)</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    k2<span class="op">.</span><span class="fu">draw_text</span><span class="op">(</span><span class="st">&quot;Hellope!&quot;</span><span class="op">,</span> <span class="op">{</span><span class="dv">50</span><span class="op">,</span> <span class="dv">50</span><span class="op">},</span> <span class="dv">100</span><span class="op">,</span> k2<span class="op">.</span>DARK_BLUE<span class="op">)</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    k2<span class="op">.</span><span class="fu">present</span><span class="op">()</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="kw">true</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="fu">shutdown </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    k2<span class="op">.</span><span class="fu">shutdown</span><span class="op">()</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><code>main</code> is still used on desktop. The web build calls
+<code>init</code> and <code>step</code> directly.</p>
+<p>Build it with the <code>build_web</code> tool that comes with Karl2D.
+Run this in your game folder (note the double dash and the period):</p>
+<pre><code>odin run karl2d/build_web -- .</code></pre>
+<p>The result ends up in <code>bin/web</code>. Open
+<code>index.html</code> from there.</p>
+<blockquote>
+<p><strong>Note:</strong> If the page is blank, the browser console may
+mention a “cross site policy” error. Serve the folder with
+<code>python -m http.server</code> from <code>bin/web</code> instead of
+opening the file directly. On Linux and Mac you may also need a package
+that provides the <code>wasm-ld</code> linker (often called
+<code>lld</code>). Add <code>-debug</code> after the <code>--</code> for
+better debug symbols in the browser.</p>
+</blockquote>
+<p>There is no file system on the web, so
+<code>load_texture_from_file</code> does not work there. Embed the file
+into the program with <code>#load</code> and use the
+<code>_from_bytes</code> loaders:</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>k2<span class="op">.</span><span class="fu">load_texture_from_bytes</span><span class="op">(</span><span class="pp">#load</span><span class="op">(</span><span class="st">&quot;image.png&quot;</span><span class="op">))</span></span></code></pre></div>
+<p>To use files on desktop and embedded bytes on web, hide the
+difference behind one procedure. Put the desktop version in a file that
+starts with <code>#+build !js</code>:</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load_texture </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>$name<span class="op">:</span> <span class="dt">string</span><span class="op">)</span> <span class="op">-&gt;</span> k2<span class="op">.</span>Texture <span class="op">{</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> k2<span class="op">.</span><span class="fu">load_texture_from_file</span><span class="op">(</span>name<span class="op">)</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>and the web version in a file that starts with
+<code>#+build js</code>:</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode odin"><code class="sourceCode odin"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load_texture </span><span class="op">::</span><span class="fu"> </span><span class="kw">proc</span><span class="op">(</span>$name<span class="op">:</span> <span class="dt">string</span><span class="op">)</span> <span class="op">-&gt;</span> k2<span class="op">.</span>Texture <span class="op">{</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> k2<span class="op">.</span><span class="fu">load_texture_from_bytes</span><span class="op">(</span><span class="pp">#load</span><span class="op">(</span>name<span class="op">))</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>The <code>$</code> on <code>name</code> makes it a compile-time
+constant, which <code>#load</code> requires.</p>
+<h2 id="where-to-go-next">Where to go next <a href="#where-to-go-next"
+class="anchor" aria-label="Link to this section"><span
+class="anchor-mark">#</span></a></h2>
+<ul>
+<li><a href="karl2d_window.html">Window and frame</a>: <code>init</code>
+options, the main loop, window modes and monitors</li>
+<li><a href="karl2d_input.html">Input</a>: keyboard, mouse, touch and
+gamepads</li>
+<li><a href="karl2d_drawing.html">Drawing</a>: shapes, textures and
+text</li>
+<li><a href="karl2d_textures.html">Textures and images</a>: loading,
+filtering and render textures</li>
+<li><a href="karl2d_fonts.html">Fonts</a>: static and dynamic fonts</li>
+<li><a href="karl2d_audio.html">Audio</a>: clips, music, buses and
+effects</li>
+<li><a href="karl2d_camera.html">Camera</a>: moving the view and
+converting coordinates</li>
+<li><a href="karl2d_shaders.html">Shaders</a>: custom shaders and
+constants</li>
+<li><a href="karl2d_math.html">Math helpers</a>: rectangles, colors and
+rotation</li>
+<li><a href="karl2d_misc.html">Misc</a>: blend modes, scissor, depth,
+hot reload, cursors and more</li>
+</ul>
+
+			<nav class="series-pager" aria-label="Series navigation"><a class="next" rel="next" href="karl2d_window.html"><span class="pager-label">Next</span><span class="pager-title">Window and frame</span></a></nav>
+		</main>
+
+		<aside class="sidebar compact">
+			<a class="brand" href="../index.html"><span class="brand-name">Yordanos Z.</span></a>
+			<nav class="side-group" aria-label="Site">
+				<a href="../index.html#products">Products</a>
+				<a href="../archive.html">Archive</a>
+			</nav>
+			<div class="side-tools">
+				<a href="../feed.xml">RSS</a>
+				<button id="theme-toggle">[dark]</button>
+			</div>
+		</aside>
+		</div>
+
+		<hr />
+		<footer><p>Creator of Worlds &amp; a Coffee Addict ;p</p></footer>
+	</body>
+</html>
