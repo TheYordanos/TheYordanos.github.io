@@ -1,0 +1,145 @@
+main figure.gist-file {
+	margin: 26px 0;
+	border: 1px solid var(--border);
+	border-radius: 6px;
+	overflow: hidden;
+}
+
+main figure.gist-file figcaption {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px 12px;
+	margin: 0;
+	padding: 8px 12px;
+	background: var(--bg);
+	border-bottom: 1px solid var(--border);
+	color: var(--text);
+	font-size: 13px;
+	line-height: 1.2;
+	text-align: left;
+}
+
+.gist-name {
+	margin-right: auto;
+	font-family: Consolas, Monaco, monospace;
+	font-weight: 700;
+	overflow-wrap: anywhere;
+}
+
+.gist-info {
+	color: var(--meta);
+	white-space: nowrap;
+}
+
+.gist-btn {
+	display: inline-block;
+	padding: 8px 14px;
+	border: 1px solid var(--border);
+	border-radius: 6px;
+	background: none;
+	color: var(--text);
+	font: inherit;
+	font-size: 14px;
+	line-height: 1.2;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.gist-btn:visited { color: var(--text); }
+
+.gist-btn:hover,
+.gist-btn.done {
+	border-color: var(--link);
+	color: var(--link);
+	text-decoration: none;
+}
+
+.gist-btn.primary,
+.gist-btn.primary:visited {
+	background: var(--link);
+	border-color: var(--link);
+	color: var(--bg);
+}
+
+.gist-btn.primary:hover { opacity: 0.88; color: var(--bg); }
+
+main figure.gist-file figcaption .gist-btn,
+main figure.gist-file figcaption .gist-btn:visited {
+	padding: 4px 10px;
+	color: var(--link);
+	font-size: 12px;
+}
+
+main figure.gist-file figcaption .gist-btn:hover {
+	background: var(--link);
+	color: var(--bg);
+}
+
+.gist-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 0 0 18px;
+}
+
+.gist-code {
+	display: flex;
+	background: var(--code-bg);
+}
+
+main .gist-code pre {
+	margin: 0;
+	border: 0;
+	border-radius: 0;
+	background: none;
+}
+
+main .gist-code > .sourceCode,
+main .gist-code > pre:not(.gist-gutter) {
+	flex: 1;
+	min-width: 0;
+}
+
+main .gist-code pre code {
+	padding: 14px 18px;
+}
+
+main .gist-code pre.gist-gutter {
+	flex: none;
+	padding: 14px 12px 14px 16px;
+	border-right: 1px solid var(--border);
+	color: var(--hl-comment);
+	opacity: 0.7;
+	text-align: right;
+	user-select: none;
+	overflow: visible;
+}
+
+.gist-meta span + span::before {
+	content: "\00b7";
+	margin: 0 0.5em;
+}
+
+.gist-files {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px 14px;
+	margin: 0 0 20px;
+	font-size: 14px;
+}
+
+.gist-files-label {
+	color: var(--meta);
+	font-size: 13px;
+}
+
+.gist-files a {
+	font-family: Consolas, Monaco, monospace;
+	font-size: 13px;
+}
+
+@media (max-width: 560px) {
+	.gist-info { display: none; }
+}

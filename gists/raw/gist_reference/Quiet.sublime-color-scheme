@@ -1,0 +1,14 @@
+{
+	"name": "Quiet",
+	"variables": {
+		"bg": "#1c1e22",
+		"fg": "#c9cdd4"
+	},
+	"globals": {
+		"background": "var(bg)",
+		"foreground": "var(fg)"
+	},
+	"rules": [
+		{ "scope": "comment", "foreground": "#6b7280", "font_style": "italic" }
+	]
+}

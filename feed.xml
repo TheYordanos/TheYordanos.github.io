@@ -5,8 +5,15 @@
 <link href="https://theyordanos.github.io/"/>
 <link rel="self" href="https://theyordanos.github.io/feed.xml"/>
 <id>https://theyordanos.github.io/</id>
-<updated>2026-11-22T00:00:00Z</updated>
+<updated>2026-11-23T00:00:00Z</updated>
 <author><name>Yordanos Z.</name></author>
+<entry>
+<title>Gist: Gist reference</title>
+<link href="https://theyordanos.github.io/gists/gist_reference.html"/>
+<id>https://theyordanos.github.io/gists/gist_reference.html</id>
+<updated>2026-11-23T00:00:00Z</updated>
+<summary>Every gist feature in one page, written as a template to copy from.</summary>
+</entry>
 <entry>
 <title>Karl2D: Overview</title>
 <link href="https://theyordanos.github.io/docs/kark2d_overview.html"/>

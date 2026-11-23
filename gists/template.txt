@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="$description$">
+
+		<title>$title$</title>
+
+		<meta property="og:type" content="article">
+		$if(og_site)$<meta property="og:site_name" content="$og_site$">$endif$
+		<meta property="og:title" content="$og_title$">
+		$if(og_description)$<meta property="og:description" content="$og_description$">$endif$
+		<meta property="og:url" content="$og_url$">
+		<meta property="og:image" content="$og_image$">
+		<meta name="twitter:card" content="summary_large_image">
+		<link rel="canonical" href="$og_url$">
+
+		<link rel="alternate" type="application/atom+xml" title="Yordanos" href="https://theyordanos.github.io/feed.xml">
+
+		<link rel="icon" type="image/png" href="../res/theyordanos-icon.png">
+		<script>
+		try {
+			if (localStorage.getItem("ty_theme") === "dark") document.documentElement.classList.add("dark");
+		} catch (e) {}
+		</script>
+		<link rel="stylesheet" href="../styles/style.css">
+		<link rel="stylesheet" href="../styles/article.css">
+		<link rel="stylesheet" href="../styles/gists.css">
+
+		<script src="../scripts/theme.js" defer></script>
+		<script src="../scripts/copy.js" defer></script>
+	</head>
+	<body>
+		<div class="layout">
+		<main>
+			<header>
+				<h1>$title$</h1>
+				$if(description)$<p class="description">$description$</p>$endif$
+				<p class="meta gist-meta">$if(date)$<span><time datetime="$date$">$date$</time></span>$endif$$if(language)$<span>$language$</span>$endif$$if(count_label)$<span>$count_label$</span>$endif$</p>
+			</header>
+
+			$if(gist_actions)$$gist_actions$$endif$
+
+			$if(gist_files)$$gist_files$$endif$
+
+			$body$
+		</main>
+
+		<aside class="sidebar compact">
+			<a class="brand" href="../index.html"><span class="brand-name">Yordanos Z.</span></a>
+			<nav class="side-group" aria-label="Site">
+				<a href="../index.html#products">Products</a>
+				<a href="../index.html#gists">Gists</a>
+				<a href="../archive.html">Archive</a>
+			</nav>
+			<div class="side-tools">
+				<a href="../feed.xml">RSS</a>
+				<button id="theme-toggle">[dark]</button>
+			</div>
+		</aside>
+		</div>
+
+		<hr />
+		<footer><p>Creator of Worlds &amp; a Coffee Addict ;p</p></footer>
+	</body>
+</html>

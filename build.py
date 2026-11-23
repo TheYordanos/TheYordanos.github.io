@@ -1,7 +1,8 @@
 """
-Build articles/*.html from articles_md/*.md and docs/*.html from docs_md/*.md
-with Pandoc, then refresh the lists in index.html (latest INDEX_LIMIT articles),
-archive.html (everything) and feed.xml (articles and docs).
+Build articles/*.html from articles_md/*.md docs/*.html from docs_md/*.md and
+gists/*.html from gists_md/*.md with Pandoc, then refresh the lists in index.html
+(latest INDEX_LIMIT articles), archive.html (everything) and feed.xml (articles,
+docs and gists).
 
 Front matter per article:
     ---
@@ -15,6 +16,19 @@ Front matter per article:
     source: link            (optional, link to source code)
     image: ../res/cover.png (optional, link preview image; default is the
                              first image in the article, then OG_IMAGE)
+    ---
+
+Front matter per gist (gists_md/*.md, plain markdown). A fenced block written as
+{.odin file="name.odin" label="Odin"} becomes a numbered file block with Copy and
+Raw buttons. file and label are yours to choose, nothing is predefined; a block
+without label shows the gist's language. Files also get a Download button:
+    ---
+    title: Fixed timestep game loop
+    description: Short summary for the meta tag and the list.
+    date: 2026-11-20        (YYYY-MM-DD, newest first)
+    language: Odin          (optional, shown under the title and on blocks without label)
+    source: link            (optional, adds a Source button)
+    draft: true             (optional, skips the gist)
     ---
 
 Front matter per doc:
@@ -36,16 +50,18 @@ Usage:
     python build.py --force
 """
 import html
+import io
 import re
 import shutil
 import subprocess
 import sys
+import zipfile
 from collections import namedtuple
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
-from urllib.parse import urljoin
+from urllib.parse import quote, urljoin
 
 # --- Settings -------------------------------------------------------------
 
@@ -58,6 +74,8 @@ FEED_LIMIT = 50
 
 ARTICLE_OG_IMAGE = "res/article_og.png"
 DOCS_OG_IMAGE = "res/docs_og.png"
+GISTS_OG_IMAGE = "res/gists_og.png"
+GISTS_INDEX_LIMIT = 10
 NOT_PREVIEW = (".mp4", ".webm", ".mov", ".mp3", ".ogg", ".wav", ".m4a", ".svg")
 
 PANDOC_EXTRA = [
@@ -77,6 +95,10 @@ DOCS_SRC = ROOT / "docs_md"
 DOCS_OUT = ROOT / "docs"
 DOCS_TEMPLATE = DOCS_OUT / "template.txt"
 
+GISTS_SRC = ROOT / "gists_md"
+GISTS_OUT = ROOT / "gists"
+GISTS_TEMPLATE = GISTS_OUT / "template.txt"
+
 FILTERS = ROOT / "filters.lua"
 INDEX = ROOT / "index.html"
 ARCHIVE = ROOT / "archive.html"
@@ -88,10 +110,15 @@ ARTICLES_START = "<!-- ARTICLES:START -->"
 ARTICLES_END = "<!-- ARTICLES:END -->"
 DOCS_START = "<!-- DOCS:START -->"
 DOCS_END = "<!-- DOCS:END -->"
+GISTS_START = "<!-- GISTS:START -->"
+GISTS_END = "<!-- GISTS:END -->"
 LIST_INDENT = "\t\t\t\t"
 
 UNDATED = "0000-00-00"
 DATE_RE = re.compile(r"\d{4}-\d{2}-\d{2}")
+
+FENCE_RE = re.compile(r"^[ \t]*(`{3,}|~{3,})(.*)$")
+FILE_ATTR_RE = re.compile(r"""\bfile\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s}]+))""")
 
 
 # --- Data -----------------------------------------------------------------
@@ -150,7 +177,31 @@ class DocProject:
     newest: float
 
 
+@dataclass(eq=False)
+class Gist:
+    src: Path
+    slug: str
+    title: str
+    date: str
+    description: str
+    meta: dict
+    files: list
+    blocks: int
+
+    @property
+    def count_label(self):
+        if self.files:
+            n, noun = len(self.files), "file"
+        else:
+            n, noun = self.blocks, "block"
+        if not n:
+            return ""
+        return f"{n} {noun}{'' if n == 1 else 's'}"
+
+
 Entry = namedtuple("Entry", "date article series")
+
+CodeBlock = namedtuple("CodeBlock", "name text")
 
 Job = namedtuple("Job", "src out template args stale_after")
 
@@ -199,6 +250,31 @@ def read_front_matter(path):
                 value = value[1:-1]
             meta[kv.group(1).lower()] = value
     return meta
+
+
+def file_id(name):
+    return "file-" + re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
+
+
+def parse_fence_file(info):
+    match = FILE_ATTR_RE.search(info) if info.strip().startswith("{") else None
+    return next(g for g in match.groups() if g is not None).strip() if match else ""
+
+
+def scan_code_blocks(text):
+    blocks, fence, name, body = [], None, "", []
+    for line in text.splitlines():
+        m = FENCE_RE.match(line)
+        if fence is None:
+            if m:
+                fence, name, body = m.group(1), parse_fence_file(m.group(2)), []
+        elif (m and m.group(1)[0] == fence[0] and len(m.group(1)) >= len(fence)
+              and not m.group(2).strip()):
+            blocks.append(CodeBlock(name, "\n".join(body)))
+            fence = None
+        else:
+            body.append(line)
+    return blocks
 
 
 def first_image(text):
@@ -288,6 +364,68 @@ def docs_nav_html(project, current):
     name = html.escape(project.name)
     return (f'<nav class="docs-pages" aria-label="{name} documentation">'
             f'<p class="side-label">{name}</p><ul>{"".join(items)}</ul></nav>')
+
+
+def gist_files_html(files):
+    links = "".join(f'<a href="#{file_id(name)}">{html.escape(name)}</a>' for name in files)
+    return (f'<nav class="gist-files" aria-label="Files">'
+            f'<span class="gist-files-label">Files</span>{links}</nav>')
+
+
+def gist_actions_html(g):
+    buttons = []
+    if len(g.files) == 1:
+        href = f"raw/{quote(g.slug)}/{quote(g.files[0].name)}"
+        buttons.append(f'<a class="gist-btn" href="{href}" download>Download</a>')
+    elif g.files:
+        buttons.append(f'<a class="gist-btn" href="raw/{quote(g.slug)}/{quote(g.slug)}.zip" '
+                       f'download>Download</a>')
+    source = g.meta.get("source", "").strip()
+    if source:
+        buttons.append(f'<a class="gist-btn" href="{html.escape(source, quote=True)}" '
+                       f'rel="noopener">Source</a>')
+    if not buttons:
+        return ""
+    return f'<div class="gist-actions">{"".join(buttons)}</div>'
+
+
+def raw_name(name):
+    return Path(name.replace("\\", "/")).name
+
+
+def write_gist_raw(g):
+    if not g.files:
+        return
+    out = GISTS_OUT / "raw" / g.slug
+    out.mkdir(parents=True, exist_ok=True)
+    expected = {}
+    for f in g.files:
+        expected[raw_name(f.name)] = (f.text.rstrip("\n") + "\n").encode("utf-8")
+    if len(expected) > 1:
+        archive = io.BytesIO()
+        with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED) as z:
+            for name, data in expected.items():
+                info = zipfile.ZipInfo(name, (1980, 1, 1, 0, 0, 0))
+                info.compress_type = zipfile.ZIP_DEFLATED
+                z.writestr(info, data)
+        expected[f"{g.slug}.zip"] = archive.getvalue()
+    for old in out.iterdir():
+        if old.name not in expected:
+            old.unlink()
+    for name, data in expected.items():
+        target = out / name
+        if not target.exists() or target.read_bytes() != data:
+            target.write_bytes(data)
+
+
+def remove_stale_raw(slugs):
+    root = GISTS_OUT / "raw"
+    if not root.exists():
+        return
+    for d in root.iterdir():
+        if d.is_dir() and d.name not in slugs:
+            shutil.rmtree(d)
+            print(f"remove gists/raw/{d.name}")
 
 
 # --- Pandoc ---------------------------------------------------------------
@@ -488,6 +626,66 @@ def build_docs(projects, force):
     return run_jobs(jobs, force, "docs")
 
 
+# --- Gists ----------------------------------------------------------------
+
+def collect_gists():
+    gists = []
+    for src in sorted(GISTS_SRC.glob("*.md")):
+        meta = read_front_matter(src)
+        slug = src.stem
+        if is_draft(meta):
+            print(f"skip   gists/{slug} [draft]")
+            continue
+
+        date = meta.get("date", "")
+        if not date:
+            print(f"warning: gists/{slug} has no date; it will sort last")
+            date = UNDATED
+        title = meta.get("title", "")
+        if not title:
+            print(f"warning: gists/{slug} has no title; using filename")
+            title = slug
+
+        blocks = scan_code_blocks(src.read_text(encoding="utf-8-sig"))
+        files = [b for b in blocks if b.name]
+        names = [raw_name(b.name) for b in files]
+        if len(set(names)) != len(names):
+            print(f"warning: gists/{slug} has duplicate file names")
+        gists.append(Gist(
+            src=src, slug=slug, title=title, date=date, meta=meta,
+            description=meta.get("description", ""),
+            files=files, blocks=len(blocks),
+        ))
+    gists.sort(key=lambda g: g.title.lower())
+    gists.sort(key=lambda g: g.date, reverse=True)
+    return gists
+
+
+def build_gists(gists, force):
+    GISTS_OUT.mkdir(exist_ok=True)
+    shared_mtime = newest_mtime(GISTS_TEMPLATE, FILTERS, SCRIPT)
+
+    jobs = []
+    for g in gists:
+        args = page_args("gists", g.slug, g.title, g.description, g.meta,
+                         g.src.read_text(encoding="utf-8-sig"), GISTS_OG_IMAGE)
+        args += ["-M", f"gist_slug={g.slug}"]
+        if g.count_label:
+            args += ["-V", "count_label=" + g.count_label]
+        actions = gist_actions_html(g)
+        if actions:
+            args += ["-V", "gist_actions=" + actions]
+        if len(g.files) > 1:
+            args += ["-V", "gist_files=" + gist_files_html([f.name for f in g.files])]
+        write_gist_raw(g)
+        jobs.append(Job(g.src, GISTS_OUT / f"{g.slug}.html",
+                        GISTS_TEMPLATE, args, shared_mtime))
+
+    remove_stale_pages(GISTS_OUT, {g.slug for g in gists}, "gists")
+    remove_stale_raw({g.slug for g in gists})
+    return run_jobs(jobs, force, "gists")
+
+
 # --- index.html / archive.html lists --------------------------------------
 
 def render_entries(entries, year_heading=None):
@@ -543,6 +741,22 @@ def render_docs(projects, show_dates=False):
     return lines
 
 
+def render_gists(gists, year_heading=None):
+    i = LIST_INDENT
+    if not gists:
+        return [f'{i}<li class="gist-empty">No gists yet.</li>']
+    lines, last_heading = [], None
+    for g in gists:
+        heading = year_heading(g.date) if year_heading else None
+        if heading and heading != last_heading:
+            lines.append(f'{i}<li class="year">{html.escape(heading)}</li>')
+            last_heading = heading
+        shown = "" if g.date == UNDATED else html.escape(g.date)
+        lines.append(f'{i}<li><time>{shown}</time>'
+                     f'<a href="gists/{g.slug}.html">{html.escape(g.title)}</a></li>')
+    return lines
+
+
 def year_heading(date):
     return None if date[:4] == "0000" else date[:4]
 
@@ -572,7 +786,7 @@ def splice(path, lines, start=ARTICLES_START, end=ARTICLES_END, required=True):
 
 # --- feed.xml -------------------------------------------------------------
 
-def collect_feed_entries(articles, docs):
+def collect_feed_entries(articles, docs, gists):
     entries = []
     for a in articles:
         if a.date == UNDATED:
@@ -582,6 +796,16 @@ def collect_feed_entries(articles, docs):
                                      a.title, a.description))
         else:
             print(f"warning: articles/{a.slug} date '{a.date}' is not YYYY-MM-DD; "
+                  f"left out of feed.xml")
+
+    for g in gists:
+        if g.date == UNDATED:
+            continue
+        if DATE_RE.fullmatch(g.date):
+            entries.append(FeedEntry(g.date, f"{SITE_URL}/gists/{g.slug}.html",
+                                     f"Gist: {g.title}", g.description))
+        else:
+            print(f"warning: gists/{g.slug} date '{g.date}' is not YYYY-MM-DD; "
                   f"left out of feed.xml")
 
     undated_docs = []
@@ -667,6 +891,16 @@ def main():
         if doc_errors:
             sys.exit(1)
 
+    gists, gists_built = [], 0
+    gists_on = GISTS_SRC.is_dir()
+    if gists_on:
+        if not GISTS_TEMPLATE.exists():
+            fail(f"missing {GISTS_TEMPLATE.relative_to(ROOT)}")
+        gists = collect_gists()
+        gists_built, gist_errors = build_gists(gists, force)
+        if gist_errors:
+            sys.exit(1)
+
     sort_newest_first(articles)
     entries = collapse_series(articles)
 
@@ -683,16 +917,23 @@ def main():
             splice(ARCHIVE, render_docs(projects, show_dates=True),
                    DOCS_START, DOCS_END, required=False)
 
-    feed_count = write_feed(collect_feed_entries(articles, docs))
+    if gists_on:
+        splice(INDEX, render_gists(gists[:GISTS_INDEX_LIMIT]), GISTS_START, GISTS_END, required=False)
+        if ARCHIVE.exists():
+            splice(ARCHIVE, render_gists(gists, year_heading), GISTS_START, GISTS_END, required=False)
+
+    feed_count = write_feed(collect_feed_entries(articles, docs, gists))
     if "example.com" in SITE_URL:
         print("warning: SITE_URL in build.py is still the placeholder; "
               "feed links will be wrong until you set it")
 
     docs_note = (f"docs: {len(docs)} page(s), {docs_built} rebuilt"
                  if docs_on else "no docs_md/")
+    gists_note = (f"gists: {len(gists)} page(s), {gists_built} rebuilt"
+                  if gists_on else "no gists_md/")
     print(f"done: {len(articles)} article(s), {built} rebuilt, "
           f"index.html shows {min(len(entries), INDEX_LIMIT)} entries, {archive_note}, "
-          f"feed.xml has {feed_count}, {docs_note}")
+          f"feed.xml has {feed_count}, {docs_note}, {gists_note}")
 
 
 if __name__ == "__main__":

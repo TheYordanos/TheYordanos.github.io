@@ -600,6 +600,8 @@ footer {
 
 .doc-empty { color: var(--meta); }
 
+.gist-empty { color: var(--meta); }
+
 /* BOOKS SECTION ========================= */
 .books-grid {
 	display: grid;

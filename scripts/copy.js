@@ -15,37 +15,66 @@ async function copyText(text) {
 	if (!ok) throw new Error("copy failed");
 }
 
-document.querySelectorAll("main pre").forEach(pre => {
-	const wrap = document.createElement("div");
-	wrap.className = "code-wrap";
-	pre.parentNode.insertBefore(wrap, pre);
-	wrap.appendChild(pre);
-
-	const button = document.createElement("button");
-	button.type = "button";
-	button.className = "copy-btn";
-	button.textContent = "Copy";
-	button.setAttribute("aria-label", "Copy code to clipboard");
-	wrap.appendChild(button);
-
+function bindCopy(button, getText, idleLabel) {
 	let timer;
 	function flash(label) {
 		button.textContent = label;
 		button.classList.add("done");
 		clearTimeout(timer);
 		timer = setTimeout(() => {
-			button.textContent = "Copy";
+			button.textContent = idleLabel;
 			button.classList.remove("done");
 		}, 1500);
 	}
 
 	button.addEventListener("click", async () => {
-		const code = pre.querySelector("code") || pre;
 		try {
-			await copyText(code.textContent);
+			await copyText(getText());
 			flash("Copied");
 		} catch {
 			flash("Failed");
 		}
 	});
+}
+
+function makeButton(className, label, ariaLabel) {
+	const button = document.createElement("button");
+	button.type = "button";
+	button.className = className;
+	button.textContent = label;
+	button.setAttribute("aria-label", ariaLabel);
+	return button;
+}
+
+document.querySelectorAll("main pre").forEach(pre => {
+	if (pre.closest(".gist-file")) return;
+
+	const wrap = document.createElement("div");
+	wrap.className = "code-wrap";
+	pre.parentNode.insertBefore(wrap, pre);
+	wrap.appendChild(pre);
+
+	const button = makeButton("copy-btn", "Copy", "Copy code to clipboard");
+	wrap.appendChild(button);
+	bindCopy(button, () => (pre.querySelector("code") || pre).textContent, "Copy");
 });
+
+function gistText(figure) {
+	const code = figure.querySelector(".gist-code > :not(.gist-gutter)");
+	return code.textContent.replace(/\n+$/, "") + "\n";
+}
+
+document.querySelectorAll("figure.gist-file").forEach(figure => {
+	const button = makeButton("gist-btn", "Copy", "Copy file to clipboard");
+	const caption = figure.querySelector("figcaption");
+	caption.insertBefore(button, caption.querySelector("a.gist-btn"));
+	bindCopy(button, () => gistText(figure), "Copy");
+});
+
+const gistActions = document.querySelector(".gist-actions");
+const gistFigures = Array.from(document.querySelectorAll("figure.gist-file"));
+if (gistActions && gistFigures.length > 1) {
+	const button = makeButton("gist-btn primary", "Copy all", "Copy all files to clipboard");
+	gistActions.prepend(button);
+	bindCopy(button, () => gistFigures.map(gistText).join("\n"), "Copy all");
+}
