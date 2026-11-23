@@ -22,7 +22,7 @@ main figure.gist-file figcaption {
 
 .gist-name {
 	margin-right: auto;
-	font-family: Consolas, Monaco, monospace;
+	font-family: MonoFont, Consolas, Monaco, monospace;
 	font-weight: 700;
 	overflow-wrap: anywhere;
 }
@@ -120,7 +120,7 @@ main .gist-code pre.gist-gutter {
 }
 
 .gist-files a {
-	font-family: Consolas, Monaco, monospace;
+	font-family: MonoFont, Consolas, Monaco, monospace;
 	font-size: 13px;
 }
 

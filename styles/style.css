@@ -28,27 +28,35 @@ html.dark {
 }
 
 /* FONT ========================= */
-@font-face {
-	font-family: "Lato";
-	src: url("../res/fonts/Lato-Regular.ttf") format("truetype");
-	font-weight: 400;
+@font-face{
+	font-family: Literata;
+	src: url(../res/fonts/literata-normal.woff2) format("woff2");
+	font-weight: 400 700;
 	font-style: normal;
 	font-display: swap;
 }
 
-@font-face {
-	font-family: "Lato";
-	src: url("../res/fonts/Lato-Italic.ttf") format("truetype");
-	font-weight: 400;
+@font-face{
+	font-family: Literata;
+	src: url(../res/fonts/literata-italic.woff2,wght.woff2) format("woff2");
+	font-weight: 400 700;
 	font-style: italic;
 	font-display: swap;
 }
 
-@font-face {
-	font-family: "Lato";
-	src: url("../res/fonts/Lato-Bold.ttf") format("truetype");
-	font-weight: 700;
+@font-face{
+	font-family: MonoFont;
+	src: url(../res/fonts/jetbrains-mono-normal.woff2) format("woff2");
+	font-weight: 400 700;
 	font-style: normal;
+	font-display: swap;
+}
+
+@font-face{
+	font-family: MonoFont;
+	src: url(../res/fonts/jetbrains-mono-italic.woff2) format("woff2");
+	font-weight: 400 700;
+	font-style: italic;
 	font-display: swap;
 }
 
@@ -57,7 +65,7 @@ html { background: var(--bg); }
 
 body {
 	container-type: inline-size;
-	font-family: 'Lato', Arial, sans-serif;
+	font-family: 'Literata', Arial, sans-serif;
 	background: var(--bg);
 	color: var(--text);
 	max-width: 1060px;

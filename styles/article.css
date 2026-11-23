@@ -92,7 +92,7 @@ main > header .source-label {
 
 main > header .source-label::before {
 	content: "</>";
-	font-family: Consolas, Monaco, monospace;
+	font-family: MonoFont, Consolas, Monaco, monospace;
 	font-size: 12px;
 	font-weight: 400;
 }
@@ -421,7 +421,7 @@ main {
 
 /* INLINE CODE */
 main code {
-	font-family: Consolas, Monaco, monospace;
+	font-family: MonoFont, Consolas, Monaco, monospace;
 	font-size: 0.86em;
 	background: rgba(127, 127, 127, 0.12);
 	border: 1px solid var(--border);
