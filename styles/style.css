@@ -72,9 +72,9 @@ section {
 	scroll-margin-top: 10px;
 }
 
-.articles nav,
-.docs nav,
-.gists nav {
+.articles > nav,
+.docs > nav,
+.gists > nav {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
