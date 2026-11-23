@@ -1,7 +1,6 @@
 ---
 title: Vim and Neovim Config
 date: 2026-11-23
-language: Lua
 ---
 
 ```{file="_vimrc"}
