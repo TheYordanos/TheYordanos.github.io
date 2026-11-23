@@ -27,6 +27,9 @@
 		<link rel="stylesheet" href="styles/style.css">
 
 		<script src="scripts/theme.js" defer></script>
+
+		<script data-goatcounter="https://yordanos.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
 	</head>
 
 	<body>
@@ -556,6 +559,16 @@
 			<div class="side-tools">
 				<a href="feed.xml">RSS</a>
 				<button id="theme-toggle">[dark]</button>
+			</div>
+
+			<div>
+				<p class="meta"><span id="visits">-</span> visits</p>
+				<script>
+					fetch("https://yordanos.goatcounter.com/counter/TOTAL.json")
+					    .then(r => r.json())
+					    .then(d => { document.getElementById("visits").textContent = d.count; })
+					    .catch(() => {});
+				</script>
 			</div>
 		</aside>
 		</div>
