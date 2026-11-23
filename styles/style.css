@@ -72,6 +72,15 @@ section {
 	scroll-margin-top: 10px;
 }
 
+.articles nav,
+.docs nav,
+.gists nav {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 1rem;
+}
+
 h1, h2, h3 { margin-top: 30px; }
 h2 {
 	border-bottom: 1px solid var(--border);
@@ -238,13 +247,6 @@ footer {
 }
 
 /* ARTICLES SECTION ========================= */
-.articles nav {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	margin-bottom: 1rem;
-}
-
 .articles ul {
 	list-style: none;
 	padding: 0;
@@ -600,6 +602,7 @@ footer {
 
 .doc-empty { color: var(--meta); }
 
+/* GISTS SECTION ========================= */
 .gist-empty { color: var(--meta); }
 
 /* BOOKS SECTION ========================= */
