@@ -29,7 +29,22 @@
 		<script src="scripts/theme.js" defer></script>
 
 		<script data-goatcounter="https://yordanos.goatcounter.com/count"
-        async src="//gc.zgo.at/count.js"></script>
+		        async src="//gc.zgo.at/count.js"></script>
+		<script>
+			var tries = 0;
+			var t = setInterval(function () {
+				if (window.goatcounter && window.goatcounter.visit_count) {
+					clearInterval(t);
+					window.goatcounter.visit_count({ append: "#stats", path: "TOTAL", no_branding: true });
+					setTimeout(function () {
+						if (document.getElementById("stats").textContent.trim())
+							document.getElementById("visits-line").hidden = false;
+					}, 1500);
+				} else if (++tries > 50) {
+					clearInterval(t);
+				}
+			}, 100);
+		</script>
 	</head>
 
 	<body>
@@ -562,13 +577,7 @@
 			</div>
 
 			<div>
-				<p class="meta"><span id="visits">-</span> visits</p>
-				<script>
-					fetch("https://yordanos.goatcounter.com/counter/TOTAL.json")
-					    .then(r => r.json())
-					    .then(d => { document.getElementById("visits").textContent = d.count; })
-					    .catch(() => {});
-				</script>
+				<p class="meta" id="visits-line" hidden><span id="stats"></span> visits</p>
 			</div>
 		</aside>
 		</div>
