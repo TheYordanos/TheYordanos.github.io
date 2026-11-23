@@ -759,7 +759,7 @@ def collect_feed_entries(articles, docs, gists):
             continue
         if DATE_RE.fullmatch(a.date):
             entries.append(FeedEntry(a.date, f"{SITE_URL}/articles/{a.slug}.html",
-                                     a.title, a.description))
+                                     f"[Article] {a.title}", a.description))
         else:
             print(f"warning: articles/{a.slug} date '{a.date}' is not YYYY-MM-DD; "
                   f"left out of feed.xml")
@@ -769,7 +769,7 @@ def collect_feed_entries(articles, docs, gists):
             continue
         if DATE_RE.fullmatch(g.date):
             entries.append(FeedEntry(g.date, f"{SITE_URL}/gists/{g.slug}.html",
-                                     f"Gist: {g.title}", g.description))
+                                     f"[Gist] {g.title}", g.description))
         else:
             print(f"warning: gists/{g.slug} date '{g.date}' is not YYYY-MM-DD; "
                   f"left out of feed.xml")
@@ -779,7 +779,7 @@ def collect_feed_entries(articles, docs, gists):
         if not d.updated:
             undated_docs.append(f"docs/{d.slug}")
         elif DATE_RE.fullmatch(d.updated):
-            title = f"{d.project}: {d.title}" if d.project else d.title
+            title = f"[Doc] {d.project}: {d.title}" if d.project else f"[Doc] {d.title}"
             entries.append(FeedEntry(d.updated, f"{SITE_URL}/docs/{d.slug}.html",
                                      title, d.description))
         else:

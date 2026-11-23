@@ -8,139 +8,139 @@
 <updated>2026-11-23T00:00:00Z</updated>
 <author><name>Yordanos Z.</name></author>
 <entry>
-<title>Gist: Vim and Neovim Config</title>
+<title>[Gist] Vim and Neovim Config</title>
 <link href="https://theyordanos.github.io/gists/vim_and_neovim_config.html"/>
 <id>https://theyordanos.github.io/gists/vim_and_neovim_config.html</id>
 <updated>2026-11-23T00:00:00Z</updated>
 </entry>
 <entry>
-<title>Karl2D: Overview</title>
+<title>[Doc] Karl2D: Overview</title>
 <link href="https://theyordanos.github.io/docs/kark2d_overview.html"/>
 <id>https://theyordanos.github.io/docs/kark2d_overview.html</id>
 <updated>2026-11-22T00:00:00Z</updated>
 <summary>Compact reference for Karl2D, a beginner friendly 2D game library for Odin (Windows, Linux, Mac, Web).</summary>
 </entry>
 <entry>
-<title>Sidewinder Algorithm</title>
+<title>[Article] Sidewinder Algorithm</title>
 <link href="https://theyordanos.github.io/articles/sidewinder.html"/>
 <id>https://theyordanos.github.io/articles/sidewinder.html</id>
 <updated>2026-11-21T00:00:00Z</updated>
 <summary>Carving a perfect maze with runs of rooms, each opening once toward the bottom corridor</summary>
 </entry>
 <entry>
-<title>Binary Tree Algorithm</title>
+<title>[Article] Binary Tree Algorithm</title>
 <link href="https://theyordanos.github.io/articles/binary_tree_maze.html"/>
 <id>https://theyordanos.github.io/articles/binary_tree_maze.html</id>
 <updated>2026-11-21T00:00:00Z</updated>
 <summary>Carving a perfect maze by giving every room one connection to the south or east</summary>
 </entry>
 <entry>
-<title>Recursive Division Algorithm</title>
+<title>[Article] Recursive Division Algorithm</title>
 <link href="https://theyordanos.github.io/articles/recursive_division.html"/>
 <id>https://theyordanos.github.io/articles/recursive_division.html</id>
 <updated>2026-11-21T00:00:00Z</updated>
 <summary>Starting with an open room and building walls, each with a single gap</summary>
 </entry>
 <entry>
-<title>All-in-One Maze Generation</title>
+<title>[Article] All-in-One Maze Generation</title>
 <link href="https://theyordanos.github.io/articles/all_in_one_maze_generation.html"/>
 <id>https://theyordanos.github.io/articles/all_in_one_maze_generation.html</id>
 <updated>2026-11-21T00:00:00Z</updated>
 <summary>Every maze generation algorithm from the series in one place, with its animation and pseudocode</summary>
 </entry>
 <entry>
-<title>Eller&#x27;s Algorithm</title>
+<title>[Article] Eller&#x27;s Algorithm</title>
 <link href="https://theyordanos.github.io/articles/ellers.html"/>
 <id>https://theyordanos.github.io/articles/ellers.html</id>
 <updated>2026-11-20T00:00:00Z</updated>
 <summary>Building a perfect maze one row at a time, remembering only the current row</summary>
 </entry>
 <entry>
-<title>Growing Forest Algorithm</title>
+<title>[Article] Growing Forest Algorithm</title>
 <link href="https://theyordanos.github.io/articles/growing_forest.html"/>
 <id>https://theyordanos.github.io/articles/growing_forest.html</id>
 <updated>2026-11-19T00:00:00Z</updated>
 <summary>Growing several trees at once and merging them with Kruskal&#x27;s sets</summary>
 </entry>
 <entry>
-<title>Growing Tree Algorithm</title>
+<title>[Article] Growing Tree Algorithm</title>
 <link href="https://theyordanos.github.io/articles/growing_tree.html"/>
 <id>https://theyordanos.github.io/articles/growing_tree.html</id>
 <updated>2026-11-19T00:00:00Z</updated>
 <summary>One algorithm with a dial, where the way you pick the next room decides what kind of maze you get</summary>
 </entry>
 <entry>
-<title>Hunt and Kill Algorithm</title>
+<title>[Article] Hunt and Kill Algorithm</title>
 <link href="https://theyordanos.github.io/articles/hunt_and_kill.html"/>
 <id>https://theyordanos.github.io/articles/hunt_and_kill.html</id>
 <updated>2026-11-19T00:00:00Z</updated>
 <summary>The recursive backtracker without the stack, scanning for a new place to start whenever it gets stuck</summary>
 </entry>
 <entry>
-<title>Wilson&#x27;s Algorithm</title>
+<title>[Article] Wilson&#x27;s Algorithm</title>
 <link href="https://theyordanos.github.io/articles/wilsons.html"/>
 <id>https://theyordanos.github.io/articles/wilsons.html</id>
 <updated>2026-11-19T00:00:00Z</updated>
 <summary>Carving a perfect maze with loop-erased random walks</summary>
 </entry>
 <entry>
-<title>Aldous-Broder Algorithm</title>
+<title>[Article] Aldous-Broder Algorithm</title>
 <link href="https://theyordanos.github.io/articles/aldous_broder.html"/>
 <id>https://theyordanos.github.io/articles/aldous_broder.html</id>
 <updated>2026-11-18T00:00:00Z</updated>
 <summary>Carving a perfect maze with a random walk</summary>
 </entry>
 <entry>
-<title>Prim&#x27;s Algorithm</title>
+<title>[Article] Prim&#x27;s Algorithm</title>
 <link href="https://theyordanos.github.io/articles/prims.html"/>
 <id>https://theyordanos.github.io/articles/prims.html</id>
 <updated>2026-11-18T00:00:00Z</updated>
 <summary>Growing a perfect maze outward from a single room, one random wall at a time</summary>
 </entry>
 <entry>
-<title>Kruskal&#x27;s Algorithm</title>
+<title>[Article] Kruskal&#x27;s Algorithm</title>
 <link href="https://theyordanos.github.io/articles/kruskals.html"/>
 <id>https://theyordanos.github.io/articles/kruskals.html</id>
 <updated>2026-11-17T00:00:00Z</updated>
 <summary>Building a perfect maze by knocking down walls in random order, using union-find to avoid loops</summary>
 </entry>
 <entry>
-<title>Recursive Backtracker</title>
+<title>[Article] Recursive Backtracker</title>
 <link href="https://theyordanos.github.io/articles/recursive_backtracker.html"/>
 <id>https://theyordanos.github.io/articles/recursive_backtracker.html</id>
 <updated>2026-11-16T00:00:00Z</updated>
 <summary>Carving a perfect maze with a depth-first walk</summary>
 </entry>
 <entry>
-<title>Maze Generation Algorithms Introduction</title>
+<title>[Article] Maze Generation Algorithms Introduction</title>
 <link href="https://theyordanos.github.io/articles/maze_generation.html"/>
 <id>https://theyordanos.github.io/articles/maze_generation.html</id>
 <updated>2026-11-16T00:00:00Z</updated>
 <summary>A series exploring different algorithms to generate &#x27;perfect&#x27; mazes</summary>
 </entry>
 <entry>
-<title>Minimalism</title>
+<title>[Article] Minimalism</title>
 <link href="https://theyordanos.github.io/articles/minimalism.html"/>
 <id>https://theyordanos.github.io/articles/minimalism.html</id>
 <updated>2026-11-15T00:00:00Z</updated>
 <summary>Simple vs Complex and Easy vs Difficult</summary>
 </entry>
 <entry>
-<title>A minimal static blog</title>
+<title>[Article] A minimal static blog</title>
 <link href="https://theyordanos.github.io/articles/minimal_blog.html"/>
 <id>https://theyordanos.github.io/articles/minimal_blog.html</id>
 <updated>2026-11-14T00:00:00Z</updated>
 <summary>The smallest useful blog setup. Markdown files turned into pages by Pandoc and one Python script, with no theme and no framework.</summary>
 </entry>
 <entry>
-<title>Game of Life</title>
+<title>[Article] Game of Life</title>
 <link href="https://theyordanos.github.io/articles/game_of_life.html"/>
 <id>https://theyordanos.github.io/articles/game_of_life.html</id>
 <updated>2026-11-13T00:00:00Z</updated>
 <summary>John Conway&#x27;s Cellular Automata</summary>
 </entry>
 <entry>
-<title>How you do anything is how you do everything</title>
+<title>[Article] How you do anything is how you do everything</title>
 <link href="https://theyordanos.github.io/articles/hydaihyde.html"/>
 <id>https://theyordanos.github.io/articles/hydaihyde.html</id>
 <updated>2026-11-03T00:00:00Z</updated>
