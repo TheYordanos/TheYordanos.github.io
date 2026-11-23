@@ -1,5 +1,5 @@
 ---
-title: Neovim
+title: Neovim Config
 date: 2026-11-23
 language: Lua
 ---
