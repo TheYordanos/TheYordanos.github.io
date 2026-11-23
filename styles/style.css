@@ -246,36 +246,42 @@ footer {
 	color: var(--bg);
 }
 
-/* ARTICLES SECTION ========================= */
-.articles ul {
+/* ARTICLES & GISTS SECTION ========================= */
+.articles ul,
+.gists ul {
 	list-style: none;
 	padding: 0;
 	margin: 0;
 }
 
-.articles.archive ul {
+.articles.archive ul,
+.gists.archive ul {
 	columns: 2 18rem;
 	column-gap: 2rem;
 }
 
-.articles ul li {
+.articles ul li,
+.gists ul li {
 	display: flex;
 	gap: 1.25rem;
 	break-inside: avoid;
 }
 
-.articles ul time {
+.articles ul time,
+.gists ul time {
 	flex: none;
 	opacity: 0.6;
 	font-variant-numeric: tabular-nums;
 }
 
-.articles .year {
+.articles .year,
+.gists .year {
 	font-weight: bold;
 	margin-top: 1rem;
 	break-after: avoid;
 }
 
+/* ARTICLES SECTION ========================= */
 .articles .series-group {
 	align-items: flex-start;
 }
