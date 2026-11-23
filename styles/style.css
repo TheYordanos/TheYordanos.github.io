@@ -38,7 +38,7 @@ html.dark {
 
 @font-face{
 	font-family: Literata;
-	src: url(../res/fonts/literata-italic.woff2,wght.woff2) format("woff2");
+	src: url(../res/fonts/literata-italic.woff2) format("woff2");
 	font-weight: 400 700;
 	font-style: italic;
 	font-display: swap;
