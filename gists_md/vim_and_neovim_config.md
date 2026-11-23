@@ -1,8 +1,170 @@
 ---
-title: Neovim Config
+title: Vim and Neovim Config
 date: 2026-11-23
 language: Lua
 ---
+
+```{file="_vimrc"}
+" =============================================================================
+" GENERAL SETTINGS
+" =============================================================================
+set nocompatible
+syntax on
+filetype on
+set termguicolors
+colorscheme slate
+
+set encoding=UTF-8
+set fileencoding=utf-8
+set updatetime=250
+set timeoutlen=400
+
+set undofile
+set undodir=~/.vim/undodir
+
+set number
+set relativenumber
+set numberwidth=4
+set signcolumn=yes
+
+set nocursorline
+set scrolloff=8
+set sidescrolloff=8
+set wrap nowrap
+set breakindent
+set whichwrap+=<,>,[,],h,l
+
+set mouse=a
+set belloff=all
+set showmatch
+set showcmd
+set showmode
+set cmdheight=1
+set showtabline=2
+set laststatus=2
+set shortmess+=c
+
+set statusline=%f%=%l/%L
+
+set incsearch
+set hlsearch
+set ignorecase
+set smartcase
+
+set wildmenu
+set wildmode=longest:full,full
+set wildignorecase
+set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
+set completeopt=menuone,noselect
+set pumheight=10
+
+set autoindent
+set smartindent
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+
+set backspace=indent,eol,start
+set iskeyword+=-
+
+set nobackup
+set nowritebackup
+set noswapfile
+set confirm
+set path+=**
+
+set splitbelow
+set splitright
+
+" Netrw (File Explorer)
+let g:netrw_banner=0
+let g:netrw_liststyle=3
+let g:netrw_showhide=1
+let g:netrw_winsize=20
+let g:netrw_fastbrowse = 0
+let g:netrw_keepdir = 0
+
+" =============================================================================
+" KEYMAPS
+" =============================================================================
+let mapleader = " "
+let maplocalleader = " "
+
+" General Shortcuts
+nnoremap <Space> <Nop>
+vnoremap <Space> <Nop>
+noremap ; :
+nnoremap <Esc> :noh<CR>
+
+nnoremap <C-s> :w<CR>
+nnoremap <leader>s :w<CR>
+nnoremap <C-q> :q<CR>
+nnoremap <leader>a ggVG
+
+" Navigation & Movement
+nnoremap <expr> k v:count == 0 ? 'gk' : 'k'
+nnoremap <expr> j v:count == 0 ? 'gj' : 'j'
+noremap <C-k> {
+noremap <C-j> }
+nnoremap <C-d> <C-d>zz        " Scroll and center
+nnoremap <C-u> <C-u>zz
+nnoremap n nzzzv              " Search and center
+nnoremap N Nzzzv
+
+nnoremap <leader>v <C-w>v     " Vertical split
+nnoremap <leader>h <C-w>s     " Horizontal split
+nnoremap <leader>se <C-w>=    " Equalize splits
+nnoremap <leader>q :close<CR> " Close current split
+
+nnoremap <A-k> :wincmd k<CR>
+nnoremap <A-j> :wincmd j<CR>
+nnoremap <A-h> :wincmd h<CR>
+nnoremap <A-l> :wincmd l<CR>
+
+nnoremap <Up> :resize -2<CR>
+nnoremap <Down> :resize +2<CR>
+nnoremap <Left> :vertical resize -2<CR>
+nnoremap <Right> :vertical resize +2<CR>
+
+nnoremap <leader>n :tabnew<CR>
+nnoremap <leader>x :tabclose<CR>
+nnoremap <TAB> :tabn<CR>
+nnoremap <S-TAB> :tabp<CR>
+
+nnoremap x "_x
+nnoremap <leader>+ <C-a>
+nnoremap <leader>- <C-x>
+nnoremap <leader>lw :set wrap!<CR>
+
+" Mode Tweaks
+vnoremap < <gv
+vnoremap > >gv
+vnoremap p "_dP
+vnoremap fj <ESC>
+vnoremap jf <ESC>
+
+inoremap /* /**/<left><left>
+inoremap fj <ESC>
+inoremap jf <ESC>
+
+" Clipboard
+noremap <leader>y "+y
+noremap <leader>p "+p
+noremap <leader>P "+P
+
+" File Explorer & Terminal
+noremap <silent> <leader>e :Lex<CR>
+noremap <leader>o :Explore<CR>
+noremap <a-`> :ter<CR>
+tnoremap <a-`> exit<CR>
+tnoremap <c-i> <c-w><s-n>
+tnoremap <Esc> <C-\><C-n>
+
+" Quick file find
+nnoremap <leader>ff :find *
+nnoremap <leader>fs :sfind *
+nnoremap <leader>fv :vert sfind *
+```
 
 ```{.lua file="init.lua"}
 -- =============================================================================

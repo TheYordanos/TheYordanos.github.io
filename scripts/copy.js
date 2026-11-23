@@ -70,11 +70,3 @@ document.querySelectorAll("figure.gist-file").forEach(figure => {
 	caption.insertBefore(button, caption.querySelector("a.gist-btn"));
 	bindCopy(button, () => gistText(figure), "Copy");
 });
-
-const gistActions = document.querySelector(".gist-actions");
-const gistFigures = Array.from(document.querySelectorAll("figure.gist-file"));
-if (gistActions && gistFigures.length > 1) {
-	const button = makeButton("gist-btn primary", "Copy all", "Copy all files to clipboard");
-	gistActions.prepend(button);
-	bindCopy(button, () => gistFigures.map(gistText).join("\n"), "Copy all");
-}

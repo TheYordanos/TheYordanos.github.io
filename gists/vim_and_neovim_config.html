@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="">
+
+		<title>Vim and Neovim Config</title>
+
+		<meta property="og:type" content="article">
+		<meta property="og:site_name" content="Yordanos">
+		<meta property="og:title" content="Vim and Neovim Config">
+		
+		<meta property="og:url" content="https://theyordanos.github.io/gists/vim_and_neovim_config.html">
+		<meta property="og:image" content="https://theyordanos.github.io/res/gists_og.png">
+		<meta name="twitter:card" content="summary_large_image">
+		<link rel="canonical" href="https://theyordanos.github.io/gists/vim_and_neovim_config.html">
+
+		<link rel="alternate" type="application/atom+xml" title="Yordanos" href="https://theyordanos.github.io/feed.xml">
+
+		<link rel="icon" type="image/png" href="../res/theyordanos-icon.png">
+		<script>
+		try {
+			if (localStorage.getItem("ty_theme") === "dark") document.documentElement.classList.add("dark");
+		} catch (e) {}
+		</script>
+		<link rel="stylesheet" href="../styles/style.css">
+		<link rel="stylesheet" href="../styles/article.css">
+		<link rel="stylesheet" href="../styles/gists.css">
+
+		<script src="../scripts/theme.js" defer></script>
+		<script src="../scripts/copy.js" defer></script>
+	</head>
+	<body>
+		<div class="layout">
+		<main>
+			<header>
+				<h1>Vim and Neovim Config</h1>
+				
+				<p class="meta gist-meta"><span><time datetime="2026-11-23">2026-11-23</time></span><span>Lua</span><span>2 files</span></p>
+				
+			</header>
+
+			<nav class="gist-files" aria-label="Files"><span class="gist-files-label">Files</span><a href="#file-vimrc">_vimrc</a><a href="#file-init-lua">init.lua</a></nav>
+
+			<figure class="gist-file" id="file-vimrc"><figcaption><span class="gist-name">_vimrc</span><span class="gist-info">Lua · 159 lines</span><a class="gist-btn" href="raw/vim_and_neovim_config/_vimrc">Raw</a></figcaption><div class="gist-code"><pre class="gist-gutter" aria-hidden="true">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159</pre>
+<pre><code>&quot; =============================================================================
+&quot; GENERAL SETTINGS
+&quot; =============================================================================
+set nocompatible
+syntax on
+filetype on
+set termguicolors
+colorscheme slate
+
+set encoding=UTF-8
+set fileencoding=utf-8
+set updatetime=250
+set timeoutlen=400
+
+set undofile
+set undodir=~/.vim/undodir
+
+set number
+set relativenumber
+set numberwidth=4
+set signcolumn=yes
+
+set nocursorline
+set scrolloff=8
+set sidescrolloff=8
+set wrap nowrap
+set breakindent
+set whichwrap+=&lt;,&gt;,[,],h,l
+
+set mouse=a
+set belloff=all
+set showmatch
+set showcmd
+set showmode
+set cmdheight=1
+set showtabline=2
+set laststatus=2
+set shortmess+=c
+
+set statusline=%f%=%l/%L
+
+set incsearch
+set hlsearch
+set ignorecase
+set smartcase
+
+set wildmenu
+set wildmode=longest:full,full
+set wildignorecase
+set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
+set completeopt=menuone,noselect
+set pumheight=10
+
+set autoindent
+set smartindent
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+
+set backspace=indent,eol,start
+set iskeyword+=-
+
+set nobackup
+set nowritebackup
+set noswapfile
+set confirm
+set path+=**
+
+set splitbelow
+set splitright
+
+&quot; Netrw (File Explorer)
+let g:netrw_banner=0
+let g:netrw_liststyle=3
+let g:netrw_showhide=1
+let g:netrw_winsize=20
+let g:netrw_fastbrowse = 0
+let g:netrw_keepdir = 0
+
+&quot; =============================================================================
+&quot; KEYMAPS
+&quot; =============================================================================
+let mapleader = &quot; &quot;
+let maplocalleader = &quot; &quot;
+
+&quot; General Shortcuts
+nnoremap &lt;Space&gt; &lt;Nop&gt;
+vnoremap &lt;Space&gt; &lt;Nop&gt;
+noremap ; :
+nnoremap &lt;Esc&gt; :noh&lt;CR&gt;
+
+nnoremap &lt;C-s&gt; :w&lt;CR&gt;
+nnoremap &lt;leader&gt;s :w&lt;CR&gt;
+nnoremap &lt;C-q&gt; :q&lt;CR&gt;
+nnoremap &lt;leader&gt;a ggVG
+
+&quot; Navigation &amp; Movement
+nnoremap &lt;expr&gt; k v:count == 0 ? &#39;gk&#39; : &#39;k&#39;
+nnoremap &lt;expr&gt; j v:count == 0 ? &#39;gj&#39; : &#39;j&#39;
+noremap &lt;C-k&gt; {
+noremap &lt;C-j&gt; }
+nnoremap &lt;C-d&gt; &lt;C-d&gt;zz        &quot; Scroll and center
+nnoremap &lt;C-u&gt; &lt;C-u&gt;zz
+nnoremap n nzzzv              &quot; Search and center
+nnoremap N Nzzzv
+
+nnoremap &lt;leader&gt;v &lt;C-w&gt;v     &quot; Vertical split
+nnoremap &lt;leader&gt;h &lt;C-w&gt;s     &quot; Horizontal split
+nnoremap &lt;leader&gt;se &lt;C-w&gt;=    &quot; Equalize splits
+nnoremap &lt;leader&gt;q :close&lt;CR&gt; &quot; Close current split
+
+nnoremap &lt;A-k&gt; :wincmd k&lt;CR&gt;
+nnoremap &lt;A-j&gt; :wincmd j&lt;CR&gt;
+nnoremap &lt;A-h&gt; :wincmd h&lt;CR&gt;
+nnoremap &lt;A-l&gt; :wincmd l&lt;CR&gt;
+
+nnoremap &lt;Up&gt; :resize -2&lt;CR&gt;
+nnoremap &lt;Down&gt; :resize +2&lt;CR&gt;
+nnoremap &lt;Left&gt; :vertical resize -2&lt;CR&gt;
+nnoremap &lt;Right&gt; :vertical resize +2&lt;CR&gt;
+
+nnoremap &lt;leader&gt;n :tabnew&lt;CR&gt;
+nnoremap &lt;leader&gt;x :tabclose&lt;CR&gt;
+nnoremap &lt;TAB&gt; :tabn&lt;CR&gt;
+nnoremap &lt;S-TAB&gt; :tabp&lt;CR&gt;
+
+nnoremap x &quot;_x
+nnoremap &lt;leader&gt;+ &lt;C-a&gt;
+nnoremap &lt;leader&gt;- &lt;C-x&gt;
+nnoremap &lt;leader&gt;lw :set wrap!&lt;CR&gt;
+
+&quot; Mode Tweaks
+vnoremap &lt; &lt;gv
+vnoremap &gt; &gt;gv
+vnoremap p &quot;_dP
+vnoremap fj &lt;ESC&gt;
+vnoremap jf &lt;ESC&gt;
+
+inoremap /* /**/&lt;left&gt;&lt;left&gt;
+inoremap fj &lt;ESC&gt;
+inoremap jf &lt;ESC&gt;
+
+&quot; Clipboard
+noremap &lt;leader&gt;y &quot;+y
+noremap &lt;leader&gt;p &quot;+p
+noremap &lt;leader&gt;P &quot;+P
+
+&quot; File Explorer &amp; Terminal
+noremap &lt;silent&gt; &lt;leader&gt;e :Lex&lt;CR&gt;
+noremap &lt;leader&gt;o :Explore&lt;CR&gt;
+noremap &lt;a-`&gt; :ter&lt;CR&gt;
+tnoremap &lt;a-`&gt; exit&lt;CR&gt;
+tnoremap &lt;c-i&gt; &lt;c-w&gt;&lt;s-n&gt;
+tnoremap &lt;Esc&gt; &lt;C-\&gt;&lt;C-n&gt;
+
+&quot; Quick file find
+nnoremap &lt;leader&gt;ff :find *
+nnoremap &lt;leader&gt;fs :sfind *
+nnoremap &lt;leader&gt;fv :vert sfind *</code></pre>
+</div></figure>
+<figure class="gist-file" id="file-init-lua"><figcaption><span class="gist-name">init.lua</span><span class="gist-info">Lua · 183 lines</span><a class="gist-btn" href="raw/vim_and_neovim_config/init.lua">Raw</a></figcaption><div class="gist-code"><pre class="gist-gutter" aria-hidden="true">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183</pre>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode lua"><code class="sourceCode lua"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- =============================================================================</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- GENERAL SETTINGS</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">-- =============================================================================</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">encoding</span> <span class="op">=</span> <span class="st">&quot;utf-8&quot;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">fileencoding</span> <span class="op">=</span> <span class="st">&quot;utf-8&quot;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span>cmd<span class="op">(</span><span class="st">&quot;syntax on&quot;</span><span class="op">)</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span>cmd<span class="op">(</span><span class="st">&quot;filetype on&quot;</span><span class="op">)</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">termguicolors</span> <span class="op">=</span> <span class="kw">true</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span>cmd<span class="op">(</span><span class="st">&quot;colorscheme slate&quot;</span><span class="op">)</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">updatetime</span> <span class="op">=</span> <span class="dv">250</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">timeoutlen</span> <span class="op">=</span> <span class="dv">400</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">undofile</span> <span class="op">=</span> <span class="kw">true</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">undodir</span> <span class="op">=</span> <span class="va">vim</span><span class="op">.</span><span class="va">fn</span><span class="op">.</span>expand<span class="op">(</span><span class="st">&quot;~/.vim/undodir&quot;</span><span class="op">)</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">fn</span><span class="op">.</span>mkdir<span class="op">(</span><span class="va">vim</span><span class="op">.</span><span class="va">fn</span><span class="op">.</span>expand<span class="op">(</span><span class="st">&quot;~/.vim/undodir&quot;</span><span class="op">),</span> <span class="st">&quot;p&quot;</span><span class="op">)</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">number</span> <span class="op">=</span> <span class="kw">true</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">relativenumber</span> <span class="op">=</span> <span class="kw">true</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">numberwidth</span> <span class="op">=</span> <span class="dv">4</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">signcolumn</span> <span class="op">=</span> <span class="st">&quot;yes&quot;</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">cursorline</span> <span class="op">=</span> <span class="kw">false</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">scrolloff</span> <span class="op">=</span> <span class="dv">8</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">sidescrolloff</span> <span class="op">=</span> <span class="dv">8</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">wrap</span> <span class="op">=</span> <span class="kw">false</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">breakindent</span> <span class="op">=</span> <span class="kw">true</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">whichwrap</span><span class="op">:</span>append<span class="op">(</span><span class="st">&quot;&lt;,&gt;,[,],h,l&quot;</span><span class="op">)</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">mouse</span> <span class="op">=</span> <span class="st">&quot;a&quot;</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">belloff</span> <span class="op">=</span> <span class="st">&quot;all&quot;</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">showmatch</span> <span class="op">=</span> <span class="kw">true</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">showcmd</span> <span class="op">=</span> <span class="kw">true</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">showmode</span> <span class="op">=</span> <span class="kw">true</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">cmdheight</span> <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">showtabline</span> <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">laststatus</span> <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">shortmess</span><span class="op">:</span>append<span class="op">(</span><span class="st">&quot;c&quot;</span><span class="op">)</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">statusline</span> <span class="op">=</span> <span class="st">&quot;%f%=%l/%L&quot;</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">incsearch</span> <span class="op">=</span> <span class="kw">true</span></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">hlsearch</span> <span class="op">=</span> <span class="kw">true</span></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">ignorecase</span> <span class="op">=</span> <span class="kw">true</span></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">smartcase</span> <span class="op">=</span> <span class="kw">true</span></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">wildmenu</span> <span class="op">=</span> <span class="kw">true</span></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">wildmode</span> <span class="op">=</span> <span class="op">{</span> <span class="st">&quot;longest:full&quot;</span><span class="op">,</span> <span class="st">&quot;full&quot;</span> <span class="op">}</span></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">wildignorecase</span> <span class="op">=</span> <span class="kw">true</span></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">wildignore</span> <span class="op">=</span> <span class="op">{</span></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;*.docx&quot;</span><span class="op">,</span></span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;*.jpg&quot;</span><span class="op">,</span></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;*.png&quot;</span><span class="op">,</span></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;*.gif&quot;</span><span class="op">,</span></span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;*.pdf&quot;</span><span class="op">,</span></span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;*.pyc&quot;</span><span class="op">,</span></span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;*.exe&quot;</span><span class="op">,</span></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;*.flv&quot;</span><span class="op">,</span></span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;*.img&quot;</span><span class="op">,</span></span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;*.xlsx&quot;</span><span class="op">,</span></span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">completeopt</span> <span class="op">=</span> <span class="op">{</span> <span class="st">&quot;menuone&quot;</span><span class="op">,</span> <span class="st">&quot;noselect&quot;</span> <span class="op">}</span></span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">pumheight</span> <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">autoindent</span> <span class="op">=</span> <span class="kw">true</span></span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">smartindent</span> <span class="op">=</span> <span class="kw">true</span></span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">tabstop</span> <span class="op">=</span> <span class="dv">4</span></span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">softtabstop</span> <span class="op">=</span> <span class="dv">4</span></span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">shiftwidth</span> <span class="op">=</span> <span class="dv">4</span></span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">backspace</span> <span class="op">=</span> <span class="op">{</span> <span class="st">&quot;indent&quot;</span><span class="op">,</span> <span class="st">&quot;eol&quot;</span><span class="op">,</span> <span class="st">&quot;start&quot;</span> <span class="op">}</span></span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">iskeyword</span><span class="op">:</span>append<span class="op">(</span><span class="st">&quot;-&quot;</span><span class="op">)</span></span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">backup</span> <span class="op">=</span> <span class="kw">false</span></span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">writebackup</span> <span class="op">=</span> <span class="kw">false</span></span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">swapfile</span> <span class="op">=</span> <span class="kw">false</span></span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">confirm</span> <span class="op">=</span> <span class="kw">true</span></span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">path</span><span class="op">:</span>append<span class="op">(</span><span class="st">&quot;**&quot;</span><span class="op">)</span></span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">splitbelow</span> <span class="op">=</span> <span class="kw">true</span></span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">opt</span><span class="op">.</span><span class="va">splitright</span> <span class="op">=</span> <span class="kw">true</span></span>
+<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a><span class="co">-- Newtr (File Explorer)</span></span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">g</span><span class="op">.</span><span class="va">netrw_banner</span> <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">g</span><span class="op">.</span><span class="va">netrw_liststyle</span> <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">g</span><span class="op">.</span><span class="va">netrw_showhide</span> <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">g</span><span class="op">.</span><span class="va">netrw_winsize</span> <span class="op">=</span> <span class="dv">20</span></span>
+<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">g</span><span class="op">.</span><span class="va">netrw_fastbrowse</span> <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">g</span><span class="op">.</span><span class="va">netrw_keepdir</span> <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a><span class="co">-- =============================================================================</span></span>
+<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a><span class="co">-- KEYMAPS</span></span>
+<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a><span class="co">-- =============================================================================</span></span>
+<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">g</span><span class="op">.</span><span class="va">mapleader</span> <span class="op">=</span> <span class="st">&quot; &quot;</span></span>
+<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">g</span><span class="op">.</span><span class="va">maplocalleader</span> <span class="op">=</span> <span class="st">&quot; &quot;</span></span>
+<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a><span class="kw">local</span> <span class="va">map</span> <span class="op">=</span> <span class="va">vim</span><span class="op">.</span><span class="va">keymap</span><span class="op">.</span><span class="va">set</span></span>
+<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a><span class="co">-- General shortcuts</span></span>
+<span id="cb2-104"><a href="#cb2-104" aria-hidden="true" tabindex="-1"></a>map<span class="op">({</span> <span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;v&quot;</span> <span class="op">},</span> <span class="st">&quot;&lt;Space&gt;&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;Nop&gt;&quot;</span><span class="op">)</span></span>
+<span id="cb2-105"><a href="#cb2-105" aria-hidden="true" tabindex="-1"></a>map<span class="op">({</span> <span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;v&quot;</span> <span class="op">},</span> <span class="st">&quot;;&quot;</span><span class="op">,</span> <span class="st">&quot;:&quot;</span><span class="op">)</span></span>
+<span id="cb2-106"><a href="#cb2-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-107"><a href="#cb2-107" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;Esc&gt;&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;cmd&gt;nohlsearch&lt;CR&gt;&quot;</span><span class="op">)</span></span>
+<span id="cb2-108"><a href="#cb2-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-109"><a href="#cb2-109" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;C-s&gt;&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;cmd&gt;write&lt;CR&gt;&quot;</span><span class="op">)</span></span>
+<span id="cb2-110"><a href="#cb2-110" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;leader&gt;s&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;cmd&gt;write&lt;CR&gt;&quot;</span><span class="op">)</span></span>
+<span id="cb2-111"><a href="#cb2-111" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;C-q&gt;&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;cmd&gt;quit&lt;CR&gt;&quot;</span><span class="op">)</span></span>
+<span id="cb2-112"><a href="#cb2-112" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;leader&gt;a&quot;</span><span class="op">,</span> <span class="st">&quot;ggVG&quot;</span><span class="op">)</span></span>
+<span id="cb2-113"><a href="#cb2-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-114"><a href="#cb2-114" aria-hidden="true" tabindex="-1"></a><span class="co">-- Navigation and movement</span></span>
+<span id="cb2-115"><a href="#cb2-115" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;k&quot;</span><span class="op">,</span> <span class="kw">function</span><span class="op">()</span></span>
+<span id="cb2-116"><a href="#cb2-116" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="va">vim</span><span class="op">.</span><span class="va">v</span><span class="op">.</span><span class="va">count</span> <span class="op">==</span> <span class="dv">0</span> <span class="kw">and</span> <span class="st">&quot;gk&quot;</span> <span class="kw">or</span> <span class="st">&quot;k&quot;</span></span>
+<span id="cb2-117"><a href="#cb2-117" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span><span class="op">,</span> <span class="op">{</span> <span class="va">expr</span> <span class="op">=</span> <span class="kw">true</span> <span class="op">})</span></span>
+<span id="cb2-118"><a href="#cb2-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-119"><a href="#cb2-119" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;j&quot;</span><span class="op">,</span> <span class="kw">function</span><span class="op">()</span></span>
+<span id="cb2-120"><a href="#cb2-120" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="va">vim</span><span class="op">.</span><span class="va">v</span><span class="op">.</span><span class="va">count</span> <span class="op">==</span> <span class="dv">0</span> <span class="kw">and</span> <span class="st">&quot;gj&quot;</span> <span class="kw">or</span> <span class="st">&quot;j&quot;</span></span>
+<span id="cb2-121"><a href="#cb2-121" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span><span class="op">,</span> <span class="op">{</span> <span class="va">expr</span> <span class="op">=</span> <span class="kw">true</span> <span class="op">})</span></span>
+<span id="cb2-122"><a href="#cb2-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-123"><a href="#cb2-123" aria-hidden="true" tabindex="-1"></a>map<span class="op">({</span> <span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;v&quot;</span><span class="op">,</span> <span class="st">&quot;o&quot;</span> <span class="op">},</span> <span class="st">&quot;&lt;C-k&gt;&quot;</span><span class="op">,</span> <span class="st">&quot;{&quot;</span><span class="op">)</span></span>
+<span id="cb2-124"><a href="#cb2-124" aria-hidden="true" tabindex="-1"></a>map<span class="op">({</span> <span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;v&quot;</span><span class="op">,</span> <span class="st">&quot;o&quot;</span> <span class="op">},</span> <span class="st">&quot;&lt;C-j&gt;&quot;</span><span class="op">,</span> <span class="st">&quot;}&quot;</span><span class="op">)</span></span>
+<span id="cb2-125"><a href="#cb2-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-126"><a href="#cb2-126" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;C-d&gt;&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;C-d&gt;zz&quot;</span><span class="op">)</span></span>
+<span id="cb2-127"><a href="#cb2-127" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;C-u&gt;&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;C-u&gt;zz&quot;</span><span class="op">)</span></span>
+<span id="cb2-128"><a href="#cb2-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-129"><a href="#cb2-129" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;nzzzv&quot;</span><span class="op">)</span></span>
+<span id="cb2-130"><a href="#cb2-130" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;N&quot;</span><span class="op">,</span> <span class="st">&quot;Nzzzv&quot;</span><span class="op">)</span></span>
+<span id="cb2-131"><a href="#cb2-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-132"><a href="#cb2-132" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;leader&gt;v&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;C-w&gt;v&quot;</span><span class="op">)</span></span>
+<span id="cb2-133"><a href="#cb2-133" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;leader&gt;h&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;C-w&gt;s&quot;</span><span class="op">)</span></span>
+<span id="cb2-134"><a href="#cb2-134" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;leader&gt;se&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;C-w&gt;=&quot;</span><span class="op">)</span></span>
+<span id="cb2-135"><a href="#cb2-135" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;leader&gt;q&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;cmd&gt;close&lt;CR&gt;&quot;</span><span class="op">)</span></span>
+<span id="cb2-136"><a href="#cb2-136" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-137"><a href="#cb2-137" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;A-k&gt;&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;cmd&gt;wincmd k&lt;CR&gt;&quot;</span><span class="op">)</span></span>
+<span id="cb2-138"><a href="#cb2-138" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;A-j&gt;&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;cmd&gt;wincmd j&lt;CR&gt;&quot;</span><span class="op">)</span></span>
+<span id="cb2-139"><a href="#cb2-139" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;A-h&gt;&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;cmd&gt;wincmd h&lt;CR&gt;&quot;</span><span class="op">)</span></span>
+<span id="cb2-140"><a href="#cb2-140" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;A-l&gt;&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;cmd&gt;wincmd l&lt;CR&gt;&quot;</span><span class="op">)</span></span>
+<span id="cb2-141"><a href="#cb2-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-142"><a href="#cb2-142" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;Up&gt;&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;cmd&gt;resize -2&lt;CR&gt;&quot;</span><span class="op">)</span></span>
+<span id="cb2-143"><a href="#cb2-143" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;Down&gt;&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;cmd&gt;resize +2&lt;CR&gt;&quot;</span><span class="op">)</span></span>
+<span id="cb2-144"><a href="#cb2-144" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;Left&gt;&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;cmd&gt;vertical resize -2&lt;CR&gt;&quot;</span><span class="op">)</span></span>
+<span id="cb2-145"><a href="#cb2-145" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;Right&gt;&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;cmd&gt;vertical resize +2&lt;CR&gt;&quot;</span><span class="op">)</span></span>
+<span id="cb2-146"><a href="#cb2-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-147"><a href="#cb2-147" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;leader&gt;n&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;cmd&gt;tabnew&lt;CR&gt;&quot;</span><span class="op">)</span></span>
+<span id="cb2-148"><a href="#cb2-148" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;leader&gt;x&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;cmd&gt;tabclose&lt;CR&gt;&quot;</span><span class="op">)</span></span>
+<span id="cb2-149"><a href="#cb2-149" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;Tab&gt;&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;cmd&gt;tabnext&lt;CR&gt;&quot;</span><span class="op">)</span></span>
+<span id="cb2-150"><a href="#cb2-150" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;S-Tab&gt;&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;cmd&gt;tabprevious&lt;CR&gt;&quot;</span><span class="op">)</span></span>
+<span id="cb2-151"><a href="#cb2-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-152"><a href="#cb2-152" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;x&quot;</span><span class="op">,</span> <span class="st">&#39;&quot;_x&#39;</span><span class="op">)</span></span>
+<span id="cb2-153"><a href="#cb2-153" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;leader&gt;+&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;C-a&gt;&quot;</span><span class="op">)</span></span>
+<span id="cb2-154"><a href="#cb2-154" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;leader&gt;-&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;C-x&gt;&quot;</span><span class="op">)</span></span>
+<span id="cb2-155"><a href="#cb2-155" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;leader&gt;lw&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;cmd&gt;set wrap!&lt;CR&gt;&quot;</span><span class="op">)</span></span>
+<span id="cb2-156"><a href="#cb2-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-157"><a href="#cb2-157" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;v&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;gv&quot;</span><span class="op">)</span></span>
+<span id="cb2-158"><a href="#cb2-158" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;v&quot;</span><span class="op">,</span> <span class="st">&quot;&gt;&quot;</span><span class="op">,</span> <span class="st">&quot;&gt;gv&quot;</span><span class="op">)</span></span>
+<span id="cb2-159"><a href="#cb2-159" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;v&quot;</span><span class="op">,</span> <span class="st">&quot;p&quot;</span><span class="op">,</span> <span class="st">&#39;&quot;_dP&#39;</span><span class="op">)</span></span>
+<span id="cb2-160"><a href="#cb2-160" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;v&quot;</span><span class="op">,</span> <span class="st">&quot;fj&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;Esc&gt;&quot;</span><span class="op">)</span></span>
+<span id="cb2-161"><a href="#cb2-161" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;v&quot;</span><span class="op">,</span> <span class="st">&quot;jf&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;Esc&gt;&quot;</span><span class="op">)</span></span>
+<span id="cb2-162"><a href="#cb2-162" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-163"><a href="#cb2-163" aria-hidden="true" tabindex="-1"></a><span class="co">-- Mode tweaks</span></span>
+<span id="cb2-164"><a href="#cb2-164" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;i&quot;</span><span class="op">,</span> <span class="st">&quot;/*&quot;</span><span class="op">,</span> <span class="st">&quot;/**/&lt;Left&gt;&lt;Left&gt;&quot;</span><span class="op">)</span></span>
+<span id="cb2-165"><a href="#cb2-165" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;i&quot;</span><span class="op">,</span> <span class="st">&quot;fj&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;Esc&gt;&quot;</span><span class="op">)</span></span>
+<span id="cb2-166"><a href="#cb2-166" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;i&quot;</span><span class="op">,</span> <span class="st">&quot;jf&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;Esc&gt;&quot;</span><span class="op">)</span></span>
+<span id="cb2-167"><a href="#cb2-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-168"><a href="#cb2-168" aria-hidden="true" tabindex="-1"></a>map<span class="op">({</span> <span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;v&quot;</span> <span class="op">},</span> <span class="st">&quot;&lt;leader&gt;y&quot;</span><span class="op">,</span> <span class="st">&#39;&quot;+y&#39;</span><span class="op">)</span></span>
+<span id="cb2-169"><a href="#cb2-169" aria-hidden="true" tabindex="-1"></a>map<span class="op">({</span> <span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;v&quot;</span> <span class="op">},</span> <span class="st">&quot;&lt;leader&gt;p&quot;</span><span class="op">,</span> <span class="st">&#39;&quot;+p&#39;</span><span class="op">)</span></span>
+<span id="cb2-170"><a href="#cb2-170" aria-hidden="true" tabindex="-1"></a>map<span class="op">({</span> <span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;v&quot;</span> <span class="op">},</span> <span class="st">&quot;&lt;leader&gt;P&quot;</span><span class="op">,</span> <span class="st">&#39;&quot;+P&#39;</span><span class="op">)</span></span>
+<span id="cb2-171"><a href="#cb2-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-172"><a href="#cb2-172" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;leader&gt;e&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;cmd&gt;Lex&lt;CR&gt;&quot;</span><span class="op">,</span> <span class="op">{</span> <span class="va">silent</span> <span class="op">=</span> <span class="kw">true</span> <span class="op">})</span></span>
+<span id="cb2-173"><a href="#cb2-173" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;leader&gt;o&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;cmd&gt;Explore&lt;CR&gt;&quot;</span><span class="op">)</span></span>
+<span id="cb2-174"><a href="#cb2-174" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;A-`&gt;&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;cmd&gt;terminal&lt;CR&gt;&quot;</span><span class="op">)</span></span>
+<span id="cb2-175"><a href="#cb2-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-176"><a href="#cb2-176" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;t&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;A-`&gt;&quot;</span><span class="op">,</span> <span class="st">&quot;exit&lt;CR&gt;&quot;</span><span class="op">)</span></span>
+<span id="cb2-177"><a href="#cb2-177" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;t&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;C-i&gt;&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;C-w&gt;&lt;S-n&gt;&quot;</span><span class="op">)</span></span>
+<span id="cb2-178"><a href="#cb2-178" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;t&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;Esc&gt;&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;C-</span><span class="sc">\\</span><span class="st">&gt;&lt;C-n&gt;&quot;</span><span class="op">)</span></span>
+<span id="cb2-179"><a href="#cb2-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-180"><a href="#cb2-180" aria-hidden="true" tabindex="-1"></a><span class="co">-- Quick file finding</span></span>
+<span id="cb2-181"><a href="#cb2-181" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;leader&gt;ff&quot;</span><span class="op">,</span> <span class="st">&quot;:find *&quot;</span><span class="op">)</span></span>
+<span id="cb2-182"><a href="#cb2-182" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;leader&gt;fs&quot;</span><span class="op">,</span> <span class="st">&quot;:sfind *&quot;</span><span class="op">)</span></span>
+<span id="cb2-183"><a href="#cb2-183" aria-hidden="true" tabindex="-1"></a>map<span class="op">(</span><span class="st">&quot;n&quot;</span><span class="op">,</span> <span class="st">&quot;&lt;leader&gt;fv&quot;</span><span class="op">,</span> <span class="st">&quot;:vert sfind *&quot;</span><span class="op">)</span></span></code></pre></div>
+</div></figure>
+		</main>
+
+		<aside class="sidebar compact">
+			<a class="brand" href="../index.html"><span class="brand-name">Yordanos Z.</span></a>
+			<nav class="side-group" aria-label="Site">
+				<a href="../index.html#products">Products</a>
+				<a href="../archive.html">Archive</a>
+			</nav>
+			<div class="side-tools">
+				<a href="../feed.xml">RSS</a>
+				<button id="theme-toggle">[dark]</button>
+			</div>
+		</aside>
+		</div>
+
+		<hr />
+		<footer><p>Creator of Worlds &amp; a Coffee Addict ;p</p></footer>
+	</body>
+</html>

@@ -4,12 +4,13 @@ description: Every gist feature in one page, written as a template to copy from.
 date: 2026-11-23
 language: Goose
 source: https://github.com/aardappel/goose
+draft: true
 ---
 A gist is plain markdown. Prose goes anywhere, and every fenced block is either a **file** or a plain code block.
 
 ## Files
 
-A file block puts `file="name"` in the fence. It gets line numbers, a Copy button and a Raw link. The text after `label=` is shown next to the line count, and you can write anything there. Without `label`, the block shows the `language` from the front matter.
+A file block puts `file="name"` in the fence. It gets line numbers and Copy and Raw buttons. The text after `label=` is shown next to the line count, and you can write anything there. Without `label`, the block shows the `language` from the front matter.
 
 ````markdown
 ```{.goose file="hello.goose" label="Goose"}
@@ -48,7 +49,7 @@ Files can use any extension and any label, so a theme or a config is no differen
 }
 ```
 
-```{file="focus.config" label="Focus config"}
+```{file="global.focus-config" label="Focus config"}
 [default]
 tab_size: 4
 highlight_line: true
@@ -65,9 +66,7 @@ build/goose build file.goose
 
 ## Buttons
 
-- **Copy all** appears when the gist has two or more files and copies them in order.
-- **Download** is the file itself for one file, or a zip for several.
-- **Source** appears when the front matter has `source:`.
-- **Copy** and **Raw** sit on each file. Raw opens the plain text.
+- **Copy** puts the file on the clipboard.
+- **Raw** opens the plain text.
 
-Gists with only plain blocks get none of these, and the Files row appears with two or more files.
+Gists with only plain blocks get none of these. The Files row appears with two or more files, and `source:` adds a Source link under the title like on every other page.

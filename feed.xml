@@ -8,16 +8,9 @@
 <updated>2026-11-23T00:00:00Z</updated>
 <author><name>Yordanos Z.</name></author>
 <entry>
-<title>Gist: Gist reference</title>
-<link href="https://theyordanos.github.io/gists/gist_reference.html"/>
-<id>https://theyordanos.github.io/gists/gist_reference.html</id>
-<updated>2026-11-23T00:00:00Z</updated>
-<summary>Every gist feature in one page, written as a template to copy from.</summary>
-</entry>
-<entry>
-<title>Gist: Neovim Config</title>
-<link href="https://theyordanos.github.io/gists/neovim_config.html"/>
-<id>https://theyordanos.github.io/gists/neovim_config.html</id>
+<title>Gist: Vim and Neovim Config</title>
+<link href="https://theyordanos.github.io/gists/vim_and_neovim_config.html"/>
+<id>https://theyordanos.github.io/gists/vim_and_neovim_config.html</id>
 <updated>2026-11-23T00:00:00Z</updated>
 </entry>
 <entry>

@@ -38,9 +38,8 @@
 				<h1>$title$</h1>
 				$if(description)$<p class="description">$description$</p>$endif$
 				<p class="meta gist-meta">$if(date)$<span><time datetime="$date$">$date$</time></span>$endif$$if(language)$<span>$language$</span>$endif$$if(count_label)$<span>$count_label$</span>$endif$</p>
+				$if(source_link)$$source_link$$endif$
 			</header>
-
-			$if(gist_actions)$$gist_actions$$endif$
 
 			$if(gist_files)$$gist_files$$endif$
 

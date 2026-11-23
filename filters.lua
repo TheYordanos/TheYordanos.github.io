@@ -75,8 +75,8 @@ function CodeBlock(block)
   local raw = ""
   if gist_slug ~= "" then
     local base = name:gsub("\\", "/"):match("[^/]+$") or name
-    raw = '<a class="gist-btn" href="raw/' .. url_encode(gist_slug) .. "/" .. url_encode(base)
-      .. '">Raw</a>'
+    local href = "raw/" .. url_encode(gist_slug) .. "/" .. url_encode(base)
+    raw = '<a class="gist-btn" href="' .. href .. '">Raw</a>'
   end
 
   local open = '<figure class="gist-file" id="' .. file_id(name) .. '">'

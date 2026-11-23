@@ -18,19 +18,6 @@ Front matter per article:
                              first image in the article, then OG_IMAGE)
     ---
 
-Front matter per gist (gists_md/*.md, plain markdown). A fenced block written as
-{.odin file="name.odin" label="Odin"} becomes a numbered file block with Copy and
-Raw buttons. file and label are yours to choose, nothing is predefined; a block
-without label shows the gist's language. Files also get a Download button:
-    ---
-    title: Fixed timestep game loop
-    description: Short summary for the meta tag and the list.
-    date: 2026-11-20        (YYYY-MM-DD, newest first)
-    language: Odin          (optional, shown under the title and on blocks without label)
-    source: link            (optional, adds a Source button)
-    draft: true             (optional, skips the gist)
-    ---
-
 Front matter per doc:
     ---
     title: Getting started
@@ -45,23 +32,31 @@ Front matter per doc:
     draft: true             (optional, skips the doc)
     ---
 
+Front matter per gist:
+    ---
+    title: Fixed timestep game loop
+    description: Short summary for the meta tag and the list.
+    date: 2026-11-20        (YYYY-MM-DD, newest first)
+    language: Odin          (optional, shown under the title and on blocks without label)
+    source: link            (optional, link to source code)
+    draft: true             (optional, skips the gist)
+    ---
+
 Usage:
     python build.py
     python build.py --force
 """
 import html
-import io
 import re
 import shutil
 import subprocess
 import sys
-import zipfile
 from collections import namedtuple
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
-from urllib.parse import quote, urljoin
+from urllib.parse import urljoin
 
 # --- Settings -------------------------------------------------------------
 
@@ -372,23 +367,6 @@ def gist_files_html(files):
             f'<span class="gist-files-label">Files</span>{links}</nav>')
 
 
-def gist_actions_html(g):
-    buttons = []
-    if len(g.files) == 1:
-        href = f"raw/{quote(g.slug)}/{quote(g.files[0].name)}"
-        buttons.append(f'<a class="gist-btn" href="{href}" download>Download</a>')
-    elif g.files:
-        buttons.append(f'<a class="gist-btn" href="raw/{quote(g.slug)}/{quote(g.slug)}.zip" '
-                       f'download>Download</a>')
-    source = g.meta.get("source", "").strip()
-    if source:
-        buttons.append(f'<a class="gist-btn" href="{html.escape(source, quote=True)}" '
-                       f'rel="noopener">Source</a>')
-    if not buttons:
-        return ""
-    return f'<div class="gist-actions">{"".join(buttons)}</div>'
-
-
 def raw_name(name):
     return Path(name.replace("\\", "/")).name
 
@@ -398,17 +376,8 @@ def write_gist_raw(g):
         return
     out = GISTS_OUT / "raw" / g.slug
     out.mkdir(parents=True, exist_ok=True)
-    expected = {}
-    for f in g.files:
-        expected[raw_name(f.name)] = (f.text.rstrip("\n") + "\n").encode("utf-8")
-    if len(expected) > 1:
-        archive = io.BytesIO()
-        with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED) as z:
-            for name, data in expected.items():
-                info = zipfile.ZipInfo(name, (1980, 1, 1, 0, 0, 0))
-                info.compress_type = zipfile.ZIP_DEFLATED
-                z.writestr(info, data)
-        expected[f"{g.slug}.zip"] = archive.getvalue()
+    expected = {raw_name(f.name): (f.text.rstrip("\n") + "\n").encode("utf-8")
+                for f in g.files}
     for old in out.iterdir():
         if old.name not in expected:
             old.unlink()
@@ -672,9 +641,6 @@ def build_gists(gists, force):
         args += ["-M", f"gist_slug={g.slug}"]
         if g.count_label:
             args += ["-V", "count_label=" + g.count_label]
-        actions = gist_actions_html(g)
-        if actions:
-            args += ["-V", "gist_actions=" + actions]
         if len(g.files) > 1:
             args += ["-V", "gist_files=" + gist_files_html([f.name for f in g.files])]
         write_gist_raw(g)
