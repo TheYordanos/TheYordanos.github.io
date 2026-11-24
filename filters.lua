@@ -2,21 +2,21 @@
 local n = 0
 
 function Note(note)
-  n = n + 1
-  local id = "sn-" .. n
+	n = n + 1
+	local id = "sn-" .. n
 
-  local out = {
-    pandoc.RawInline("html",
+	local out = {
+	pandoc.RawInline("html",
       '<label for="' .. id .. '" class="sidenote-number"></label>' ..
       '<input type="checkbox" id="' .. id .. '" class="margin-toggle">' ..
       '<span class="sidenote">')
-  }
-  for _, inline in ipairs(pandoc.utils.blocks_to_inlines(note.content)) do
-    table.insert(out, inline)
-  end
-  table.insert(out, pandoc.RawInline("html", "</span>"))
+	}
+	for _, inline in ipairs(pandoc.utils.blocks_to_inlines(note.content)) do
+		table.insert(out, inline)
+	end
+	table.insert(out, pandoc.RawInline("html", "</span>"))
 
-  return out
+	return out
 end
 
 -- Adds a small "#" link after every heading from level 2 down.
@@ -75,7 +75,7 @@ function CodeBlock(block)
 	local raw = ""
 	if gist_slug ~= "" then
 		local base = name:gsub("\\", "/"):match("[^/]+$") or name
-		local href = "raw/" .. url_encode(gist_slug) .. "/" .. url_encode(base)
+		local href = "raw/" .. url_encode(gist_slug) .. "/" .. url_encode(base .. ".txt")
 		raw = '<a class="gist-btn" href="' .. href .. '">Raw</a>'
 	end
 

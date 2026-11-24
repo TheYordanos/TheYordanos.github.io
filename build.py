@@ -436,7 +436,7 @@ def write_gist_raw(g):
         return
     out = GISTS_OUT / "raw" / g.slug
     out.mkdir(parents=True, exist_ok=True)
-    expected = {raw_name(f.name): (f.text.rstrip("\n") + "\n").encode("utf-8")
+    expected = {raw_name(f.name) + ".txt": (f.text.rstrip("\n") + "\n").encode("utf-8")
                 for f in g.files}
     for old in out.iterdir():
         if old.name not in expected:
