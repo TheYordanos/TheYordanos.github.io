@@ -1,0 +1,393 @@
+---
+title: Halogen Color Scheme (Sublime Text)
+date: 2026-11-24
+language: .sublime-color-scheme (json)
+source: https://github.com/aardappel/goose
+---
+
+
+```{.yaml file="Halogen.sublime-color-scheme" label="Halogen"}
+{
+	"name": "Halogen",
+	"variables": {
+		"bg0": "#181818FF",
+		"bg1": "#181818FB",
+		"sel": "#BFC9DB38",
+		"sel_hl": "#FCEDFC26",
+		"cursor": "#BFC9DBFF",
+
+		"code_default": "#BFC9DBFF",
+		"code_comment": "#536371FF",
+		"code_type": "#6E8EB8FF",
+		"code_function": "#6E8EB8FF",
+		"code_punc": "#BFC9DBFF",
+		"code_op": "#FFFFFFFF",
+		"code_string": "#D4BC7DFF",
+		"code_value": "#3AA982FF",
+		"code_highlight": "#D89B75FF",
+		"code_error": "#FF0000FF",
+		"code_keyword": "#3AA982FF",
+		"code_warning": "#E4D97DFF",
+		"code_invalid": "#FF0000FF",
+		"code_multiline_comment": "#87919DFF",
+		"code_modifier": "#E67D74FF",
+		"code_attribute": "#E67D74FF",
+		"code_enum": "#BFC9DBFF",
+		"code_macro": "#BFC9DBFF",
+		"code_builtin_var": "#D699B5FF",
+		"code_builtin_fn": "#6E8EB8FF",
+		"code_directive": "#E67D74FF",
+		"code_header": "#E67D74FF",
+		"code_header2": "#E0AD82FF",
+
+		"code_diff_add": "#3AA982FF",
+		"code_diff_remove": "#E67D74FF",
+		"code_diff_header": "#87919DFF"
+	},
+
+	"globals": {
+		"background": "var(bg0)",
+		"foreground": "var(code_default)",
+		"caret": "var(cursor)",
+		"selection": "var(sel)",
+		// "selection_foreground": "var(code_default)",
+		"selection_border": "var(sel)",
+		"inactive_selection": "var(sel)",
+		"inactive_selection_foreground": "var(code_default)",
+		"find_highlight": "var(sel_hl)",
+		"find_highlight_foreground": "var(code_default)",
+		"gutter": "var(bg0)",
+		"gutter_foreground": "var(code_comment)",
+		"line_highlight": "var(bg1)",
+		"brackets_options": "underline",
+		"brackets_foreground": "var(sel_hl)",
+		"bracket_contents_options": "underline",
+		"bracket_contents_foreground": "var(sel_hl)",
+		"tags_options": "underline",
+		"tags_foreground": "var(code_default)",
+		"guide": "var(sel_hl)",
+		"active_guide": "var(code_default)",
+		"stack_guide": "var(sel_hl)",
+		"highlight": "var(sel_hl)",
+		"misspelling": "var(code_error)",
+		"shadow": "#00000055",
+		"line_diff_added": "var(code_diff_add)",
+		"line_diff_modified": "var(code_warning)",
+		"line_diff_deleted": "var(code_diff_remove)",
+		"minimap_border": "var(bg1)",
+		"popup_css": "background-color: color(var(bg1));"
+	},
+
+	"rules": [
+		// Comments
+		{
+			"scope": "comment",
+			"foreground": "var(code_comment)"
+		},
+		{
+			"scope": "comment.block",
+			"foreground": "var(code_multiline_comment)"
+		},
+		{
+			"scope": "punctuation.definition.comment",
+			"foreground": "var(code_comment)"
+		},
+
+		// Strings
+		{
+			"scope": "string",
+			"foreground": "var(code_string)"
+		},
+		{
+			"scope": "string.quoted",
+			"foreground": "var(code_string)"
+		},
+		{
+			"scope": "string.raw",
+			"foreground": "var(code_string)"
+		},
+		{
+			"scope": "string.char",
+			"foreground": "var(code_string)"
+		},
+		{
+			"scope": "string.unquoted",
+			"foreground": "var(code_string)"
+		},
+		{
+			"scope": "string.interpolated, punctuation.section.interpolation",
+			"foreground": "var(code_op)"
+		},
+		{
+			"scope": "constant.character.escape, constant.character.escape.backslash",
+			"foreground": "var(code_highlight)"
+		},
+
+		// Numbers
+		{
+			"scope": "constant.numeric",
+			"foreground": "var(code_builtin_var)"
+		},
+
+		// Language constants (true/false/nil/null) and language variables (self/this/super)
+		{
+			"scope": "constant.language",
+			"foreground": "var(code_value)"
+		},
+		{
+			"scope": "variable.language",
+			"foreground": "var(code_builtin_var)",
+			"font_style": "italic"
+		},
+
+		// Keywords
+		{
+			"scope": "keyword, storage.type",
+			"foreground": "var(code_keyword)"
+		},
+		{
+			"scope": "keyword.control",
+			"foreground": "var(code_keyword)"
+		},
+		{
+			"scope": "keyword.operator.word",
+			"foreground": "var(code_keyword)"
+		},
+		{
+			"scope": "storage.modifier",
+			"foreground": "var(code_modifier)"
+		},
+		{
+			"scope": "storage.directive",
+			"foreground": "var(code_directive)"
+		},
+		{
+			"scope": "storage.header",
+			"foreground": "var(code_header)"
+		},
+		{
+			"scope": "storage.macro",
+			"foreground": "var(code_macro)"
+		},
+		{
+			"scope": "storage.type.function, keyword.declaration.function, meta.function keyword",
+			"foreground": "var(code_keyword)"
+		},
+
+		// Functions / Methods
+		{
+			"scope": "entity.name.function",
+			"foreground": "var(code_function)"
+		},
+		{
+			"scope": "variable.function, meta.function-call entity.name.function",
+			"foreground": "var(code_function)"
+		},
+
+		// Types / Classes
+		{
+			"scope": "entity.name.type, support.type",
+			"foreground": "var(code_type)"
+		},
+		{
+			"scope": "entity.name.class, entity.name.struct, entity.name.enum, entity.name.union, entity.name.trait, entity.name.interface",
+			"foreground": "var(code_type)"
+		},
+		{
+			"scope": "entity.other.inherited-class",
+			"foreground": "var(code_type)",
+			"font_style": "italic"
+		},
+		{
+			"scope": "support.class, support.module",
+			"foreground": "var(code_type)"
+		},
+
+		// Variables / Identifiers
+		{
+			"scope": "variable, identifier",
+			"foreground": "var(code_default)"
+		},
+		{
+			"scope": "variable.parameter",
+			"foreground": "var(code_default)",
+			"font_style": "italic"
+		},
+		{
+			"scope": "variable.other.constant, variable.other.enummember",
+			"foreground": "var(code_value)"
+		},
+
+		// Builtins
+		{
+			"scope": "support.function",
+			"foreground": "var(code_builtin_fn)"
+		},
+		{
+			"scope": "support.variable",
+			"foreground": "var(code_builtin_var)"
+		},
+		{
+			"scope": "support.constant",
+			"foreground": "var(code_value)"
+		},
+
+		// Attributes
+		{
+			"scope": "entity.other.attribute-name",
+			"foreground": "var(code_attribute)"
+		},
+
+		// Macros
+		{
+			"scope": "entity.name.function.preprocessor, meta.preprocessor",
+			"foreground": "var(code_macro)"
+		},
+
+		// Directives
+		{
+			"scope": "keyword.control.directive",
+			"foreground": "var(code_directive)"
+		},
+
+		// Punctuation
+		{
+			"scope": "punctuation",
+			"foreground": "var(code_punc)"
+		},
+		{
+			"scope": "punctuation.separator, punctuation.terminator, punctuation.accessor",
+			"foreground": "var(code_punc)"
+		},
+		{
+			"scope": "punctuation.section.block, punctuation.section.group, punctuation.section.parens, punctuation.section.brackets",
+			"foreground": "var(code_punc)"
+		},
+
+		// Operators
+		{
+			"scope": "keyword.operator",
+			"foreground": "var(code_op)"
+		},
+
+		// Invalid / Errors
+		{
+			"scope": "invalid",
+			"foreground": "var(code_invalid)",
+			"background": "#00000000"
+		},
+		{
+			"scope": "invalid.illegal",
+			"foreground": "var(code_error)"
+		},
+		{
+			"scope": "invalid.deprecated",
+			"foreground": "var(code_warning)",
+			"font_style": "italic"
+		},
+
+		// Markdown / Markup
+		{
+			"scope": "markup.heading",
+			"foreground": "var(code_header)"
+		},
+		{
+			"scope": "markup.heading.2",
+			"foreground": "var(code_header2)"
+		},
+		{
+			"scope": "markup.bold",
+			"foreground": "var(code_default)",
+			"font_style": "bold"
+		},
+		{
+			"scope": "markup.italic",
+			"foreground": "var(code_default)",
+			"font_style": "italic"
+		},
+		{
+			"scope": "markup.underline.link",
+			"foreground": "var(code_type)",
+			"font_style": "underline"
+		},
+		{
+			"scope": "markup.list, markup.list.unnumbered, markup.list.numbered",
+			"foreground": "var(code_modifier)"
+		},
+		{
+			"scope": "markup.quote",
+			"foreground": "var(code_comment)",
+			"font_style": "italic"
+		},
+		{
+			"scope": "markup.raw, markup.raw.inline, markup.raw.block",
+			"foreground": "var(code_string)"
+		},
+		{
+			"scope": "meta.link",
+			"foreground": "var(code_string)"
+		},
+
+		// Diff / Version control
+		{
+			"scope": "diff.inserted, markup.inserted",
+			"foreground": "var(code_diff_add)"
+		},
+		{
+			"scope": "diff.deleted, markup.deleted",
+			"foreground": "var(code_diff_remove)"
+		},
+		{
+			"scope": "diff.header, diff.range",
+			"foreground": "var(code_diff_header)"
+		},
+
+		// Constants / Values
+		{
+			"scope": "constant",
+			"foreground": "var(code_value)"
+		},
+
+		// Preprocessor keywords
+		{
+			"scope": "meta.preprocessor keyword",
+			"foreground": "var(code_directive)"
+		},
+
+		// CSS properties/units (kept close to defaults, not overly colorful)
+		{
+			"scope": "meta.property-name.css, support.type.property-name.css",
+			"foreground": "var(code_attribute)"
+		},
+		{
+			"scope": "keyword.other.unit",
+			"foreground": "var(code_value)"
+		},
+
+		// JSON keys
+		{
+			"scope": "meta.mapping.key string, string.quoted.double.json meta.mapping.key",
+			"foreground": "var(code_type)"
+		},
+
+		// Html Tags
+		{
+			"scope": "entity.name.tag",
+			"foreground": "var(code_keyword)"
+		},
+		{
+			"scope": "punctuation.definition.tag",
+			"foreground": "var(code_type)"
+		},
+		{
+			"scope": "entity.other.attribute-name",
+			"foreground": "var(code_type)",
+			"font_style": "italic"
+		},
+		{
+			"scope": "meta.tag",
+			"foreground": "var(code_default)"
+		}
+	]
+}
+```
