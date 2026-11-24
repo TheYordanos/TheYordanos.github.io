@@ -7,6 +7,12 @@
 		});
 	}
 
+	var here = document.querySelector(".docs-pages [aria-current]");
+	if (nav && here && here.offsetParent && nav.scrollHeight > nav.clientHeight) {
+		nav.scrollTop += here.getBoundingClientRect().top
+			- nav.getBoundingClientRect().top - nav.clientHeight / 2;
+	}
+
 	var toc = document.getElementById("TOC");
 	if (!toc) return;
 

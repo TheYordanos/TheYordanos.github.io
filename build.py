@@ -23,7 +23,10 @@ Front matter per doc:
     title: Getting started
     description: Short summary for the meta tag.
     project: Mazes          (optional, groups docs; the pages of a project list each other)
-    order: 1                (optional, position inside the project; default is by title)
+    path: Core / Strings    (optional, the groups this page sits in, separated by /, any depth)
+                            (a page titled like the last part of its path is the page of that
+                             group: the group links to it and takes its order)
+    order: 1                (optional, position among its siblings; default is by title)
     version: v0.1           (optional, shown under the title)
     updated: 2026-11-22     (optional, shown under the title; also the date in
                              feed.xml, docs without it stay out of the feed)
@@ -53,7 +56,7 @@ import subprocess
 import sys
 from collections import namedtuple
 from concurrent.futures import ThreadPoolExecutor
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Optional
 from urllib.parse import urljoin
@@ -65,6 +68,7 @@ SITE_TITLE = "Yordanos"
 SITE_AUTHOR = "Yordanos Z."
 
 INDEX_LIMIT = 50
+DOCS_INDEX_ITEMS = 6
 FEED_LIMIT = 50
 
 ARTICLE_OG_IMAGE = "res/article_og.png"
@@ -154,6 +158,7 @@ class Doc:
     project: str
     order: int
     updated: str
+    path: tuple = ()
 
     @property
     def project_key(self):
@@ -165,11 +170,32 @@ class Doc:
 
 
 @dataclass(eq=False)
+class DocNode:
+    name: str
+    doc: Optional[Doc] = None
+    children: list = field(default_factory=list)
+    order: int = 10**6
+
+    def pages(self):
+        found = [self.doc] if self.doc else []
+        for child in self.children:
+            found += child.pages()
+        return found
+
+    def first(self):
+        return self.pages()[0]
+
+    def holds(self, doc):
+        return any(page is doc for page in self.pages())
+
+
+@dataclass(eq=False)
 class DocProject:
     key: str
     name: str
     pages: list
     newest: float
+    tree: list = field(default_factory=list)
 
 
 @dataclass(eq=False)
@@ -351,14 +377,27 @@ def pager_html(links, current_slug):
 
 
 def docs_nav_html(project, current):
-    items = []
-    for doc in project.pages:
-        title = html.escape(doc.title)
-        mark = ' aria-current="page"' if doc is current else ""
-        items.append(f'<li><a href="{doc.slug}.html"{mark}>{title}</a></li>')
+    def label(node):
+        title = html.escape(node.name)
+        if node.doc is None:
+            return f'<span class="group-name">{title}</span>'
+        mark = ' aria-current="page"' if node.doc is current else ""
+        return f'<a href="{node.doc.slug}.html"{mark}>{title}</a>'
+
+    def render(nodes):
+        items = []
+        for n in nodes:
+            if not n.children:
+                items.append(f"<li>{label(n)}</li>")
+                continue
+            opened = " open" if n.holds(current) else ""
+            items.append(f"<li><details{opened}><summary>{label(n)}</summary>"
+                         f"{render(n.children)}</details></li>")
+        return f'<ul>{"".join(items)}</ul>'
+
     name = html.escape(project.name)
     return (f'<nav class="docs-pages" aria-label="{name} documentation">'
-            f'<p class="side-label">{name}</p><ul>{"".join(items)}</ul></nav>')
+            f'<p class="side-label">{name}</p>{render(project.tree)}</nav>')
 
 
 def gist_files_html(files):
@@ -532,6 +571,10 @@ def collapse_series(articles):
 
 # --- Docs -----------------------------------------------------------------
 
+def split_path(text):
+    return tuple(p.strip() for p in text.split("/") if p.strip())
+
+
 def collect_docs():
     docs, project_newest = [], {}
     for src in sorted(DOCS_SRC.glob("*.md")):
@@ -549,25 +592,71 @@ def collect_docs():
             print(f"warning: docs/{slug} has no title; using filename")
             title = slug
         order = meta.get("order", "").strip()
+        path = split_path(meta.get("path", ""))
         docs.append(Doc(
             src=src, slug=slug, title=title, meta=meta, project=project,
             description=meta.get("description", ""),
             order=int(order) if re.fullmatch(r"-?\d+", order) else 10**6,
-            updated=meta.get("updated", ""),
+            updated=meta.get("updated", ""), path=path,
         ))
     return docs, project_newest
 
 
-def group_docs(docs, project_newest):
-    projects = {}
+def build_tree(docs):
+    roots, index = [], {}
+
+    def attach(parent_key, node):
+        (index[parent_key].children if parent_key else roots).append(node)
+
+    def chain_of(d):
+        if d.path and d.title.lower() == d.path[-1].lower():
+            return d.path
+        return d.path + (d.title,)
+
     for d in docs:
-        p = projects.setdefault(
-            d.project_key,
-            DocProject(d.project_key, d.project_name, [], project_newest[d.project_key]))
-        p.pages.append(d)
-    for p in projects.values():
-        p.pages.sort(key=lambda d: (d.order, d.title.lower()))
-    return sorted(projects.values(), key=lambda p: p.name.lower())
+        chain = chain_of(d)
+        parent_key = ()
+        for depth, name in enumerate(chain[:-1]):
+            key = tuple(p.lower() for p in chain[:depth + 1])
+            if key not in index:
+                index[key] = DocNode(name)
+                attach(parent_key, index[key])
+            parent_key = key
+
+        key = parent_key + (chain[-1].lower(),)
+        node = index.get(key)
+        if node is None:
+            node = index[key] = DocNode(chain[-1])
+            attach(parent_key, node)
+        elif node.doc is not None:
+            print(f"warning: docs/{d.slug} and docs/{node.doc.slug} are the same page "
+                  f"of the tree; they are listed separately")
+            node = DocNode(chain[-1])
+            attach(parent_key, node)
+        node.doc, node.order, node.name = d, d.order, d.title
+
+    def settle(nodes):
+        for n in nodes:
+            settle(n.children)
+            if n.doc is None:
+                n.order = min(c.order for c in n.children)
+        nodes.sort(key=lambda n: (n.order, n.name.lower()))
+
+    settle(roots)
+    return roots
+
+
+def group_docs(docs, project_newest):
+    by_project = {}
+    for d in docs:
+        by_project.setdefault(d.project_key, []).append(d)
+    projects = []
+    for key, members in by_project.items():
+        tree = build_tree(members)
+        pages = [page for node in tree for page in node.pages()]
+        projects.append(DocProject(key, members[0].project_name, pages,
+                                   project_newest[key], tree))
+    return sorted(projects, key=lambda p: p.name.lower())
 
 
 def build_docs(projects, force):
@@ -687,23 +776,60 @@ def render_series(series, shown_date):
     return lines
 
 
-def render_docs(projects, show_dates=False):
+def pages_label(n):
+    return f'{n} page{"" if n == 1 else "s"}'
+
+
+def render_docs(projects, full=False):
     i = LIST_INDENT
     if not projects:
         return [f'{i}<li class="doc-empty">No docs yet.</li>']
     lines = []
     for p in projects:
-        count = f'{len(p.pages)} page{"" if len(p.pages) == 1 else "s"}'
         lines.append(f'{i}<li class="doc-project">')
         lines.append(f'{i}\t<a class="doc-project-name" href="docs/{p.pages[0].slug}.html">'
-                     f'{html.escape(p.name)}</a><span class="doc-count">{count}</span>')
-        lines.append(f'{i}\t<ul class="doc-pages">')
-        for d in p.pages:
-            when = f'<time>{html.escape(d.updated)}</time>' if show_dates and d.updated else ""
-            lines.append(f'{i}\t\t<li><a href="docs/{d.slug}.html">'
-                         f'{html.escape(d.title)}</a>{when}</li>')
-        lines.append(f'{i}\t</ul>')
+                     f'{html.escape(p.name)}</a>'
+                     f'<span class="doc-count">{pages_label(len(p.pages))}</span>')
+        if full:
+            lines.append(f'{i}\t<ul class="doc-pages doc-tree">')
+            lines += render_doc_tree(p.tree, i + "\t\t")
+            lines.append(f'{i}\t</ul>')
+        else:
+            lines.append(f'{i}\t<ul class="doc-pages">')
+            for n in p.tree[:DOCS_INDEX_ITEMS]:
+                lines.append(f'{i}\t\t<li><a href="docs/{n.first().slug}.html">'
+                             f'{html.escape(n.name)}</a>'
+                             f'{doc_badge(n)}</li>')
+            if len(p.tree) > DOCS_INDEX_ITEMS:
+                more = len(p.tree) - DOCS_INDEX_ITEMS
+                lines.append(f'{i}\t\t<li class="doc-more"><a href="archive.html#docs">'
+                             f'{more} more</a></li>')
+            lines.append(f'{i}\t</ul>')
         lines.append(f'{i}</li>')
+    return lines
+
+
+def doc_badge(node):
+    if not node.children:
+        return ""
+    return f'<span class="doc-count">{len(node.pages())}</span>'
+
+
+def render_doc_tree(nodes, indent):
+    lines = []
+    for n in nodes:
+        title = html.escape(n.name)
+        link = (f'<a href="docs/{n.doc.slug}.html">{title}</a>' if n.doc
+                else f'<span class="doc-group">{title}</span>')
+        if n.children:
+            lines.append(f'{indent}<li><details><summary>{link}{doc_badge(n)}</summary>')
+            lines.append(f'{indent}\t<ul>')
+            lines += render_doc_tree(n.children, indent + "\t\t")
+            lines.append(f'{indent}\t</ul>')
+            lines.append(f'{indent}</details></li>')
+        else:
+            when = f'<time>{html.escape(n.doc.updated)}</time>' if n.doc.updated else ""
+            lines.append(f'{indent}<li>{link}{when}</li>')
     return lines
 
 
@@ -880,7 +1006,7 @@ def main():
     if docs_on:
         splice(INDEX, render_docs(projects), DOCS_START, DOCS_END, required=False)
         if ARCHIVE.exists():
-            splice(ARCHIVE, render_docs(projects, show_dates=True),
+            splice(ARCHIVE, render_docs(projects, full=True),
                    DOCS_START, DOCS_END, required=False)
 
     if gists_on:

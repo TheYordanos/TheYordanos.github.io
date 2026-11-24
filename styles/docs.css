@@ -62,14 +62,49 @@ body.docs-page main { max-width: 740px; }
 
 .docs-pages li { margin: 0; }
 
+.docs-pages details > ul {
+	margin: 0 0 2px 4px;
+	padding-left: 10px;
+	border-left: 1px solid var(--border);
+}
+
+.docs-pages summary {
+	display: flex;
+	align-items: baseline;
+	cursor: pointer;
+	list-style: none;
+}
+
+.docs-pages summary::-webkit-details-marker { display: none; }
+
+.docs-pages summary::before {
+	content: "";
+	flex: none;
+	width: 5px;
+	height: 5px;
+	margin: 0 9px 2px 1px;
+	border-right: 1.5px solid var(--meta);
+	border-bottom: 1.5px solid var(--meta);
+	transform: rotate(-45deg);
+	transition: transform 0.12s;
+}
+
+.docs-pages details[open] > summary::before { transform: rotate(45deg); }
+
+.docs-pages summary a { flex: 1; }
+
+.docs-pages .group-name {
+	padding: 2px 0;
+	overflow-wrap: anywhere;
+}
+
 .docs-pages a {
 	display: block;
 	padding: 2px 0;
 }
 
 .docs-pages a[aria-current] {
-	font-weight: 700;
-	text-decoration: underline;
+	font-weight: 800;
 }
 
 .docs-nav #TOC ul {

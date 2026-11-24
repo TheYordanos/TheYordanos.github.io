@@ -614,6 +614,50 @@ footer {
 	font-variant-numeric: tabular-nums;
 }
 
+.doc-pages li > .doc-count { margin-left: 0; }
+
+.doc-more a,
+.doc-more a:visited { color: var(--meta); }
+
+.doc-tree ul {
+	margin: 0;
+	padding: 0 0 0 0.9rem;
+	border-left: 2px solid var(--border);
+	list-style: none;
+}
+
+.doc-tree li > details { flex: 1; min-width: 0; }
+
+.doc-tree summary {
+	display: flex;
+	align-items: baseline;
+	gap: 1rem;
+	cursor: pointer;
+	list-style: none;
+}
+
+.doc-tree summary::-webkit-details-marker { display: none; }
+
+.doc-tree summary::before {
+	content: "";
+	flex: none;
+	width: 5px;
+	height: 5px;
+	margin: 0 -0.4rem 2px 1px;
+	border-right: 1.5px solid var(--meta);
+	border-bottom: 1.5px solid var(--meta);
+	transform: rotate(-45deg);
+	transition: transform 0.12s;
+}
+
+.doc-tree details[open] > summary::before { transform: rotate(45deg); }
+
+.doc-tree summary > :first-child { margin-right: auto; overflow-wrap: anywhere; }
+
+.doc-tree summary .doc-count { margin-left: 0; }
+
+.doc-group { color: var(--text); }
+
 .doc-empty { color: var(--meta); }
 
 /* GISTS SECTION ========================= */
