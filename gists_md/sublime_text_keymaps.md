@@ -1,0 +1,77 @@
+---
+title: Sublime Text Custom Keymaps
+date: 2026-11-24
+language: .sublime-keymap (json)
+source: https://www.sublimetext.com/
+---
+
+```{.json file="config (Windows).sublime-keymap" label="Keymaps"}
+[
+	{ "keys": ["alt+`"], "command": "toggle_terminus_panel" },
+	{ "keys": ["alt+z"], "command": "toggle_setting", "args": {"setting": "word_wrap" } },
+	// { "keys": ["alt+m"], "command": "toggle_side_bar" },
+
+	{ "keys": ["ctrl+alt+p"], "command": "prompt_select_workspace" },
+
+	// Lines
+	{ "keys": ["alt+k"], "command": "scroll_lines", "args": {"amount": 5.0 } },
+	{ "keys": ["alt+j"], "command": "scroll_lines", "args": {"amount": -5.0 } },
+	{ "keys": ["alt+q"], "command": "move", "args": {"by": "pages", "forward": false} },
+	{ "keys": ["alt+e"], "command": "move", "args": {"by": "pages", "forward": true} },
+
+	{ "keys": ["alt+up"], "command": "swap_line_up" },
+	{ "keys": ["alt+down"], "command": "swap_line_down" },
+	{ "keys": ["ctrl+j"], "command": "join_lines" },
+	{ "keys": ["alt+a"], "command": "alignment" },
+
+	// Tabs
+	{ "keys": ["ctrl+tab"], "command": "next_view" },
+	{ "keys": ["ctrl+shift+tab"], "command": "prev_view" },
+
+	// Jump to end and beginning of line
+	{ "keys": ["ctrl+alt+left"], "command": "move_to", "args": {"to": "bol", "extend": false } },
+	{ "keys": ["ctrl+alt+right"], "command": "move_to", "args": {"to": "eol", "extend": false } },
+	{ "keys": ["ctrl+shift+alt+left"], "command": "move_to", "args": {"to": "bol", "extend": true } },
+	{ "keys": ["ctrl+shift+alt+right"], "command": "move_to", "args": {"to": "eol", "extend": true } },
+
+	// Movement
+
+	// Subword
+	{ "keys": ["alt+left"], "command": "move", "args": {"by": "subwords", "forward": false} },
+	{ "keys": ["alt+right"], "command": "move", "args": {"by": "subword_ends", "forward": true} },
+	{ "keys": ["alt+shift+left"], "command": "move", "args": {"by": "subwords", "forward": false, "extend": true} },
+	{ "keys": ["alt+shift+right"], "command": "move", "args": {"by": "subword_ends", "forward": true, "extend": true} },
+
+	{ "keys": ["alt+backspace"], "command": "run_macro_file", "args": {"file": "res://Packages/User/Delete Subword Backward.sublime-macro"} },
+	{ "keys": ["alt+delete"], "command": "run_macro_file", "args": {"file": "res://Packages/User/Delete Subword Forward.sublime-macro"} },
+
+	// By Paragraph
+	{ "keys": ["ctrl+up"], "command": "move_by_paragraph", "args": {"extend": false, "forward": false } },
+	{ "keys": ["ctrl+down"], "command": "move_by_paragraph", "args": {"extend": false, "forward": true } },
+	{ "keys": ["ctrl+shift+up"], "command": "move_by_paragraph", "args": {"extend": true, "forward": false } },
+	{ "keys": ["ctrl+shift+down"], "command": "move_by_paragraph", "args": {"extend": true, "forward": true } },
+	{ "keys": ["shift+alt+e"], "command": "move", "args": {"by": "pages", "forward": false, "extend": true} },
+	{ "keys": ["shift+alt+d"], "command": "move", "args": {"by": "pages", "forward": true, "extend": true} },
+
+	// Line of File
+	{ "keys": ["alt+p"], "command": "move_to", "args": {"to": "bof", "extend": false } },
+	{ "keys": ["alt+shift+p"], "command": "move_to", "args": {"to": "bof", "extend": true } },
+	{ "keys": ["alt+n"], "command": "move_to", "args": {"to": "eof", "extend": false } },
+	{ "keys": ["alt+shift+n"], "command": "move_to", "args": {"to": "eof", "extend": true } },
+
+	// LSP
+	{ "keys": ["ctrl+k", "ctrl+f"], "command": "lsp_symbol_definition", "args": {"side_by_side": false, "force_group": true, "fallback": false, "group": -1}, "context": [{"key": "lsp.session_with_capability", "operand": "definitionProvider"}, {"key": "auto_complete_visible", "operand": false} ] },
+	{ "keys": ["ctrl+k", "ctrl+j"], "command": "lsp_symbol_implementation", "args": {"side_by_side": false, "force_group": true, "group": -1}, "context": [{"key": "lsp.session_with_capability", "operand": "implementationProvider"}, {"key": "auto_complete_visible", "operand": false} ] },
+	{ "keys": ["alt+shift+f"], "command": "lsp_format_document_range", "context": [{"key": "lsp.session_with_capability", "operand": "documentRangeFormattingProvider"}] },
+	{ "keys": ["alt+f"], "command": "lsp_format_document", "context": [{"key": "lsp.session_with_capability", "operand": "documentFormattingProvider | documentRangeFormattingProvider"}] },
+	{ "keys": ["alt+r"], "command": "lsp_symbol_rename", "context": [{"key": "lsp.session_with_capability", "operand": "renameProvider"}] },
+	{ "keys": ["alt+s"], "command": "lsp_format_document_range", "context": [{"key": "lsp.session_with_capability", "operand": "documentRangeFormattingProvider"}] },
+	{ "keys": ["alt+d"], "command": "lsp_goto_diagnostic", "args": {"uri": "$view_uri"} },
+	{ "keys": ["alt+b"], "command": "lsp_next_diagnostic", "context": [{"key": "setting.lsp_active"}] },
+	{ "keys": ["alt+h"], "command": "lsp_prev_diagnostic", "context": [{"key": "setting.lsp_active"}] },
+
+	// Build Results
+	{ "keys": ["alt+b"], "command": "next_result" },
+	{ "keys": ["alt+h"], "command": "prev_result" },
+]
+```

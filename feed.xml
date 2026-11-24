@@ -5,10 +5,16 @@
 <link href="https://theyordanos.github.io/"/>
 <link rel="self" href="https://theyordanos.github.io/feed.xml"/>
 <id>https://theyordanos.github.io/</id>
-<updated>2026-11-23T00:00:00Z</updated>
+<updated>2026-11-24T00:00:00Z</updated>
 <author><name>Yordanos Z.</name></author>
 <entry>
-<title>[Gist] Sublime Text Syntax Highlighting for Goose-Lang</title>
+<title>[Gist] Sublime Text Custom Keymaps</title>
+<link href="https://theyordanos.github.io/gists/sublime_text_keymaps.html"/>
+<id>https://theyordanos.github.io/gists/sublime_text_keymaps.html</id>
+<updated>2026-11-24T00:00:00Z</updated>
+</entry>
+<entry>
+<title>[Gist] Goose Highlighting Sublime</title>
 <link href="https://theyordanos.github.io/gists/sublime_goose.html"/>
 <id>https://theyordanos.github.io/gists/sublime_goose.html</id>
 <updated>2026-11-23T00:00:00Z</updated>

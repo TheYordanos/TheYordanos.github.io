@@ -1,5 +1,5 @@
 ---
-title: Sublime Text Syntax Highlighting for Goose-Lang
+title: Goose Highlighting Sublime
 date: 2026-11-23
 language: yaml
 source: https://github.com/aardappel/goose
