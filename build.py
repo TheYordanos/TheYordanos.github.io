@@ -1,8 +1,8 @@
 """
 Build articles/*.html from articles_md/*.md docs/*.html from docs_md/*.md and
 gists/*.html from gists_md/*.md with Pandoc, then refresh the lists in index.html
-(latest INDEX_LIMIT articles), archive.html (everything) and feed.xml (articles,
-docs and gists).
+(latest INDEX_LIMIT articles), archive.html (everything), feed.xml (articles,
+docs and gists) and docs/search.json (the index behind the docs search box, one project at a time).
 
 Front matter per article:
     ---
@@ -50,6 +50,7 @@ Usage:
     python build.py --force
 """
 import html
+import json
 import re
 import shutil
 import subprocess
@@ -69,6 +70,7 @@ SITE_AUTHOR = "Yordanos Z."
 
 INDEX_LIMIT = 50
 DOCS_INDEX_ITEMS = 6
+SEARCH_TEXT_LIMIT = 12000
 FEED_LIMIT = 50
 
 ARTICLE_OG_IMAGE = "res/article_og.png"
@@ -159,6 +161,7 @@ class Doc:
     order: int
     updated: str
     path: tuple = ()
+    node: Optional["DocNode"] = None
 
     @property
     def project_key(self):
@@ -175,6 +178,7 @@ class DocNode:
     doc: Optional[Doc] = None
     children: list = field(default_factory=list)
     order: int = 10**6
+    parent: Optional["DocNode"] = None
 
     def pages(self):
         found = [self.doc] if self.doc else []
@@ -400,6 +404,23 @@ def docs_nav_html(project, current):
             f'<p class="side-label">{name}</p>{render(project.tree)}</nav>')
 
 
+def docs_crumbs_html(project, doc):
+    items = []
+    if doc.project:
+        items.append(f'<a href="{project.pages[0].slug}.html">{html.escape(project.name)}</a>')
+    chain, node = [], doc.node.parent
+    while node:
+        chain.append(node)
+        node = node.parent
+    for node in reversed(chain):
+        name = html.escape(node.name)
+        items.append(f'<a href="{node.doc.slug}.html">{name}</a>' if node.doc
+                     else f"<span>{name}</span>")
+    if not items:
+        return ""
+    return f'<nav class="crumbs" aria-label="Breadcrumb">{"".join(items)}</nav>'
+
+
 def gist_files_html(files):
     links = "".join(f'<a href="#{file_id(name)}">{html.escape(name)}</a>' for name in files)
     return (f'<nav class="gist-files" aria-label="Files">'
@@ -606,6 +627,7 @@ def build_tree(docs):
     roots, index = [], {}
 
     def attach(parent_key, node):
+        node.parent = index[parent_key] if parent_key else None
         (index[parent_key].children if parent_key else roots).append(node)
 
     def chain_of(d):
@@ -634,6 +656,7 @@ def build_tree(docs):
             node = DocNode(chain[-1])
             attach(parent_key, node)
         node.doc, node.order, node.name = d, d.order, d.title
+        d.node = node
 
     def settle(nodes):
         for n in nodes:
@@ -674,6 +697,11 @@ def build_docs(projects, force):
             if d.meta.get("toc", "true").lower() not in ("false", "no", "0"):
                 args += ["--toc", "--toc-depth=3"]
             args += ["-V", "docs_nav=" + docs_nav_html(project, d)]
+            if d.project:
+                args += ["-V", "docs_project=" + html.escape(d.project, quote=True)]
+            crumbs = docs_crumbs_html(project, d)
+            if crumbs:
+                args += ["-V", "docs_crumbs=" + crumbs]
             if len(links) > 1:
                 args += ["-V", "docs_pager=" + pager_html(links, d.slug)]
             jobs.append(Job(d.src, DOCS_OUT / f"{d.slug}.html",
@@ -682,6 +710,50 @@ def build_docs(projects, force):
 
     remove_stale_pages(DOCS_OUT, slugs, "docs")
     return run_jobs(jobs, force, "docs")
+
+
+def plain_text(markdown):
+    text = re.sub(r"\A---[ \t]*\r?\n.*?\r?\n(?:---|\.\.\.)[ \t]*(?:\r?\n|$)", "", markdown,
+                  flags=re.DOTALL)
+    text = re.sub(r"^[ \t]*(`{3,}|~{3,}).*$", "", text, flags=re.MULTILINE)
+    text = re.sub(r"!\[([^\]]*)\]\([^)]*\)", r"\1", text)
+    text = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", text)
+    text = re.sub(r"^\[\^[^\]]+\]:", "", text, flags=re.MULTILINE)
+    text = re.sub(r"^[ \t]*#{1,6}[ \t]+", "", text, flags=re.MULTILINE)
+    text = re.sub(r"[*`]|\{[.#][^}]*\}", "", text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def headings_of(markdown):
+    body = re.sub(r"^[ \t]*(`{3,}|~{3,}).*?^[ \t]*\1[ \t]*$", "", markdown,
+                  flags=re.DOTALL | re.MULTILINE)
+    found = re.findall(r"^#{1,4}[ \t]+(.+?)[ \t]*#*[ \t]*$", body, flags=re.MULTILINE)
+    return [re.sub(r"[*`]|\{[.#][^}]*\}", "", h).strip() for h in found]
+
+
+def write_search_index(projects):
+    entries = []
+
+    def walk(project, nodes, trail):
+        for n in nodes:
+            d = n.doc
+            if d:
+                markdown = d.src.read_text(encoding="utf-8-sig")
+                heads = headings_of(markdown)
+                if heads and heads[0].lower() == d.title.lower():
+                    heads = heads[1:]
+                entries.append({
+                    "j": d.project, "t": d.title, "u": f"{d.slug}.html", "p": " / ".join(trail),
+                    "d": d.description, "h": heads,
+                    "x": plain_text(markdown)[:SEARCH_TEXT_LIMIT],
+                })
+            walk(project, n.children, trail + [n.name])
+
+    for project in projects:
+        walk(project, project.tree, [])
+    write_if_changed(DOCS_OUT / "search.json",
+                     json.dumps(entries, ensure_ascii=False, separators=(",", ":")) + "\n")
+    return len(entries)
 
 
 # --- Gists ----------------------------------------------------------------
@@ -982,6 +1054,7 @@ def main():
         docs_built, doc_errors = build_docs(projects, force)
         if doc_errors:
             sys.exit(1)
+        write_search_index(projects)
 
     gists, gists_built = [], 0
     gists_on = GISTS_SRC.is_dir()

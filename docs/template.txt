@@ -45,6 +45,11 @@
 			</div>
 
 			<div class="docs-body">
+				<div class="docs-search">
+					<input type="search" id="docs-search" data-project="$docs_project$" placeholder="$if(docs_project)$Search $docs_project$$else$Search docs$endif$" aria-label="Search this documentation" autocomplete="off" spellcheck="false">
+					<div id="docs-results" aria-live="polite"></div>
+				</div>
+
 				$if(docs_nav)$$docs_nav$$endif$
 
 				$if(toc)$
@@ -58,6 +63,7 @@
 
 		<main>
 			<header>
+				$if(docs_crumbs)$$docs_crumbs$$endif$
 				<h1>$title$</h1>
 				$if(description)$<p class="description">$description$</p>$endif$
 				$if(version)$<p class="meta doc-meta"><span>$version$</span>$if(updated)$<span>Updated <time datetime="$updated$">$updated$</time></span>$endif$</p>$elseif(updated)$<p class="meta doc-meta"><span>Updated <time datetime="$updated$">$updated$</time></span></p>$endif$
