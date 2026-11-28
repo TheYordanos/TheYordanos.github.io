@@ -48,33 +48,51 @@
 			body.classList.remove("searching");
 		}
 
-		function score(entry, terms) {
+		function rank(entry, terms) {
 			var title = entry.t.toLowerCase();
-			var heads = entry.h.join(" ").toLowerCase();
 			var desc = entry.d.toLowerCase();
-			var text = entry.x.toLowerCase();
 			var total = 0;
 			for (var i = 0; i < terms.length; i++) {
 				var term = terms[i];
 				var found = 0;
 				if (title.indexOf(term) === 0) found += 20;
 				else if (title.indexOf(term) > 0) found += 12;
-				if (heads.indexOf(term) >= 0) found += 6;
 				if (desc.indexOf(term) >= 0) found += 3;
-				if (text.indexOf(term) >= 0) found += 1;
-				if (!found) return 0;
+				for (var k = 0; k < entry.s.length && found < 20; k++) {
+					if (entry.s[k][0].toLowerCase().indexOf(term) >= 0) { found += 6; break; }
+				}
+				for (var m = 0; m < entry.s.length; m++) {
+					if (entry.s[m][2].toLowerCase().indexOf(term) >= 0) { found += 1; break; }
+				}
+				if (!found) return null;
 				total += found;
 			}
-			return total;
+			return { score: total, entry: entry, section: bestSection(entry, terms) };
 		}
 
-		function snippet(entry, term) {
-			var at = entry.x.toLowerCase().indexOf(term);
-			if (at < 0) return entry.d ? [entry.d, -1, 0] : ["", -1, 0];
+		function bestSection(entry, terms) {
+			var best = null;
+			var bestScore = 0;
+			for (var i = 0; i < entry.s.length; i++) {
+				var name = entry.s[i][0].toLowerCase();
+				var text = entry.s[i][2].toLowerCase();
+				var s = 0;
+				for (var t = 0; t < terms.length; t++) {
+					if (name.indexOf(terms[t]) >= 0) s += 6;
+					if (text.indexOf(terms[t]) >= 0) s += 1;
+				}
+				if (s > bestScore) { bestScore = s; best = entry.s[i]; }
+			}
+			return best;
+		}
+
+		function snippet(entry, section, term) {
+			var source = section ? section[2] : entry.d;
+			var at = section ? source.toLowerCase().indexOf(term) : -1;
+			if (at < 0) return [source.slice(0, 110), -1, 0];
 			var from = Math.max(0, at - 40);
-			var text = (from ? "\u2026" : "") + entry.x.slice(from, at + term.length + 70);
-			var mark = at - from + (from ? 1 : 0);
-			return [text, mark, term.length];
+			var text = (from ? "\u2026" : "") + source.slice(from, at + term.length + 70);
+			return [text, at - from + (from ? 1 : 0), term.length];
 		}
 
 		function show(list, message, term) {
@@ -87,9 +105,11 @@
 				results.appendChild(none);
 				return;
 			}
-			list.forEach(function (entry) {
+			list.forEach(function (hit) {
+				var entry = hit.entry;
+				var section = hit.section;
 				var a = document.createElement("a");
-				a.href = entry.u;
+				a.href = entry.u + (section && section[1] ? "#" + section[1] : "");
 				var title = document.createElement("span");
 				title.className = "r-title";
 				title.textContent = entry.t;
@@ -100,7 +120,13 @@
 					path.textContent = entry.p;
 					a.appendChild(path);
 				}
-				var s = snippet(entry, term);
+				if (section && section[0]) {
+					var sec = document.createElement("span");
+					sec.className = "r-sec";
+					sec.textContent = "# " + section[0];
+					a.appendChild(sec);
+				}
+				var s = snippet(entry, section, term);
 				if (s[0]) {
 					var snip = document.createElement("span");
 					snip.className = "r-snip";
@@ -128,11 +154,11 @@
 				var ranked = [];
 				index.forEach(function (entry) {
 					if (entry.j.toLowerCase() !== scope) return;
-					var s = score(entry, terms);
-					if (s) ranked.push({ s: s, entry: entry });
+					var hit = rank(entry, terms);
+					if (hit) ranked.push(hit);
 				});
-				ranked.sort(function (a, b) { return b.s - a.s || a.entry.t.localeCompare(b.entry.t); });
-				show(ranked.slice(0, 8).map(function (r) { return r.entry; }), "", terms[0]);
+				ranked.sort(function (a, b) { return b.score - a.score || a.entry.t.localeCompare(b.entry.t); });
+				show(ranked.slice(0, 8), "", terms[0]);
 			});
 		}
 

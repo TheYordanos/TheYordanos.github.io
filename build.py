@@ -712,23 +712,35 @@ def build_docs(projects, force):
     return run_jobs(jobs, force, "docs")
 
 
-def plain_text(markdown):
-    text = re.sub(r"\A---[ \t]*\r?\n.*?\r?\n(?:---|\.\.\.)[ \t]*(?:\r?\n|$)", "", markdown,
-                  flags=re.DOTALL)
-    text = re.sub(r"^[ \t]*(`{3,}|~{3,}).*$", "", text, flags=re.MULTILINE)
-    text = re.sub(r"!\[([^\]]*)\]\([^)]*\)", r"\1", text)
-    text = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", text)
-    text = re.sub(r"^\[\^[^\]]+\]:", "", text, flags=re.MULTILINE)
-    text = re.sub(r"^[ \t]*#{1,6}[ \t]+", "", text, flags=re.MULTILINE)
-    text = re.sub(r"[*`]|\{[.#][^}]*\}", "", text)
-    return re.sub(r"\s+", " ", text).strip()
+SECTION_RE = re.compile(r'<h[2-4]\b[^>]*\bid="([^"]*)"[^>]*>(.*?)</h[2-4]>', re.DOTALL)
 
 
-def headings_of(markdown):
-    body = re.sub(r"^[ \t]*(`{3,}|~{3,}).*?^[ \t]*\1[ \t]*$", "", markdown,
-                  flags=re.DOTALL | re.MULTILINE)
-    found = re.findall(r"^#{1,4}[ \t]+(.+?)[ \t]*#*[ \t]*$", body, flags=re.MULTILINE)
-    return [re.sub(r"[*`]|\{[.#][^}]*\}", "", h).strip() for h in found]
+def html_text(fragment):
+    fragment = re.sub(r'<a\b[^>]*class="anchor[^"]*"[^>]*>.*?</a>', "", fragment, flags=re.DOTALL)
+    fragment = re.sub(r"<(script|style)\b.*?</\1>", "", fragment, flags=re.DOTALL)
+    fragment = re.sub(r"<[^>]+>", " ", fragment)
+    return re.sub(r"\s+", " ", html.unescape(fragment)).strip()
+
+
+def page_sections(page):
+    text = page.read_text(encoding="utf-8")
+    m = re.search(r"<main\b[^>]*>(.*?)</main>", text, re.DOTALL)
+    body = m.group(1) if m else text
+    body = re.sub(r"<header>.*?</header>", "", body, flags=re.DOTALL)
+    body = re.sub(r'<nav class="series-pager".*?</nav>', "", body, flags=re.DOTALL)
+
+    parts = SECTION_RE.split(body)
+    found = [("", "", parts[0])]
+    for i in range(1, len(parts), 3):
+        found.append((html_text(parts[i + 1]), parts[i], parts[i + 2]))
+
+    sections, budget = [], SEARCH_TEXT_LIMIT
+    for name, ident, fragment in found:
+        text = html_text(fragment)[:max(budget, 0)]
+        budget -= len(text)
+        if name or text:
+            sections.append([name, ident, text])
+    return sections
 
 
 def write_search_index(projects):
@@ -738,14 +750,10 @@ def write_search_index(projects):
         for n in nodes:
             d = n.doc
             if d:
-                markdown = d.src.read_text(encoding="utf-8-sig")
-                heads = headings_of(markdown)
-                if heads and heads[0].lower() == d.title.lower():
-                    heads = heads[1:]
                 entries.append({
-                    "j": d.project, "t": d.title, "u": f"{d.slug}.html", "p": " / ".join(trail),
-                    "d": d.description, "h": heads,
-                    "x": plain_text(markdown)[:SEARCH_TEXT_LIMIT],
+                    "j": d.project, "t": d.title, "u": f"{d.slug}.html",
+                    "p": " / ".join(trail), "d": d.description,
+                    "s": page_sections(DOCS_OUT / f"{d.slug}.html"),
                 })
             walk(project, n.children, trail + [n.name])
 

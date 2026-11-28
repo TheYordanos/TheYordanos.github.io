@@ -176,6 +176,7 @@ body.docs-page main { max-width: 740px; }
 #docs-results .r-title { display: block; font-weight: 700; }
 
 #docs-results .r-path,
+#docs-results .r-sec,
 #docs-results .r-snip,
 #docs-results .r-empty {
 	display: block;
@@ -183,6 +184,8 @@ body.docs-page main { max-width: 740px; }
 	font-size: 12px;
 	line-height: 1.4;
 }
+
+#docs-results .r-sec { color: var(--text); }
 
 #docs-results .r-snip {
 	margin-top: 2px;
